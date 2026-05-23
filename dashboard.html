@@ -248,7 +248,12 @@ async function postStatement() {
   if (!text) { document.getElementById("postErr").innerText = "Write something first"; return; }
   try {
     var res = await addStatement(text, sourceUrl);
-    lastPostedId = (res.response && res.response.id) ? res.response.id : "";
+    lastPostedId = "";
+if (res.response) {
+  lastPostedId = res.response.id || res.response._id || res.response.status || "";
+}
+if (res.id) lastPostedId = res.id;
+if (res._id) lastPostedId = res._id;
     lastPostedText = text;
     document.getElementById("postMsg").innerText = "Statement posted! Now react to it below:";
     document.getElementById("postReactSection").style.display = "block";
