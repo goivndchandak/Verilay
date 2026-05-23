@@ -54,7 +54,7 @@ async function signup(email, password) {
   var res = await fetch(API_BASE + "/signup_user", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email: email, password: password })
+    body: JSON.stringify({ email: email, password: password, full_name: "" })
   });
   return handleResponse(res);
 }
