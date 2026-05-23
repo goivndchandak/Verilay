@@ -51,7 +51,7 @@ async function handleResponse(res) {
 // ============================================================
 
 async function signup(email, password) {
-  var res = await fetch(API_BASE + "/signup", {
+  var res = await fetch(API_BASE + "/signup_user", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: email, password: password })
@@ -60,7 +60,7 @@ async function signup(email, password) {
 }
 
 async function login(email, password) {
-  var res = await fetch(API_BASE + "/login", {
+  var res = await fetch(API_BASE + "/login_user", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: email, password: password })
