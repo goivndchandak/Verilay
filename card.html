@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verilay'd Card</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #faf5eb; min-height: 100vh; }
+    .page-topbar { background: #1d3557; padding: 16px 20px; text-align: center; border-bottom: 4px solid #FF9933; }
+    .page-topbar h1 { color: #FF9933; font-size: 22px; letter-spacing: 3px; }
+    .page-content { max-width: 500px; margin: 0 auto; padding: 30px 20px; text-align: center; }
+    .step-circle { width: 90px; height: 90px; background: #1d3557; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
+    .step-circle span { color: #FF9933; font-size: 36px; font-weight: bold; }
+    .page-title { font-size: 22px; color: #1d3557; font-weight: bold; }
+    .page-subtitle { font-size: 20px; color: #FF9933; font-weight: bold; margin-bottom: 10px; }
+    .title-line { width: 200px; height: 3px; background: #FF9933; margin: 0 auto 30px; }
+    .form-section { background: white; border-radius: 10px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: left; }
+    .form-section h3 { color: #1d3557; margin-bottom: 15px; font-size: 16px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+    .generate-btn { width: 100%; padding: 14px; background: #FF9933; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: bold; margin-top: 10px; letter-spacing: 1px; }
+    .verilayd-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 6px 25px rgba(0,0,0,0.08); margin: 0 auto 25px; max-width: 380px; }
+    .card-header { background: #1d3557; padding: 16px 20px; text-align: center; border-radius: 20px 20px 0 0; }
+    .card-header h2 { color: white; font-size: 20px; letter-spacing: 5px; font-weight: bold; }
+    .card-accent { height: 4px; background: #FF9933; }
+    .card-body { padding: 30px 30px 25px; text-align: center; background: white; }
+    .card-verdict-label { font-size: 22px; font-weight: bold; letter-spacing: 4px; color: #FF9933; margin-bottom: 22px; }
+    .seal-wrapper { width: 160px; height: 160px; margin: 0 auto 25px; }
+    .seal-svg { width: 160px; height: 160px; }
+    .card-name-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; }
+    .card-name-line { flex: 1; max-width: 60px; height: 1px; background: #FFD699; }
+    .card-name { font-size: 15px; color: #1d3557; font-weight: bold; }
+    .card-statement { font-size: 13px; color: #aaa; margin-top: 12px; line-height: 1.5; font-style: italic; }
+    .card-username { font-size: 12px; color: #bbb; margin-top: 10px; }
+    .card-footer { background: #1d3557; padding: 10px 20px; text-align: center; margin-top: 20px; border-radius: 0 0 20px 20px; }
+    .card-footer span { color: #FFD699; font-size: 12px; letter-spacing: 1.5px; }
+    .btn-download { width: 100%; max-width: 380px; padding: 14px; background: #1d3557; color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: bold; letter-spacing: 1px; margin-bottom: 15px; }
+    .share-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+    .share-btn { padding: 10px 20px; border: none; border-radius: 8px; color: white; font-size: 13px; cursor: pointer; font-weight: bold; min-width: 90px; }
+    .btn-instagram { background: #E1306C; }
+    .btn-twitter { background: #1DA1F2; }
+    .btn-linkedin { background: #0A66C2; }
+    .btn-whatsapp { background: #25D366; }
+    .page-footer { background: #1d3557; padding: 12px; text-align: center; border-top: 4px solid #FF9933; margin-top: 20px; }
+    .page-footer span { color: #FF9933; font-size: 12px; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+<div class="page-topbar"><h1>VERILAY'D</h1></div>
+<div class="page-content">
+  <div class="step-circle"><span>04</span></div>
+  <div class="page-title">Share Your</div>
+  <div class="page-subtitle">Verilay'd Card</div>
+  <div class="title-line"></div>
+  <div class="form-section">
+    <h3>Create Your Card</h3>
+    <div class="form-group"><label>Your Name</label><input id="inputName" placeholder="Govind Chandak"></div>
+    <div class="form-group"><label>Username</label><input id="inputUsername" placeholder="@govindchandak"></div>
+    <div class="form-group"><label>Statement / News</label><textarea id="inputStatement" rows="2" placeholder="Partnership confirmed"></textarea></div>
+    <div class="form-group"><label>Your Reaction</label>
+      <select id="inputVerdict">
+        <option value="accepted">Accepted</option>
+        <option value="modified">Modified</option>
+        <option value="denied">Denied</option>
+      </select>
+    </div>
+    <button class="generate-btn" onclick="generateCard()">Generate Verilay'd Card</button>
+  </div>
+  <div class="verilayd-card" id="verilayCard">
+    <div class="card-header"><h2>VERILAY'D</h2></div>
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-verdict-label" id="cardVerdict">ACCEPTED</div>
+      <div class="seal-wrapper">
+        <svg class="seal-svg" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="80" r="78" fill="none" stroke="#1d3557" stroke-width="1" stroke-dasharray="4,3" opacity="0.25"/>
+          <circle cx="80" cy="80" r="72" fill="none" stroke="#1d3557" stroke-width="2.5"/>
+          <circle cx="80" cy="80" r="46" fill="none" stroke="#1d3557" stroke-width="2"/>
+          <circle cx="80" cy="80" r="44" fill="rgba(29,53,87,0.03)"/>
+          <text id="cardCheck" x="80" y="86" text-anchor="middle" font-size="30" fill="#FF9933" font-family="Arial">&#10003;</text>
+          <defs>
+            <path id="topArc" d="M 22,80 a 58,58 0 0,1 116,0"/>
+            <path id="bottomArc" d="M 22,80 a 58,58 0 0,0 116,0"/>
+          </defs>
+          <text font-size="6.2" fill="#1d3557" font-weight="bold" letter-spacing="0.8">
+            <textPath href="#topArc" startOffset="50%" text-anchor="middle">THE LAYER OF TRUTH THE INTERNET NEEDS</textPath>
+          </text>
+          <text font-size="9" fill="#1d3557" font-weight="bold" letter-spacing="2.5">
+            <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">VERILAY.COM</textPath>
+          </text>
+          <circle cx="22" cy="80" r="2.5" fill="#FF9933"/>
+          <circle cx="138" cy="80" r="2.5" fill="#FF9933"/>
+        </svg>
+      </div>
+      <div class="card-name-row">
+        <div class="card-name-line"></div>
+        <div class="card-name" id="cardName">by Govind Chandak</div>
+        <div class="card-name-line"></div>
+      </div>
+      <div class="card-statement" id="cardStatement">"Partnership confirmed"</div>
+      <div class="card-username" id="cardUsername">@govindchandak</div>
+    </div>
+    <div class="card-footer"><span>#Verilayd &middot; verilay.com</span></div>
+  </div>
+  <button class="btn-download" onclick="downloadCard()">Save as Image</button>
+  <div class="share-row">
+    <button class="share-btn btn-instagram" onclick="shareInstagram()">Instagram</button>
+    <button class="share-btn btn-twitter" onclick="shareTwitter()">Twitter</button>
+    <button class="share-btn btn-linkedin" onclick="shareLinkedin()">LinkedIn</button>
+    <button class="share-btn btn-whatsapp" onclick="shareWhatsapp()">WhatsApp</button>
+  </div>
+</div>
+<div class="page-footer"><span>VERILAY &middot; The layer of truth internet needs</span></div>
+<script>
+function normalizeVerdict(v) {
+  v = (v || "").toLowerCase();
+  if (v === "accept" || v === "accepted") return "accepted";
+  if (v === "modify" || v === "modified") return "modified";
+  return "denied";
+}
+function generateCard() {
+  var name = document.getElementById("inputName").value.trim() || "Anonymous";
+  var username = document.getElementById("inputUsername").value.trim() || "@anonymous";
+  var statement = document.getElementById("inputStatement").value.trim() || "No statement";
+  var verdict = normalizeVerdict(document.getElementById("inputVerdict").value);
+  document.getElementById("cardName").innerText = "by " + name;
+  document.getElementById("cardUsername").innerText = username.startsWith("@") ? username : "@" + username;
+  document.getElementById("cardStatement").innerText = '"' + statement + '"';
+  var check = document.getElementById("cardCheck");
+  var verdictEl = document.getElementById("cardVerdict");
+  if (verdict === "accepted") { verdictEl.innerText = "ACCEPTED"; check.textContent = "\u2713"; }
+  else if (verdict === "modified") { verdictEl.innerText = "MODIFIED"; check.textContent = "\u2248"; }
+  else { verdictEl.innerText = "DENIED"; check.textContent = "\u2717"; }
+}
+function downloadCard() {
+  var card = document.getElementById("verilayCard");
+  html2canvas(card, { scale: 3, useCORS: true, backgroundColor: "#ffffff" }).then(function(canvas) {
+    var link = document.createElement("a");
+    link.download = "verilayd-card.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+}
+function getShareText() {
+  var name = document.getElementById("inputName").value.trim() || "Someone";
+  var statement = document.getElementById("inputStatement").value.trim() || "";
+  var verdict = normalizeVerdict(document.getElementById("inputVerdict").value).toUpperCase();
+  return name + ' Verilay\'d: "' + statement + '" | ' + verdict + " #Verilayd verilay.com";
+}
+function shareTwitter() { window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(getShareText()), "_blank"); }
+function shareLinkedin() { window.open("https://www.linkedin.com/sharing/share-offsite/?url=https://verilay.com", "_blank"); }
+function shareWhatsapp() { window.open("https://wa.me/?text=" + encodeURIComponent(getShareText()), "_blank"); }
+function shareInstagram() { alert("Image will download. Open Instagram and share from your gallery!"); downloadCard(); }
+window.addEventListener("load", function() {
+  var p = new URLSearchParams(window.location.search);
+  if (p.get("name")) document.getElementById("inputName").value = p.get("name");
+  if (p.get("username")) document.getElementById("inputUsername").value = p.get("username");
+  if (p.get("text")) document.getElementById("inputStatement").value = p.get("text");
+  if (p.get("verdict")) { document.getElementById("inputVerdict").value = normalizeVerdict(p.get("verdict")); }
+  if (p.get("name") || p.get("text")) generateCard();
+});
+</script>
+</body>
+</html>

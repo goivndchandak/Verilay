@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up - Verilay</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * { margin557; padding: 16px 20px; text-align: center; border-bottom: 4px solid #FF9933; }    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .topbar a { color: #FF9933; font-size: 22px; font-weight: bold; letter-spacing: 4px; text-decoration: none; }
+    .container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+    .card { background: white; border-radius: 16px; padding: 40px 30px; max-width: 400px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; }
+    .card h2 { color: #1d3557; font-size: 24px; margin-bottom: 8px; }
+    .card p { color: #999; font-size: 13px; margin-bottom: 25px; }
+    .form-group { margin-bottom: 15px; text-align: left; }
+    .form-group label { font-size: 12px; color: #666; display: block; margin-bottom: 5px; font-weight: bold; }
+    .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; transition: border 0.3s; }
+    .form-group input:focus { outline: none; border-color: #FF9933; }
+    .btn { width: 100%; padding: 14px; background: #FF9933; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; letter-spacing: 1px; transition: 0.3s; margin-top: 10px; }
+    .btn:hover { background: #e68a2e; transform: translateY(-1px); }
+    .btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+    .error { color: red; font-size: 12px; margin-top: 10px; }
+    .success { color: green; font-size: 12px; margin-top: 10px; }
+    .link { margin-top: 20px; font-size: 13px; color: #666; }
+    .link a { color: #1d3557; font-weight: bold; text-decoration: none; }
+    .link a:hover { color: #FF9933; }
+    .footer { background: #1d3557; padding: 12px; text-align: center; border-top: 4px solid #FF9933; }
+    .footer span { color: #FF9933; font-size: 12px; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+<div class="topbar"><a href="index.html">VERILAY</a></div>
+<div class="container">
+  <div class="card">
+    <h2>Create Account</h2>
+    <p>Join Verilay and take control of your narrative</p>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="you@example.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Min 8 characters">
+    </div>
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password" id="confirmPassword" placeholder="Confirm password">
+    </div>
+    <button class="btn" id="signupBtn" onclick="doSignup()">Sign Up Free</button>
+    <div id="errorMsg" class="error"></div>
+    <div id="successMsg" class="success"></div>
+    <div class="link">Already have an account? <a href="login.html">Login</a></div>
+  </div>
+</div>
+<div class="footer"><span>VERILAY &middot; The layer of truth internet needs</span></div>
+
+<script src="js/api.js"></script>
+<script>
+async function doSignup() {
+  var email = document.getElementById("email").value.trim();
+  var password = document.getElementById("password").value;
+  var confirm = document.getElementById("confirmPassword").value;
+  var errorMsg = document.getElementById("errorMsg");
+  var successMsg = document.getElementById("successMsg");
+  var btn = document.getElementById("signupBtn");
+
+  errorMsg.innerText = "";
+  successMsg.innerText = "";
+
+  if (!email) { errorMsg.innerText = "Enter your email"; return; }
+  if (!password) { errorMsg.innerText = "Enter a password"; return; }
+  if (password.length < 8) { errorMsg.innerText = "Password must be at least 8 characters"; return; }
+  if (password !== confirm) { errorMsg.innerText = "Passwords do not match"; return; }
+
+  btn.disabled = true;
+  btn.innerText = "Creating account...";
+
+  try {
+    await signup(email, password);
+    successMsg.innerText = "Account created! Redirecting to login...";
+    setTimeout(function() { window.location.href = "login.html"; }, 1500);
+  } catch (err) {
+    errorMsg.innerText = "Error: " + err.message;
+    btn.disabled = false;
+    btn.innerText = "Sign Up Free";
+  }
+}
+</script>
+</body>
+</html>
+    body { font-family: Arial, sans-serif; background: #faf5eb; min-height: 100vh; display: flex; flex-direction: column; }
