@@ -6,83 +6,139 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+
+/* ---------- BASE ---------- */
 body {
+  margin: 0;
   font-family: Arial;
-  background:#fafafa;
-  padding:10px;
-  padding-bottom:70px;
+  background: #fafafa;
+  padding-bottom: 70px;
 }
 
-/* ✅ TOP BAR */
+/* ---------- TOP BAR (MATCH DASHBOARD) ---------- */
 .topbar {
-  background:#1d3557;
-  color:white;
-  padding:14px;
-  text-align:center;
-  font-size:20px;
-  font-weight:bold;
-  margin-bottom:10px;
+  background: #1d3557;
+  color: white;
+  padding: 15px 20px;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* ✅ CARD */
+.topbar button {
+  background: none;
+  border: 1px solid white;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* ---------- CONTAINER ---------- */
+.container {
+  padding: 12px;
+  max-width: 600px;
+  margin: auto;
+}
+
+/* ---------- CARD ---------- */
 .card {
-  background:white;
-  padding:12px;
-  margin-bottom:12px;
-  border-radius:12px;
+  background: white;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 14px;
 }
 
-/* ✅ IMAGE PREVIEW */
+/* ✅ OWNER NAME */
+.owner {
+  font-weight: bold;
+  color: #1d3557;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+/* ---------- TEXT ---------- */
+.card p {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* ---------- PREVIEW ---------- */
 .preview img {
-  width:100%;
-  height:200px;
-  object-fit:cover;
-  border-radius:10px;
-  margin-top:10px;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 10px;
 }
 
-/* ✅ BUTTONS */
+.preview a {
+  display: block;
+  font-size: 12px;
+  margin-top: 6px;
+  color: #1d3557;
+  text-decoration: none;
+}
+
+/* ---------- BUTTONS ---------- */
 .btn {
-  padding:8px 12px;
-  border:none;
-  border-radius:20px;
-  color:white;
-  margin:4px;
-  cursor:pointer;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 20px;
+  color: white;
+  margin: 5px 5px 0 0;
+  cursor: pointer;
+  font-size: 12px;
 }
 
-.accept { background:#2d6a4f;}
-.modify { background:#f77f00;}
-.deny   { background:#d62828;}
+.accept { background: #2d6a4f; }
+.modify { background: #f77f00; }
+.deny   { background: #d62828; }
 
-/* ✅ CARD BUTTON */
+/* ---------- CARD CTA ---------- */
 .gen-card {
-  background:#FF9933;
-  color:white;
-  padding:6px 14px;
-  border-radius:20px;
-  text-decoration:none;
-  display:inline-block;
-  margin-top:8px;
+  display: inline-block;
+  background: #FF9933;
+  color: white;
+  padding: 7px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  margin-top: 8px;
+  font-size: 12px;
 }
 
-/* ✅ BOTTOM NAV (LIGHT SAFFRON) */
+/* ---------- BOTTOM NAV ---------- */
 .bottomnav {
- position:fixed;
- bottom:0;
- left:0;
- right:0;
- background:#fff4e6;
- display:flex;
- justify-content:space-around;
- height:60px;
- border-top:1px solid #eee;
- align-items:center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff4e6;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 60px;
+  border-top: 1px solid #eee;
 }
 
 .bottomnav a {
-  text-decoration:none;
-  font-size:22px;
+  text-decoration: none;
+  text-align: center;
+  color: #999;
+  font-size: 11px;
+}
+
+.bottomnav a.active {
+  color: #1d3557;
+  font-weight: bold;
+}
+
+.bottomnav span {
+  font-size: 22px;
+  display: block;
 }
 
 </style>
@@ -91,30 +147,60 @@ body {
 <body>
 
 <!-- ✅ TOP BAR -->
-<div class="topbar">Verilay</div>
+<div class="topbar">
+  Verilay
+  <button onclick="logout()">Logout</button>
+</div>
 
-<div id="feed"></div>
+<div class="container" id="feed"></div>
 
 <!-- ✅ BOTTOM NAV -->
 <div class="bottomnav">
-  <a href="feed.html">🏠</a>
-  <a href="dashboard.html">👤</a>
+  <a href="feed.html" class="active"><span>🏠</span>Feed</a>
+  <a href="dashboard.html"><span>👤</span>Profile</a>
 </div>
 
 <script src="js/api.js"></script>
 
 <script>
 
+/* ---------- GLOBALS ---------- */
 const myUserId = localStorage.getItem("user_id");
 let myProfile = {};
+let userCache = {}; // ✅ store user names
 
 /* ---------- LOAD PROFILE ---------- */
 async function loadProfile(){
-  const res = await getProfile();
-  myProfile = res.response || {};
+  try {
+    const res = await getProfile();
+    myProfile = res.response || {};
+  } catch(e){}
 }
 
-/* ---------- IMAGE PREVIEW (ALWAYS SHOW) ---------- */
+/* ---------- GET USER NAME ---------- */
+async function getUserName(userId){
+
+  if(userCache[userId]) return userCache[userId];
+
+  try {
+    // ✅ fetch user details from Bubble
+    const res = await fetch(
+      "https://verilay-88625.bubbleapps.io/api/1.1/obj/User/" + userId,
+      { headers: authHeaders() }
+    );
+
+    const data = await res.json();
+    const name = data.response.full_name || "User";
+
+    userCache[userId] = name;
+    return name;
+
+  } catch(e){
+    return "User";
+  }
+}
+
+/* ---------- IMAGE PREVIEW ---------- */
 function getPreviewHTML(url){
 
   if(!url) return "";
@@ -123,12 +209,12 @@ function getPreviewHTML(url){
     url = "https://" + url;
   }
 
-  const image = "https://image.thum.io/get/" + url;
+  const img = "https://image.thum.io/get/" + url;
 
   return `
     <div class="preview">
-      <img src="${image}">
-      <a href="${url}" target="_blank">${url}</a>
+      <img src="${img}">
+      <a href="${url}" target="_blank">Read source ↗</a>
     </div>
   `;
 }
@@ -141,20 +227,29 @@ async function loadFeed(){
 
   let html = "";
 
-  list.forEach(item => {
+  for (let item of list) {
 
     const id = item._id || item.id;
     const text = item.text || "";
     const url = item.source_url || "";
-    const owner = item["Created By"] || item.created_by || item.user_id;
 
-    const isOwner = (owner == myUserId);
+    const ownerId =
+      item["Created By"] ||
+      item.created_by ||
+      item.user_id ||
+      item.creator;
+
+    const isOwner = (ownerId == myUserId);
+
+    const ownerName = await getUserName(ownerId);
 
     html += `<div class="card">`;
 
+    /* ✅ SHOW FULL NAME */
+    html += `<div class="owner">${ownerName}</div>`;
+
     html += `<p>${text}</p>`;
 
-    /* ✅ IMAGE PREVIEW */
     if(url){
       html += getPreviewHTML(url);
     }
@@ -163,9 +258,9 @@ async function loadFeed(){
     if(isOwner){
       html += `
         <div id="action-${id}">
-          <button class="btn accept" onclick="react('${id}','accepted','${encodeURIComponent(text)}')">Accept</button>
-          <button class="btn modify" onclick="react('${id}','modified','${encodeURIComponent(text)}')">Modify</button>
-          <button class="btn deny" onclick="react('${id}','denied','${encodeURIComponent(text)}')">Deny</button>
+          <button class="btn accept" onclick="react('${id}','accepted',\`${text}\`)">Accept</button>
+          <button class="btn modify" onclick="react('${id}','modified',\`${text}\`)">Modify</button>
+          <button class="btn deny" onclick="react('${id}','denied',\`${text}\`)">Deny</button>
         </div>
 
         <div id="result-${id}"></div>
@@ -173,26 +268,35 @@ async function loadFeed(){
     }
 
     html += `</div>`;
-  });
+  }
 
   document.getElementById("feed").innerHTML = html;
 }
 
 /* ---------- REACT ---------- */
-async function react(id,action,text){
+async function react(id, action, text){
 
   await reactStatement(id, action);
 
-  /* hide buttons */
-  document.getElementById("action-"+id).style.display="none";
+  document.getElementById("action-"+id).style.display = "none";
 
-  /* show result + generate card */
-  document.getElementById("result-"+id).innerHTML =
-    `Marked ${action}
-     <br>
-     <a class="gen-card" href="card.html?name=${encodeURIComponent(myProfile.full_name)}&username=${encodeURIComponent(myProfile.username)}&text=${text}&verdict=${action}">
-     Generate Card
-     </a>`;
+  document.getElementById("result-"+id).innerHTML = `
+    Marked ${action}
+    <br>
+    <a class="gen-card"
+       href="card.html?name=${encodeURIComponent(myProfile.full_name)}
+       &username=${encodeURIComponent(myProfile.username)}
+       &text=${encodeURIComponent(text)}
+       &verdict=${action}">
+       Generate Card
+    </a>
+  `;
+}
+
+/* ---------- LOGOUT ---------- */
+function logout(){
+  localStorage.clear();
+  window.location.href = "login.html";
 }
 
 /* ---------- INIT ---------- */
@@ -203,4 +307,3 @@ loadFeed();
 
 </body>
 </html>
-``
