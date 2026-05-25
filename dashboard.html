@@ -1,337 +1,301 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Profile - Verilay</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #fafafa; padding-bottom: 70px; }
-    .topbar { background: #1d3557; color: white; padding: 15px 20px; font-size: 20px; font-weight: bold; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-    .topbar button { background: none; border: 1px solid white; color: white; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
-    .content { max-width: 600px; margin: 0 auto; padding: 15px; }
-    .profile-header { background: white; padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .avatar { width: 80px; height: 80px; border-radius: 50%; background: #1d3557; color: white; font-size: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
-    .profile-header h2 { font-size: 20px; color: #1d3557; }
-    .profile-header p { color: #666; font-size: 13px; margin-top: 4px; }
-    .social-links { margin-top: 12px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-    .social-links a { font-size: 12px; color: #1d3557; text-decoration: none; padding: 5px 12px; border: 1px solid #1d3557; border-radius: 20px; }
-    .stats { display: flex; justify-content: space-around; background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .stat { text-align: center; }
-    .stat-num { font-size: 22px; font-weight: bold; color: #1d3557; }
-    .stat-label { font-size: 11px; color: #999; }
-    .tabs { display: flex; background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-size: 12px; font-weight: bold; color: #999; border-bottom: 3px solid transparent; }
-    .tab.active { color: #1d3557; border-bottom-color: #1d3557; }
-    .section { display: none; }
-    .section.active { display: block; }
-    .form-group { margin-bottom: 12px; }
-    .form-group label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; }
-    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-    .btn { padding: 12px 24px; background: #1d3557; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; margin-top: 10px; }
-    .card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .card p { font-size: 14px; line-height: 1.5; }
-    .card-date { font-size: 11px; color: #999; margin-top: 5px; }
-    .card-link { font-size: 12px; margin-top: 5px; }
-    .card-link a { color: #1d3557; }
-    .card-actions { margin-top: 8px; }
-    .card-actions button { padding: 6px 12px; border: none; border-radius: 15px; cursor: pointer; font-size: 11px; margin-right: 5px; color: white; }
-    textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-    .news-card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 4px solid #ff9933; }
-    .news-card h4 { font-size: 14px; color: #1d3557; margin-bottom: 5px; }
-    .news-card p { font-size: 13px; color: #555; line-height: 1.4; margin-bottom: 8px; }
-    .news-card img { width: 100%; border-radius: 8px; margin-bottom: 8px; }
-    .news-card a { font-size: 12px; color: #1d3557; }
-    .news-actions { margin-top: 10px; }
-    .news-actions button { padding: 6px 12px; border: none; border-radius: 15px; cursor: pointer; font-size: 11px; margin-right: 5px; color: white; }
-    .search-box { display: flex; gap: 10px; margin-bottom: 15px; }
-    .search-box input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-    .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; align-items: center; height: 60px; border-top: 1px solid #eee; z-index: 100; }
-    .bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
-    .bottomnav a.active { color: #1d3557; font-weight: bold; }
-    .bottomnav a span { font-size: 22px; display: block; }
-    .error { color: red; font-size: 12px; margin-top: 5px; }
-    .success { color: green; font-size: 12px; margin-top: 5px; }
-    .gen-card-btn { display: inline-block; font-size: 12px; color: white; background: #FF9933; padding: 5px 14px; border-radius: 20px; text-decoration: none; font-weight: bold; }
-    .marked-label { font-size: 13px; color: #1d3557; font-weight: bold; }
-    .result-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
-  </style>
-</head>
-<body>
-<div class="topbar">My Profile <button onclick="logout()">Logout</button></div>
-<div class="content">
-  <div class="profile-header">
-    <div class="avatar" id="avatarInitial">?</div>
-    <h2 id="profileName">Loading...</h2>
-    <p id="profileUsername">@...</p>
-    <p id="profileBio"></p>
-    <div class="social-links" id="socialLinks"></div>
-  </div>
-  <div class="stats">
-    <div class="stat"><div class="stat-num" id="statStatements">0</div><div class="stat-label">Statements</div></div>
-    <div class="stat"><div class="stat-num" id="statScore">0</div><div class="stat-label">Verilay Score</div></div>
-  </div>
-  <div class="tabs">
-    <div class="tab active" id="tab-statements" onclick="showTab('statements')">Statements</div>
-    <div class="tab" id="tab-post" onclick="showTab('post')">New Post</div>
-    <div class="tab" id="tab-news" onclick="showTab('news')">Scan News</div>
-    <div class="tab" id="tab-settings" onclick="showTab('settings')">Settings</div>
-  </div>
-  <div class="section active" id="sec-statements"><div id="myStatements"></div></div>
-  <div class="section" id="sec-post">
-    <div class="card">
-      <h3 style="margin-bottom:15px; color:#1d3557;">Add New Statement</h3>
-      <textarea id="newStatement" placeholder="Share your truth or react to news..." rows="4"></textarea>
-      <div class="form-group"><label>News/Source Link (optional)</label><input id="sourceUrl" placeholder="https://example.com/article..."></div>
-      <button class="btn" onclick="postStatement()">Post Statement</button>
-      <div id="postMsg" class="success"></div>
-      <div id="postErr" class="error"></div>
-      <div id="postReactSection" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
-        <p style="font-size:13px; color:#666; margin-bottom:8px;"><strong>Now react to your statement:</strong></p>
-        <div class="card-actions">
-          <button style="background:#2d6a4f;color:white;" onclick="reactToPost('accepted')">&#9989; Accept</button>
-          <button style="background:#f77f00;color:white;" onclick="reactToPost('modified')">&#9999;&#65039; Modify</button>
-          <button style="background:#d62828;color:white;" onclick="reactToPost('denied')">&#10060; Deny</button>
-        </div>
-        <div id="postReactResult"></div>
-      </div>
-    </div>
-  </div>
-  <div class="section" id="sec-news">
-    <div class="card">
-      <h3 style="margin-bottom:15px; color:#1d3557;">&#128240; Scan News from Internet</h3>
-      <div class="search-box">
-        <input id="newsQuery" placeholder="Search topic or your name...">
-        <button style="padding:10px 20px; border:none; border-radius:8px; cursor:pointer; color:white; background:#ff9933;" onclick="scanNews()">Scan</button>
-      </div>
-      <div id="newsError" class="error"></div>
-      <div id="newsInfo" class="success"></div>
-      <div id="newsResults"></div>
-    </div>
-  </div>
-  <div class="section" id="sec-settings">
-    <div class="card">
-      <h3 style="margin-bottom:15px; color:#1d3557;">Edit Profile</h3>
-      <div class="form-group"><label>Full Name</label><input id="editName" placeholder="Your name"></div>
-      <div class="form-group"><label>Username</label><input id="editUsername" placeholder="username"></div>
-      <div class="form-group"><label>Bio</label><textarea id="editBio" placeholder="Write about yourself..." rows="3"></textarea></div>
-      <div class="form-group"><label>LinkedIn URL</label><input id="editLinkedin" placeholder="https://linkedin.com/in/..."></div>
-      <div class="form-group"><label>Instagram URL</label><input id="editInstagram" placeholder="https://instagram.com/..."></div>
-      <div class="form-group"><label>Twitter / X URL</label><input id="editTwitter" placeholder="https://twitter.com/..."></div>
-      <button class="btn" onclick="saveProfile()">Save Profile</button>
-      <div id="settingsMsg" class="success"></div>
-      <div id="settingsErr" class="error"></div>
-    </div>
-  </div>
-</div>
-<div class="bottomnav">
-  <a href="feed.html"><span>&#127968;</span> Feed</a>
-  <a href="dashboard.html" class="active"><span>&#128100;</span> Profile</a>
-</div>
-<script src="js/api.js"></script>
-<script>
-if (!localStorage.getItem("token")) { window.location.href = "login.html"; }
+<meta charset="UTF-8">
+<title>Profile - Verilay</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-var profileData = {};
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Arial, sans-serif; background: #fafafa; padding-bottom: 70px; }
+
+.topbar {
+  background: #1d3557;
+  color: white;
+  padding: 15px 20px;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+}
+
+.content { max-width: 600px; margin: 0 auto; padding: 15px; }
+
+.profile-header {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: #1d3557;
+  color: white;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.tabs { display: flex; background: white; border-radius: 12px; margin-bottom: 15px; }
+.tab { flex:1; padding:12px; text-align:center; cursor:pointer; font-weight:bold; color:#999; }
+.tab.active { color:#1d3557; border-bottom:3px solid #1d3557; }
+
+.section { display:none; }
+.section.active { display:block; }
+
+.card {
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:12px;
+}
+
+.btn {
+  padding: 12px;
+  background: #1d3557;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.result-row { margin-top: 10px; }
+
+.gen-card-btn {
+  background: #FF9933;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  My Profile
+  <button onclick="logout()">Logout</button>
+</div>
+
+<div class="content">
+
+<div class="profile-header">
+  <div class="avatar" id="avatarInitial">?</div>
+  <h2 id="profileName">Loading...</h2>
+  <p id="profileUsername">@...</p>
+</div>
+
+<div class="stats">
+  <div><b id="statStatements">0</b><br>Statements</div>
+  <div><b id="statScore">0</b><br>Score</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('statements')">Statements</div>
+  <div class="tab" onclick="showTab('post')">New</div>
+  <div class="tab" onclick="showTab('news')">News</div>
+</div>
+
+<!-- Statements -->
+<div id="sec-statements" class="section active">
+  <div id="myStatements"></div>
+</div>
+
+<!-- Post -->
+<div id="sec-post" class="section">
+  <div class="card">
+    <textarea id="newStatement" placeholder="Write..." rows="4"></textarea>
+    <input id="sourceUrl" placeholder="Optional source url">
+    <button class="btn" onclick="postStatement()">Post</button>
+
+    <div id="postReactSection" style="display:none;">
+      <br>
+      <button onclick="reactToPost('accepted')">Accept</button>
+      <button onclick="reactToPost('modified')">Modify</button>
+      <button onclick="reactToPost('denied')">Deny</button>
+      <div id="postReactResult"></div>
+    </div>
+  </div>
+</div>
+
+<!-- News -->
+<div id="sec-news" class="section">
+  <input id="newsQuery">
+  <button onclick="scanNews()">Scan</button>
+  <div id="newsResults"></div>
+</div>
+
+</div>
+
+<script src="js/api.js"></script>
+
+<script>
+
+if (!localStorage.getItem("token")) {
+  window.location.href = "login.html";
+}
+
 var lastPostedId = "";
 var lastPostedText = "";
-window._stmtTexts = {};
-window._newsTexts = {};
-window._newsUrls = {};
 
-function escapeHtml(str) { return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-
-function showTab(name) {
-  var sections = document.querySelectorAll(".section");
-  var tabs = document.querySelectorAll(".tab");
-  for (var i = 0; i < sections.length; i++) sections[i].classList.remove("active");
-  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove("active");
-  document.getElementById("sec-" + name).classList.add("active");
-  document.getElementById("tab-" + name).classList.add("active");
+/* ---------- TAB ---------- */
+function showTab(name){
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
 }
 
-async function loadProfile() {
-  try {
-    var res = await getProfile();
-    var user = res.response ? (res.response.User || res.response.user || res.response) : {};
-    profileData = user;
-    document.getElementById("profileName").innerText = user.full_name || "No Name";
-    document.getElementById("profileUsername").innerText = "@" + (user.username || "unknown");
-    document.getElementById("profileBio").innerText = user.bio || "";
-    document.getElementById("avatarInitial").innerText = (user.full_name || "?").charAt(0).toUpperCase();
-    var links = "";
-    if (user.linkedin_url) links += "<a href='" + escapeHtml(user.linkedin_url) + "' target='_blank'>LinkedIn</a>";
-    if (user.instagram_url) links += "<a href='" + escapeHtml(user.instagram_url) + "' target='_blank'>Instagram</a>";
-    if (user.twitter_url) links += "<a href='" + escapeHtml(user.twitter_url) + "' target='_blank'>Twitter</a>";
-    document.getElementById("socialLinks").innerHTML = links;
-    document.getElementById("editName").value = user.full_name || "";
-    document.getElementById("editUsername").value = user.username || "";
-    document.getElementById("editBio").value = user.bio || "";
-    document.getElementById("editLinkedin").value = user.linkedin_url || "";
-    document.getElementById("editInstagram").value = user.instagram_url || "";
-    document.getElementById("editTwitter").value = user.twitter_url || "";
-  } catch (err) { console.error(err); }
+/* ---------- LOAD PROFILE ---------- */
+async function loadProfile(){
+  const res = await getProfile();
+  const user = res.response || {};
+
+  document.getElementById("profileName").innerText = user.full_name || "";
+  document.getElementById("profileUsername").innerText = "@"+(user.username || "");
+  document.getElementById("avatarInitial").innerText = (user.full_name||"?")[0];
 }
 
-async function saveProfile() {
-  document.getElementById("settingsMsg").innerText = "";
-  document.getElementById("settingsErr").innerText = "";
-  try {
-    await updateProfile({ full_name: document.getElementById("editName").value, username: document.getElementById("editUsername").value, bio: document.getElementById("editBio").value, linkedin_url: document.getElementById("editLinkedin").value, instagram_url: document.getElementById("editInstagram").value, twitter_url: document.getElementById("editTwitter").value });
-    document.getElementById("settingsMsg").innerText = "Profile saved!";
-    loadProfile();
-  } catch (err) { document.getElementById("settingsErr").innerText = "Error: " + err.message; }
+/* ---------- LOAD STATEMENTS ---------- */
+async function loadMyStatements(){
+  const res = await getMyStatements();
+  const list = res.response || [];
+  document.getElementById("statStatements").innerText = list.length;
+
+  let html = "";
+  list.forEach(item=>{
+    const id = item._id;
+
+    html += `
+      <div class="card">
+        <p>${item.text}</p>
+
+        <button onclick="reactToStatement('${id}','accepted')">✅</button>
+        <button onclick="reactToStatement('${id}','modified')">✏️</button>
+        <button onclick="reactToStatement('${id}','denied')">❌</button>
+
+        <div id="r-${id}"></div>
+      </div>
+    `;
+  });
+
+  document.getElementById("myStatements").innerHTML = html;
 }
 
-function buildCardLink(text, verdict) {
-  var name = encodeURIComponent(profileData.full_name || "");
-  var uname = encodeURIComponent(profileData.username || "");
-  var t = encodeURIComponent(text || "");
-  var v = encodeURIComponent(verdict || "accepted");
-  return "card.html?name=" + name + "&username=" + uname + "&text=" + t + "&verdict=" + v;
+/* ---------- POST ---------- */
+async function postStatement(){
+  const text = document.getElementById("newStatement").value;
+  const url = document.getElementById("sourceUrl").value;
+
+  if(!text) return alert("write something");
+
+  const res = await addStatement(text, url);
+
+  // ✅ FIXED ID LOGIC
+  lastPostedId = "";
+  if (res.response) {
+    lastPostedId = res.response.id || res.response._id || "";
+  }
+  if (res.id) lastPostedId = res.id;
+  if (res._id) lastPostedId = res._id;
+
+  lastPostedText = text;
+
+  document.getElementById("postReactSection").style.display = "block";
 }
 
-function makeResultHtml(label, cardUrl) {
-  return "<div class='result-row'><span class='marked-label'>This is marked " + label + "</span><a class='gen-card-btn' href='" + cardUrl + "'>&#127912; Generate Card</a></div>";
+/* ---------- REACT POST ---------- */
+async function reactToPost(action){
+  if(!lastPostedId) return alert("no ID");
+
+  await reactStatement(lastPostedId, action);
+
+  document.getElementById("postReactResult").innerHTML =
+    `Marked ${action}`;
+
+  loadMyStatements();
 }
 
-async function loadMyStatements() {
-  try {
-    var res = await getMyStatements();
-    var list = [];
-    if (res.response && res.response.statements) list = res.response.statements;
-    else if (Array.isArray(res.response)) list = res.response;
-    document.getElementById("statStatements").innerText = list.length;
-    document.getElementById("statScore").innerText = list.length * 10;
-    var container = document.getElementById("myStatements");
-    container.innerHTML = "";
-    if (list.length === 0) { container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No statements yet.</p></div>"; return; }
-    window._stmtTexts = {};
-    for (var i = 0; i < list.length; i++) {
-      var item = list[i];
-      var id = item._id;
-      window._stmtTexts[id] = item.text || "";
-      var sourceLink = "";
-      if (item.source_url) sourceLink = "<div class='card-link'>&#128279; <a href='" + escapeHtml(item.source_url) + "' target='_blank'>Source</a></div>";
-      var reactBtns = "<div class='card-actions' id='actions-" + id + "'>"
-        + "<button style='background:#2d6a4f;color:white;' onclick=\"reactToStatement('" + id + "','accepted')\">&#9989; Accept</button>"
-        + "<button style='background:#f77f00;color:white;' onclick=\"reactToStatement('" + id + "','modified')\">&#9999;&#65039; Modify</button>"
-        + "<button style='background:#d62828;color:white;' onclick=\"reactToStatement('" + id + "','denied')\">&#10060; Deny</button>"
-        + "</div><div id='result-" + id + "'></div>";
-      container.innerHTML += "<div class='card'><p>" + escapeHtml(item.text || "") + "</p>" + sourceLink
-        + "<div class='card-date'>" + (item.Created_Date ? new Date(item.Created_Date).toLocaleDateString() : "") + "</div>"
-        + reactBtns + "</div>";
-    }
-  } catch (err) { console.error(err); }
+/* ---------- REACT STATEMENT ---------- */
+async function reactToStatement(id,action){
+  await reactStatement(id,action);
+  document.getElementById("r-"+id).innerHTML = "Marked "+action;
 }
 
-async function reactToStatement(id, action) {
-  try {
-    await reactStatement(id, action);
-    var actionsEl = document.getElementById("actions-" + id);
-    if (actionsEl) actionsEl.style.display = "none";
-    var resultEl = document.getElementById("result-" + id);
-    if (resultEl) {
-      var label = action.charAt(0).toUpperCase() + action.slice(1);
-      var text = (window._stmtTexts && window._stmtTexts[id]) || "";
-      resultEl.innerHTML = makeResultHtml(label, buildCardLink(text, action));
-    }
-  } catch (err) { console.error(err); }
+/* ---------- NEWS ---------- */
+async function scanNews(){
+  const res = await searchNews(document.getElementById("newsQuery").value);
+  const list = res.articles || [];
+
+  let html = "";
+
+  list.forEach((n,i)=>{
+    const id = "n"+i;
+
+    html += `
+      <div class="card">
+        <p>${n.title}</p>
+
+        <button onclick="reactToNews('${id}','accepted')">✅</button>
+        <button onclick="reactToNews('${id}','modified')">✏️</button>
+        <button onclick="reactToNews('${id}','denied')">❌</button>
+
+        <div id="nr-${id}"></div>
+      </div>
+    `;
+
+    window[id] = n;
+  });
+
+  document.getElementById("newsResults").innerHTML = html;
 }
 
-async function postStatement() {
-  document.getElementById("postMsg").innerText = "";
-  document.getElementById("postErr").innerText = "";
-  document.getElementById("postReactSection").style.display = "none";
-  document.getElementById("postReactResult").innerHTML = "";
-  var text = document.getElementById("newStatement").value.trim();
-  var sourceUrl = document.getElementById("sourceUrl").value.trim();
-  if (!text) { document.getElementById("postErr").innerText = "Write something first"; return; }
-  try {
-    var res = await addStatement(text, sourceUrl);
-    lastPostedId = "";
-if (res.response) {
-  lastPostedId = res.response.id || res.response._id || res.response.status || "";
-}
-if (res.id) lastPostedId = res.id;
-if (res._id) lastPostedId = res._id;
-    lastPostedText = text;
-    document.getElementById("postMsg").innerText = "Statement posted! Now react to it below:";
-    document.getElementById("postReactSection").style.display = "block";
-  } catch (err) { document.getElementById("postErr").innerText = "Error: " + err.message; }
-}
+/* ---------- FIXED NEWS REACT ---------- */
+async function reactToNews(id,action){
+  const n = window[id];
 
-async function reactToPost(action) {
-  if (!lastPostedId) return;
-  try {
-    await reactStatement(lastPostedId, action);
-    var label = action.charAt(0).toUpperCase() + action.slice(1);
-    document.getElementById("postReactResult").innerHTML = makeResultHtml(label, buildCardLink(lastPostedText, action));
-    document.getElementById("newStatement").value = "";
-    document.getElementById("sourceUrl").value = "";
-    setTimeout(function() {
-      document.getElementById("postReactSection").style.display = "none";
-      document.getElementById("postMsg").innerText = "";
-      document.getElementById("postReactResult").innerHTML = "";
-      lastPostedId = ""; lastPostedText = "";
-      loadMyStatements(); showTab("statements");
-    }, 2000);
-  } catch (err) { document.getElementById("postReactResult").innerHTML = "<span class='error'>Error: " + err.message + "</span>"; }
+  const res = await addStatement(n.title, n.url);
+
+  // ✅ FIXED ID HANDLING
+  let stmtId = "";
+  if (res.response) {
+    stmtId = res.response.id || res.response._id || "";
+  }
+  if (res.id) stmtId = res.id;
+  if (res._id) stmtId = res._id;
+
+  if(stmtId){
+    await reactStatement(stmtId, action);
+  }
+
+  document.getElementById("nr-"+id).innerText = "Marked "+action;
 }
 
-var newsCounter = 0;
-async function scanNews() {
-  document.getElementById("newsError").innerText = "";
-  document.getElementById("newsInfo").innerText = "Scanning...";
-  var query = document.getElementById("newsQuery").value.trim();
-  if (!query) { document.getElementById("newsError").innerText = "Enter a topic"; document.getElementById("newsInfo").innerText = ""; return; }
-  try {
-    var res = await searchNews(query);
-    var articles = res.articles || [];
-    var container = document.getElementById("newsResults");
-    container.innerHTML = "";
-    if (articles.length === 0) { container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No news found.</p></div>"; document.getElementById("newsInfo").innerText = ""; return; }
-    document.getElementById("newsInfo").innerText = articles.length + " articles found";
-    for (var i = 0; i < articles.length; i++) {
-      var a = articles[i];
-      newsCounter++;
-      var nid = "news-" + newsCounter;
-      window._newsTexts[nid] = a.title || "";
-      window._newsUrls[nid] = a.url || "";
-      var imgHtml = a.image ? "<img src='" + escapeHtml(a.image) + "' alt='news'>" : "";
-      container.innerHTML += "<div class='news-card'>" + imgHtml
-        + "<h4>" + escapeHtml(a.title || "") + "</h4>"
-        + "<p>" + escapeHtml(a.description || "") + "</p>"
-        + "<a href='" + escapeHtml(a.url || "") + "' target='_blank'>Read full article &#8599;</a>"
-        + "<div class='news-actions' id='nactions-" + nid + "'>"
-        + "  <button style='background:#2d6a4f;color:white;' onclick=\"reactToNews('" + nid + "','accepted')\">&#9989; Accept</button>"
-        + "  <button style='background:#f77f00;color:white;' onclick=\"reactToNews('" + nid + "','modified')\">&#9999;&#65039; Modify</button>"
-        + "  <button style='background:#d62828;color:white;' onclick=\"reactToNews('" + nid + "','denied')\">&#10060; Deny</button>"
-        + "</div><div id='nresult-" + nid + "'></div></div>";
-    }
-  } catch (err) { document.getElementById("newsError").innerText = "News error: " + err.message; document.getElementById("newsInfo").innerText = ""; }
+/* ---------- LOGOUT ---------- */
+function logout(){
+  localStorage.clear();
+  window.location.href = "login.html";
 }
 
-async function reactToNews(nid, action) {
-  var title = (window._newsTexts && window._newsTexts[nid]) || "";
-  var url = (window._newsUrls && window._newsUrls[nid]) || "";
-  try {
-    var res = await addStatement(action.toUpperCase() + ": " + title, url);
-    if (res.response && res.response.id) { await reactStatement(res.response.id, action); }
-    var actionsEl = document.getElementById("nactions-" + nid);
-    if (actionsEl) actionsEl.style.display = "none";
-    var resultEl = document.getElementById("nresult-" + nid);
-    if (resultEl) {
-      var label = action.charAt(0).toUpperCase() + action.slice(1);
-      resultEl.innerHTML = makeResultHtml(label, buildCardLink(title, action));
-    }
-    loadMyStatements();
-  } catch (err) { var el = document.getElementById("nresult-" + nid); if (el) el.innerHTML = "<span class='error'>Error: " + err.message + "</span>"; }
-}
-
-function logout() { localStorage.removeItem("token"); localStorage.removeItem("user_id"); window.location.href = "login.html"; }
-
+/* ---------- INIT ---------- */
 loadProfile();
 loadMyStatements();
+
 </script>
+
 </body>
 </html>
