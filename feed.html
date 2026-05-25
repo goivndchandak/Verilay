@@ -13,6 +13,18 @@ body {
   padding-bottom:70px;
 }
 
+/* ✅ TOP BAR */
+.topbar {
+  background:#1d3557;
+  color:white;
+  padding:14px;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+/* ✅ CARD */
 .card {
   background:white;
   padding:12px;
@@ -20,13 +32,16 @@ body {
   border-radius:12px;
 }
 
+/* ✅ IMAGE PREVIEW */
 .preview img {
   width:100%;
   height:200px;
   object-fit:cover;
   border-radius:10px;
+  margin-top:10px;
 }
 
+/* ✅ BUTTONS */
 .btn {
   padding:8px 12px;
   border:none;
@@ -40,6 +55,7 @@ body {
 .modify { background:#f77f00;}
 .deny   { background:#d62828;}
 
+/* ✅ CARD BUTTON */
 .gen-card {
   background:#FF9933;
   color:white;
@@ -50,24 +66,36 @@ body {
   margin-top:8px;
 }
 
+/* ✅ BOTTOM NAV (LIGHT SAFFRON) */
 .bottomnav {
  position:fixed;
  bottom:0;
  left:0;
  right:0;
- background:white;
+ background:#fff4e6;
  display:flex;
  justify-content:space-around;
  height:60px;
  border-top:1px solid #eee;
+ align-items:center;
 }
+
+.bottomnav a {
+  text-decoration:none;
+  font-size:22px;
+}
+
 </style>
 </head>
 
 <body>
 
+<!-- ✅ TOP BAR -->
+<div class="topbar">Verilay</div>
+
 <div id="feed"></div>
 
+<!-- ✅ BOTTOM NAV -->
 <div class="bottomnav">
   <a href="feed.html">🏠</a>
   <a href="dashboard.html">👤</a>
@@ -83,11 +111,10 @@ let myProfile = {};
 /* ---------- LOAD PROFILE ---------- */
 async function loadProfile(){
   const res = await getProfile();
-  const u = res.response || {};
-  myProfile = u;
+  myProfile = res.response || {};
 }
 
-/* ---------- IMAGE PREVIEW ---------- */
+/* ---------- IMAGE PREVIEW (ALWAYS SHOW) ---------- */
 function getPreviewHTML(url){
 
   if(!url) return "";
@@ -96,7 +123,6 @@ function getPreviewHTML(url){
     url = "https://" + url;
   }
 
-  // ✅ ALWAYS show image using screenshot fallback
   const image = "https://image.thum.io/get/" + url;
 
   return `
@@ -128,24 +154,22 @@ async function loadFeed(){
 
     html += `<p>${text}</p>`;
 
-    // ✅ IMAGE PREVIEW
+    /* ✅ IMAGE PREVIEW */
     if(url){
       html += getPreviewHTML(url);
     }
 
-    // ✅ ONLY OWNER REACT
+    /* ✅ ONLY OWNER CAN REACT */
     if(isOwner){
-
       html += `
         <div id="action-${id}">
-          <button class="btn accept" onclick="react('${id}','accepted')">Accept</button>
-          <button class="btn modify" onclick="react('${id}','modified')">Modify</button>
-          <button class="btn deny" onclick="react('${id}','denied')">Deny</button>
+          <button class="btn accept" onclick="react('${id}','accepted','${encodeURIComponent(text)}')">Accept</button>
+          <button class="btn modify" onclick="react('${id}','modified','${encodeURIComponent(text)}')">Modify</button>
+          <button class="btn deny" onclick="react('${id}','denied','${encodeURIComponent(text)}')">Deny</button>
         </div>
 
         <div id="result-${id}"></div>
       `;
-
     }
 
     html += `</div>`;
@@ -155,18 +179,18 @@ async function loadFeed(){
 }
 
 /* ---------- REACT ---------- */
-async function react(id,action){
+async function react(id,action,text){
 
   await reactStatement(id, action);
 
-  // hide buttons
+  /* hide buttons */
   document.getElementById("action-"+id).style.display="none";
 
-  // show result + generate card
+  /* show result + generate card */
   document.getElementById("result-"+id).innerHTML =
     `Marked ${action}
      <br>
-     <a class="gen-card" href="card.html?name=${encodeURIComponent(myProfile.full_name)}&username=${encodeURIComponent(myProfile.username)}&text=${encodeURIComponent("")}&verdict=${action}">
+     <a class="gen-card" href="card.html?name=${encodeURIComponent(myProfile.full_name)}&username=${encodeURIComponent(myProfile.username)}&text=${text}&verdict=${action}">
      Generate Card
      </a>`;
 }
@@ -179,3 +203,4 @@ loadFeed();
 
 </body>
 </html>
+``
