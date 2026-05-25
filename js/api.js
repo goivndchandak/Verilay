@@ -1,352 +1,253 @@
-/* =========================
-   Verilay Frontend API Layer
-   - Keeps previous structure (external js/api.js)
-   - Fixes: getMyStatements/searchNews/getFeed undefined
-   - Uses Newsdata.io API for Scan News
-   - Fixes link preview showing GitHub by fetching OG tags from source_url
-   ========================= */
+// ============================================================
+// VERILAY - API LAYER (api.js)
+// ============================================================
+// REPLACE NEWS_API_KEY with your actual NewsData.io key
+// ============================================================
 
-/* ========= CONFIG (EDIT THESE) ========= */
-var BUBBLE = 'https://verilay.bubbleapps.io';      // <-- CHANGE to your Bubble app URL if different
-var API_BASE = BUBBLE + '/api/1.1/obj';            // Bubble Data API
-var NEWS_API_KEY = 'pub_592aba825f6745448b3744626b1d16d6';                              // <-- Paste your Newsdata.io key here
-var NEWS_LANGUAGE = 'en';                           // en/hi etc
-/* ====================================== */
+var API_BASE  = "https://verilay-88625.bubbleapps.io/api/1.1/wf";
+var DATA_BASE = "https://verilay-88625.bubbleapps.io/api/1.1/obj";
+var NEWS_API_KEY = "pub_592aba825f6745448b3744626b1d16d6";
 
-/* ---------- Helpers ---------- */
-function $(id) { return document.getElementById(id); }
+// ============================================================
+// HELPERS
+// ============================================================
 
-function esc(s) {
-  var d = document.createElement('div');
-  d.textContent = (s === undefined || s === null) ? '' : String(s);
-  return d.innerHTML;
+function getToken() {
+  return localStorage.getItem("token") || "";
 }
 
-function getToken() { return localStorage.getItem('token'); }
-function getUserId() { return localStorage.getItem('user_id'); }
-function getUserName() { return localStorage.getItem('username') || 'User'; }
-
-function requireAuth() {
-  if (!getToken()) window.location.href = 'login.html';
+function getUserId() {
+  return localStorage.getItem("user_id") || "";
 }
 
-function logout() {
-  localStorage.clear();
-  window.location.href = 'login.html';
+function authHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + getToken()
+  };
 }
 
-/* Try direct fetch; if blocked by CORS, retry via allorigins */
-async function fetchJsonSmart(url, options) {
+async function handleResponse(res) {
+  var data;
   try {
-    var r = await fetch(url, options);
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return await r.json();
+    data = await res.json();
   } catch (e) {
-    // Retry via proxy (works on GitHub Pages)
-    var proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
-    var r2 = await fetch(proxy, options);
-    if (!r2.ok) throw new Error('Proxy HTTP ' + r2.status);
-    return await r2.json();
+    if (!res.ok) throw new Error("Request failed with status " + res.status);
+    return {};
   }
+  if (!res.ok) {
+    var msg = "";
+    if (data && data.body && data.body.message) msg = data.body.message;
+    else if (data && data.message) msg = data.message;
+    else if (data && data.statusMessage) msg = data.statusMessage;
+    else msg = "Request failed (" + res.status + ")";
+    throw new Error(msg);
+  }
+  return data;
 }
 
-/* ---------- Bubble: Statements ---------- */
+// ============================================================
+// AUTH
+// ============================================================
 
-/**
- * Loads statements created by the logged-in user (Created By = user_id).
- * Expects a container with id="stmtBox"
- */
+async function signup(email, password) {
+  var res = await fetch(API_BASE + "/signup_user", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email, password: password, full_name: "", username: "", bio: "", linkedin_url: "", instagram_url: "", twitter_url: "" })
+  });
+  return handleResponse(res);
+}
+
+async function login(email, password) {
+  var res = await fetch(API_BASE + "/login_user", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email, password: password })
+  });
+  var data = await handleResponse(res);
+  if (data.response && data.response.token) {
+    localStorage.setItem("token", data.response.token);
+  }
+  if (data.response && data.response.user_id) {
+    localStorage.setItem("user_id", data.response.user_id);
+  }
+  return data;
+}
+
+// ============================================================
+// PROFILE
+// ============================================================
+
+async function getProfile() {
+  var userId = getUserId();
+  var res = await fetch(DATA_BASE + "/User/" + userId, {
+    method: "GET",
+    headers: authHeaders()
+  });
+  return handleResponse(res);
+}
+
+async function updateProfile(profileData) {
+  var userId = getUserId();
+  var res = await fetch(DATA_BASE + "/User/" + userId, {
+    method: "PATCH",
+    headers: authHeaders(),
+    body: JSON.stringify(profileData)
+  });
+  return handleResponse(res);
+}
+
+// ============================================================
+// STATEMENTS (Bubble type: TruthStatement)
+// ============================================================
+
 async function getMyStatements() {
-  var box = $('stmtBox');
-  if (!box) return;
-
-  box.innerHTML = '<div class="loading">Loading...</div>';
-
-  try {
-    var uid = getUserId();
-    var constraints = encodeURIComponent(JSON.stringify([
-      { key: "Created By", constraint_type: "equals", value: uid }
-    ]));
-
-    var url = API_BASE + '/statement?constraints=' + constraints + '&sort_field=Created%20Date&descending=true';
-
-    var r = await fetch(url, {
-      headers: { 'Authorization': 'Bearer ' + getToken() }
-    });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-
-    var data = await r.json();
-    var items = (data && data.response && data.response.results) ? data.response.results : [];
-
-    if (!items.length) {
-      box.innerHTML = '<div class="empty">No statements yet. Post your first one!</div>';
-      return;
-    }
-
-    box.innerHTML = items.map(function (s) {
-      var reaction = (s.reaction || 'pending').toLowerCase();
-      var badgeClass = reaction === 'accepted' ? 'b-accepted'
-                    : reaction === 'modified' ? 'b-modified'
-                    : reaction === 'denied'   ? 'b-denied'
-                    : 'b-pending';
-
-      return (
-        '<div class="card">' +
-          '<div class="stmt">' + esc(s.statement || '') + '</div>' +
-          (s.source_url ? '<a class="source" href="' + s.source_url + '" target="_blank">🔗 Source</a>' : '') +
-          '<div class="meta">' +
-            '<span class="badge ' + badgeClass + '">' + esc(reaction.toUpperCase()) + '</span>' +
-          '</div>' +
-        '</div>'
-      );
-    }).join('');
-
-  } catch (e) {
-    console.error(e);
-    box.innerHTML = '<div class="error-msg">Error loading statements</div>';
+  var userId = getUserId();
+  var constraints = JSON.stringify([
+    { key: "Created By", constraint_type: "equals", value: userId }
+  ]);
+  var url = DATA_BASE + "/TruthStatement"
+    + "?constraints=" + encodeURIComponent(constraints)
+    + "&sort_field=Created+Date"
+    + "&descending=true";
+  var res = await fetch(url, {
+    method: "GET",
+    headers: authHeaders()
+  });
+  var data = await handleResponse(res);
+  if (data.response && data.response.results) {
+    data.response.statements = data.response.results;
   }
+  return data;
 }
 
-/**
- * Creates a statement (New Post)
- * Expects: textarea#postText, input#postUrl, div#postStatus (optional)
- */
-async function submitPost() {
-  var textEl = $('postText');
-  var urlEl = $('postUrl');
-  var statusEl = $('postStatus');
-
-  var statement = textEl ? textEl.value.trim() : '';
-  var sourceUrl = urlEl ? urlEl.value.trim() : '';
-
-  if (!statement) {
-    if (statusEl) statusEl.innerHTML = '<span style="color:#c62828">Please write a statement.</span>';
-    return;
-  }
-
-  if (statusEl) statusEl.innerHTML = '<span style="color:#888">Posting...</span>';
-
-  try {
-    var r = await fetch(API_BASE + '/statement', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + getToken()
-      },
-      body: JSON.stringify({
-        statement: statement,
-        source_url: sourceUrl,
-        username: getUserName()
-      })
-    });
-
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-
-    if (statusEl) statusEl.innerHTML = '<span style="color:#2e7d32">✅ Posted!</span>';
-
-    if (textEl) textEl.value = '';
-    if (urlEl) urlEl.value = '';
-
-    // refresh statements if on dashboard statements tab
-    if ($('stmtBox')) getMyStatements();
-
-    setTimeout(function () { if (statusEl) statusEl.innerHTML = ''; }, 1800);
-
-  } catch (e) {
-    console.error(e);
-    if (statusEl) statusEl.innerHTML = '<span style="color:#c62828">Error posting.</span>';
-  }
+async function addStatement(text, sourceUrl) {
+  var body = { text: text, source_url: sourceUrl || "" };
+  var res = await fetch(API_BASE + "/add_statement", {
+    method: "POST",
+    headers: authHeaders(),
+    body: JSON.stringify(body)
+  });
+  return handleResponse(res);
 }
 
-/* ---------- Feed ---------- */
+async function reactStatement(statementId, action) {
+  var res = await fetch(API_BASE + "/react_statement", {
+    method: "POST",
+    headers: authHeaders(),
+    body: JSON.stringify({
+      statement_id: statementId,
+      reaction_type: action
+    })
+  });
+  return handleResponse(res);
+}
 
-/**
- * Public feed: loads latest statements
- * Expects a container with id="feedBox"
- */
+// ============================================================
+// FEED (All statements - Bubble type: TruthStatement)
+// ============================================================
+
 async function getFeed() {
-  var box = $('feedBox');
-  if (!box) return;
+  var url = DATA_BASE + "/TruthStatement"
+    + "?sort_field=Created+Date"
+    + "&descending=true"
+    + "&limit=50";
+  var res = await fetch(url, {
+    method: "GET",
+    headers: authHeaders()
+  });
+  var data = await handleResponse(res);
+  if (data.response && data.response.results) {
+    data.response.statements = data.response.results;
+  }
+  return data;
+}
 
-  box.innerHTML = '<div class="loading">Loading...</div>';
+// ============================================================
+// FOLLOW / UNFOLLOW (Bubble type: Follow)
+// ============================================================
 
+async function getFollowing() {
+  var userId = getUserId();
+  var constraints = JSON.stringify([
+    { key: "follower", constraint_type: "equals", value: userId }
+  ]);
+  var url = DATA_BASE + "/Follow"
+    + "?constraints=" + encodeURIComponent(constraints);
+  var res = await fetch(url, {
+    method: "GET",
+    headers: authHeaders()
+  });
+  return handleResponse(res);
+}
+
+async function followUser(targetUserId) {
+  var res = await fetch(API_BASE + "/follow_user", {
+    method: "POST",
+    headers: authHeaders(),
+    body: JSON.stringify({ user_id: targetUserId })
+  });
+  return handleResponse(res);
+}
+
+async function unfollowUser(followId) {
+  var res = await fetch(DATA_BASE + "/Follow/" + followId, {
+    method: "DELETE",
+    headers: authHeaders()
+  });
+  return handleResponse(res);
+}
+
+// ============================================================
+// SEARCH USERS (Bubble type: User)
+// ============================================================
+
+async function searchUsers(query) {
+  var constraints = JSON.stringify([
+    { key: "full_name", constraint_type: "text contains", value: query }
+  ]);
+  var url = DATA_BASE + "/User"
+    + "?constraints=" + encodeURIComponent(constraints)
+    + "&limit=20";
+  var res = await fetch(url, {
+    method: "GET",
+    headers: authHeaders()
+  });
+  return handleResponse(res);
+}
+
+// ============================================================
+// NEWS (NewsData.io)
+// ============================================================
+
+async function searchNews(query) {
+  var url = "https://newsdata.io/api/1/news"
+    + "?apikey=" + NEWS_API_KEY
+    + "&q=" + encodeURIComponent(query)
+    + "&language=en";
   try {
-    // Public list; if your Bubble privacy rules require auth, this still supports token if present
-    var headers = {};
-    if (getToken()) headers['Authorization'] = 'Bearer ' + getToken();
-
-    var url = API_BASE + '/statement?sort_field=Created%20Date&descending=true&limit=50';
-
-    var r = await fetch(url, { headers: headers });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-
-    var data = await r.json();
-    var items = (data && data.response && data.response.results) ? data.response.results : [];
-
-    if (!items.length) {
-      box.innerHTML = '<div class="empty">No posts yet.</div>';
-      return;
+    var res = await fetch(url);
+    var data = await res.json();
+    var articles = [];
+    if (data.results && data.results.length > 0) {
+      for (var i = 0; i < data.results.length; i++) {
+        var item = data.results[i];
+        articles.push({
+          title: item.title || "",
+          description: item.description || "",
+          url: item.link || "",
+          image: item.image_url || ""
+        });
+      }
     }
-
-    box.innerHTML = '';
-    items.forEach(function (s) {
-      var card = document.createElement('div');
-      card.className = 'feed-card';
-
-      var prefix = s.reaction ? ('<span class="prefix">' + esc(s.reaction.toUpperCase()) + ':</span> ') : '';
-      var previewId = 'pv_' + s._id;
-
-      card.innerHTML =
-        '<div class="feed-user">' + esc(s.username || 'Anonymous') + '</div>' +
-        '<div class="feed-stmt">' + prefix + esc(s.statement || '') + '</div>' +
-        '<div id="' + previewId + '"></div>' +
-        (s.source_url ? '<a class="source" href="' + s.source_url + '" target="_blank">🔗 Source</a>' : '') +
-        '<div class="reactions">' +
-          '<button class="react-btn accept" onclick="react(\'' + s._id + '\',\'accepted\',this)">✅ Accept</button>' +
-          '<button class="react-btn modify" onclick="react(\'' + s._id + '\',\'modified\',this)">✏️ Modify</button>' +
-          '<button class="react-btn deny" onclick="react(\'' + s._id + '\',\'denied\',this)">❌ Deny</button>' +
-        '</div>';
-
-      box.appendChild(card);
-
-      // Real preview for the actual news URL (NOT GitHub)
-      if (s.source_url) fetchPreview(s.source_url, previewId);
-    });
-
-  } catch (e) {
-    console.error(e);
-    box.innerHTML = '<div class="error-msg">Error loading feed</div>';
+    return { articles: articles };
+  } catch (err) {
+    console.error("News API error:", err);
+    return { articles: [] };
   }
 }
 
-/**
- * Reaction PATCH
- */
-async function react(statementId, reaction, btn) {
-  try {
-    var r = await fetch(API_BASE + '/statement/' + statementId, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + getToken()
-      },
-      body: JSON.stringify({ reaction: reaction })
-    });
-
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-
-    // Replace buttons with label
-    if (btn && btn.parentElement) {
-      btn.parentElement.innerHTML =
-        '<div class="reacted-label">This is marked ' + esc(reaction.toUpperCase()) + '</div>';
-    }
-  } catch (e) {
-    console.error(e);
-    alert('Reaction failed. Check login/token & Bubble privacy rules.');
-  }
-}
-
-/* ---------- Scan News (Newsdata.io) ---------- */
-
-var savedArticles = [];
-
-/**
- * News search using Newsdata.io
- * Expects: input#newsQ, div#newsResults, div#newsErr (optional)
- */
-async function searchNews() {
-  var qEl = $('newsQ');
-  var resEl = $('newsResults');
-  var errEl = $('newsErr');
-
-  var q = qEl ? qEl.value.trim() : '';
-  if (!q) {
-    if (errEl) errEl.innerHTML = '<span style="color:#c62828">Enter a topic</span>';
-    return;
-  }
-  if (!NEWS_API_KEY) {
-    if (errEl) errEl.innerHTML = '<span style="color:#c62828">Add Newsdata API key in js/api.js</span>';
-    return;
-  }
-
-  if (errEl) errEl.innerHTML = '';
-  if (resEl) resEl.innerHTML = '<div class="loading">Searching...</div>';
-
-  try {
-    var url =
-      'https://newsdata.io/api/1/news' +
-      '?apikey=' + encodeURIComponent(NEWS_API_KEY) +
-      '&q=' + encodeURIComponent(q) +
-      '&language=' + encodeURIComponent(NEWS_LANGUAGE);
-
-    var data = await fetchJsonSmart(url);
-
-    savedArticles = (data && data.results) ? data.results : [];
-
-    if (!savedArticles.length) {
-      if (resEl) resEl.innerHTML = '<div class="empty">No news found</div>';
-      return;
-    }
-
-    if (!resEl) return;
-
-    resEl.innerHTML = savedArticles.slice(0, 15).map(function (a, i) {
-      var title = a.title || '';
-      var desc  = a.description || a.content || '';
-      var img   = a.image_url || '';
-      var link  = a.link || '';
-      var src   = a.source_id || (a.creator && a.creator[0]) || '';
-
-      return (
-        '<div class="ncard">' +
-          (img ? '<img src="' + img + '" onerror="this.style.display=\'none\'">' : '') +
-          '<div class="nbody">' +
-            '<div class="ntitle">' + esc(title) + '</div>' +
-            (desc ? '<div class="ndesc">' + esc(desc) + '</div>' : '') +
-            (src ? '<div class="nsrc">' + esc(src) + '</div>' : '') +
-            (link ? '<a class="nlink" href="' + link + '" target="_blank">Read ↗</a>' : '') +
-            '<button class="npost-btn" onclick="postFromNews(' + i + ')">Post to Verilay</button>' +
-          '</div>' +
-        '</div>'
-      );
-    }).join('');
-
-  } catch (e) {
-    console.error(e);
-    if (resEl) resEl.innerHTML = '';
-    if (errEl) errEl.innerHTML = '<span style="color:#c62828">Search failed</span>';
-  }
-}
-
-/**
- * Fills New Post with selected news item
- * Expects: textarea#postText, input#postUrl
- */
-function postFromNews(i) {
-  var a = savedArticles[i];
-  if (!a) return;
-
-  var title = a.title || '';
-  var link = a.link || '';
-
-  if ($('postText')) $('postText').value = title;
-  if ($('postUrl')) $('postUrl').value = link;
-
-  // If dashboard has tabs, try switching to New Post
-  if (typeof switchTab === 'function') switchTab('newpost');
-}
-
-/* ---------- OG Link Preview (Fix GitHub preview issue) ---------- */
-
-/**
- * Fetch OG tags from the ACTUAL page HTML using allorigins (CORS-safe)
- * Renders a card into containerId
- */
-async function fetchPreview(url, containerId) {
-  try {
-    // Use allorigins to get raw HTML
-    var proxy = 'https://api.allorigins.win/get?url=' + encodeURIComponent(url);
-    var r = await fetch(proxy);
-    if (!r.ok) return;
-
-    var j = await r.json();
+// ============================================================
+// END OF API LAYER
+// ============================================================
