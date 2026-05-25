@@ -1,480 +1,181 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Feed - Verilay</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<title>Feed - Verilay</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #fafafa; padding-bottom: 70px; }
+<style>
+body {
+  font-family: Arial;
+  background:#fafafa;
+  padding:10px;
+  padding-bottom:70px;
+}
 
-    .topbar {
-      background: #1d3557;
-      color: white;
-      padding: 14px 16px;
-      font-size: 18px;
-      font-weight: bold;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-    .topbar .links a{
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 12px;
-      padding: 6px 10px;
-      border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 999px;
-      margin-left: 6px;
-      display: inline-block;
-    }
-    .topbar .links a.active{
-      background: rgba(255,255,255,0.12);
-      border-color: rgba(255,255,255,0.6);
-    }
+.card {
+  background:white;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:12px;
+}
 
-    .content { max-width: 640px; margin: 0 auto; padding: 14px; }
+.preview img {
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  border-radius:10px;
+}
 
-    .card {
-      background: white;
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-      border: 1px solid rgba(0,0,0,0.04);
-    }
+.btn {
+  padding:8px 12px;
+  border:none;
+  border-radius:20px;
+  color:white;
+  margin:4px;
+  cursor:pointer;
+}
 
-    .meta-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      color: #8a8a8a;
-      font-size: 12px;
-    }
-    .pill {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
-      border: 1px solid rgba(29,53,87,0.2);
-      color: #1d3557;
-      background: rgba(29,53,87,0.04);
-      white-space: nowrap;
-    }
+.accept { background:#2d6a4f;}
+.modify { background:#f77f00;}
+.deny   { background:#d62828;}
 
-    .stmt-text {
-      font-size: 14px;
-      color: #222;
-      line-height: 1.45;
-      margin-bottom: 10px;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
+.gen-card {
+  background:#FF9933;
+  color:white;
+  padding:6px 14px;
+  border-radius:20px;
+  text-decoration:none;
+  display:inline-block;
+  margin-top:8px;
+}
 
-    .preview {
-      border: 1px solid #eee;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #fff;
-      margin-top: 8px;
-    }
-    .preview .imgwrap {
-      width: 100%;
-      max-height: 220px;
-      overflow: hidden;
-      background: #f3f3f3;
-    }
-    .preview img {
-      width: 100%;
-      display: block;
-      object-fit: cover;
-    }
-    .preview .body {
-      padding: 10px 12px;
-    }
-    .preview .title {
-      font-size: 13px;
-      font-weight: 800;
-      color: #1d3557;
-      margin-bottom: 4px;
-      line-height: 1.3;
-    }
-    .preview .desc {
-      font-size: 12px;
-      color: #666;
-      line-height: 1.35;
-      margin-bottom: 8px;
-    }
-    .preview .link {
-      font-size: 12px;
-      color: #1d3557;
-      text-decoration: none;
-      font-weight: 700;
-    }
-
-    .actions {
-      margin-top: 10px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .actions button {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 999px;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 800;
-      color: white;
-    }
-    .btn-accept { background: #2d6a4f; }
-    .btn-modify { background: #f77f00; }
-    .btn-deny   { background: #d62828; }
-
-    .result-row {
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .marked-label {
-      font-size: 13px;
-      font-weight: 800;
-      color: #1d3557;
-    }
-    .gen-card-btn {
-      display: inline-block;
-      font-size: 12px;
-      color: white;
-      background: #FF9933;
-      padding: 7px 14px;
-      border-radius: 999px;
-      text-decoration: none;
-      font-weight: 900;
-    }
-
-    .muted {
-      font-size: 12px;
-      color: #888;
-      margin-top: 8px;
-    }
-
-    .error { color: #d62828; font-size: 12px; margin-top: 8px; }
-    .loading { color: #888; font-size: 12px; }
-
-    .bottomnav {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: white;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      height: 60px;
-      border-top: 1px solid #eee;
-      z-index: 100;
-    }
-    .bottomnav a {
-      text-decoration: none;
-      text-align: center;
-      color: #999;
-      font-size: 11px;
-    }
-    .bottomnav a.active { color: #1d3557; font-weight: bold; }
-    .bottomnav a span { font-size: 22px; display: block; }
-  </style>
+.bottomnav {
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ background:white;
+ display:flex;
+ justify-content:space-around;
+ height:60px;
+ border-top:1px solid #eee;
+}
+</style>
 </head>
 
 <body>
-  <div class="topbar">
-    <div>Feed</div>
-    <div class="links">
-      <a href="explore.html">🔍 Explore</a>
-      <a class="active" href="feed.html">🏠 Feed</a>
-      <a href="dashboard.html">👤 Profile</a>
+
+<div id="feed"></div>
+
+<div class="bottomnav">
+  <a href="feed.html">🏠</a>
+  <a href="dashboard.html">👤</a>
+</div>
+
+<script src="js/api.js"></script>
+
+<script>
+
+const myUserId = localStorage.getItem("user_id");
+let myProfile = {};
+
+/* ---------- LOAD PROFILE ---------- */
+async function loadProfile(){
+  const res = await getProfile();
+  const u = res.response || {};
+  myProfile = u;
+}
+
+/* ---------- IMAGE PREVIEW ---------- */
+function getPreviewHTML(url){
+
+  if(!url) return "";
+
+  if(!url.startsWith("http")){
+    url = "https://" + url;
+  }
+
+  // ✅ ALWAYS show image using screenshot fallback
+  const image = "https://image.thum.io/get/" + url;
+
+  return `
+    <div class="preview">
+      <img src="${image}">
+      <a href="${url}" target="_blank">${url}</a>
     </div>
-  </div>
+  `;
+}
 
-  <div class="content">
-    <div id="feedError" class="error"></div>
-    <div id="feedList" class="loading">Loading feed...</div>
-  </div>
+/* ---------- LOAD FEED ---------- */
+async function loadFeed(){
 
-  <div class="bottomnav">
-    <a href="feed.html" class="active"><span>🏠</span> Feed</a>
-    <a href="dashboard.html"><span>👤</span> Profile</a>
-  </div>
+  const res = await getFeed();
+  const list = res.response.statements || res.response.results || [];
 
-  <script src="js/api.js"></script>
-  <script>
-    // --- Auth gate ---
-    if (!localStorage.getItem("token")) window.location.href = "login.html";
+  let html = "";
 
-    // --- Globals ---
-    var me = { full_name: "", username: "" };
-    var myUserId = (typeof getUserId === "function") ? getUserId() : "";
-    var stmtTextById = {}; // for card generation text
+  list.forEach(item => {
 
-    // --- Helpers ---
-    function escapeHtml(str) {
-      return String(str || "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    const id = item._id || item.id;
+    const text = item.text || "";
+    const url = item.source_url || "";
+    const owner = item["Created By"] || item.created_by || item.user_id;
+
+    const isOwner = (owner == myUserId);
+
+    html += `<div class="card">`;
+
+    html += `<p>${text}</p>`;
+
+    // ✅ IMAGE PREVIEW
+    if(url){
+      html += getPreviewHTML(url);
     }
 
-    function safeUrl(u){
-      u = (u || "").trim();
-      if (!u) return "";
-      if (!/^https?:\/\//i.test(u)) u = "https://" + u;
-      return u;
+    // ✅ ONLY OWNER REACT
+    if(isOwner){
+
+      html += `
+        <div id="action-${id}">
+          <button class="btn accept" onclick="react('${id}','accepted')">Accept</button>
+          <button class="btn modify" onclick="react('${id}','modified')">Modify</button>
+          <button class="btn deny" onclick="react('${id}','denied')">Deny</button>
+        </div>
+
+        <div id="result-${id}"></div>
+      `;
+
     }
 
-    function domainFromUrl(u){
-      try { return (new URL(u)).hostname.replace(/^www\./,''); }
-      catch(e){ return ""; }
-    }
+    html += `</div>`;
+  });
 
-    function getStatementId(item){
-      return item._id || item.id || item.unique_id || item.uid || "";
-    }
+  document.getElementById("feed").innerHTML = html;
+}
 
-    function getCreatorId(item){
-      // Bubble often uses "Created By" field name in Data API
-      return item["Created By"] || item.created_by || item.createdBy || item.creator || item.user_id || "";
-    }
+/* ---------- REACT ---------- */
+async function react(id,action){
 
-    function getReaction(item){
-      // try common reaction fields (depends on your Bubble data structure)
-      var r = item.reaction_type || item.reaction || item.verdict || item.status || "";
-      r = String(r || "").toLowerCase();
-      if (r === "accept") r = "accepted";
-      if (r === "deny") r = "denied";
-      if (r === "modify") r = "modified";
-      if (r !== "accepted" && r !== "modified" && r !== "denied") return "";
-      return r;
-    }
+  await reactStatement(id, action);
 
-    function labelFromReaction(r){
-      return r ? (r.charAt(0).toUpperCase() + r.slice(1)) : "";
-    }
+  // hide buttons
+  document.getElementById("action-"+id).style.display="none";
 
-    function buildCardLink(text, verdict){
-      var name = encodeURIComponent(me.full_name || "");
-      var uname = encodeURIComponent(me.username || "");
-      var t = encodeURIComponent(text || "");
-      var v = encodeURIComponent(verdict || "accepted");
-      return "card.html?name=" + name + "&username=" + uname + "&text=" + t + "&verdict=" + v;
-    }
+  // show result + generate card
+  document.getElementById("result-"+id).innerHTML =
+    `Marked ${action}
+     <br>
+     <a class="gen-card" href="card.html?name=${encodeURIComponent(myProfile.full_name)}&username=${encodeURIComponent(myProfile.username)}&text=${encodeURIComponent("")}&verdict=${action}">
+     Generate Card
+     </a>`;
+}
 
-    function makeResultHtml(reaction, text){
-      var label = labelFromReaction(reaction);
-      var cardUrl = buildCardLink(text, reaction);
-      return "<div class='result-row'>"
-        + "<span class='marked-label'>This is marked " + escapeHtml(label) + "</span>"
-        + "<a class='gen-card-btn' href='" + cardUrl + "'>🎨 Generate Card</a>"
-        + "</div>";
-    }
+/* ---------- INIT ---------- */
+loadProfile();
+loadFeed();
 
-    // --- Link Preview (OG tags) ---
-    async function loadLinkPreview(url, mountId){
-      var mount = document.getElementById(mountId);
-      if (!mount) return;
+</script>
 
-      var u = safeUrl(url);
-      if (!u) { mount.innerHTML = ""; return; }
-
-      // Show quick fallback immediately
-      var d = domainFromUrl(u);
-      mount.innerHTML =
-        "<div class='preview'>"
-        + "<div class='body'>"
-        + "<div class='title'>" + escapeHtml(d || "Link") + "</div>"
-        + "<a class='link' href='" + escapeHtml(u) + "' target='_blank'>Open source ↗</a>"
-        + "</div></div>";
-
-      // Try OG extraction via proxy (works on GitHub Pages; avoids CORS)
-      try {
-        var proxy = "https://r.jina.ai/" + u; // e.g. https://r.jina.ai/https://example.com
-        var res = await fetch(proxy);
-        var html = await res.text();
-
-        // Extract OG tags with simple regex
-        function pick(regex){
-          var m = html.match(regex);
-          return m && m[1] ? m[1].trim() : "";
-        }
-
-        var ogTitle = pick(/property=["']og:title["'][^>]*content=["']([^"']+)["']/i) ||
-                      pick(/name=["']twitter:title["'][^>]*content=["']([^"']+)["']/i) ||
-                      pick(/<title[^>]*>([^<]+)<\/title>/i);
-
-        var ogDesc  = pick(/property=["']og:description["'][^>]*content=["']([^"']+)["']/i) ||
-                      pick(/name=["']description["'][^>]*content=["']([^"']+)["']/i) ||
-                      pick(/name=["']twitter:description["'][^>]*content=["']([^"']+)["']/i);
-
-        var ogImg   = pick(/property=["']og:image["'][^>]*content=["']([^"']+)["']/i) ||
-                      pick(/name=["']twitter:image["'][^>]*content=["']([^"']+)["']/i);
-
-        ogImg = safeUrl(ogImg);
-
-        // If we still got nothing, keep simple link preview
-        if (!ogTitle && !ogDesc && !ogImg) return;
-
-        var imgHtml = ogImg
-          ? "<div class='imgwrap'><img src='" + escapeHtml(ogImg) + "' alt='preview'></div>"
-          : "";
-
-        mount.innerHTML =
-          "<div class='preview'>"
-          + imgHtml
-          + "<div class='body'>"
-          + "<div class='title'>" + escapeHtml(ogTitle || d || "Source") + "</div>"
-          + (ogDesc ? "<div class='desc'>" + escapeHtml(ogDesc) + "</div>" : "")
-          + "<a class='link' href='" + escapeHtml(u) + "' target='_blank'>Read source ↗</a>"
-          + "</div></div>";
-
-      } catch(e){
-        // Leave fallback preview as-is
-      }
-    }
-
-    // --- Render feed card ---
-    function renderCard(item){
-      var id = getStatementId(item);
-      var creatorId = getCreatorId(item);
-      var isOwner = (creatorId && myUserId && String(creatorId) === String(myUserId));
-
-      var text = item.text || item.statement || item.content || "";
-      stmtTextById[id] = text;
-
-      var created = item["Created Date"] || item.Created_Date || item.created_date || item.createdAt || "";
-      var createdText = "";
-      try { if (created) createdText = new Date(created).toLocaleString(); } catch(e){}
-
-      var sourceUrl = item.source_url || item.sourceUrl || item.url || "";
-      var reaction = getReaction(item);
-
-      var previewMountId = "pv-" + id;
-
-      var html = "";
-      html += "<div class='card' id='card-" + escapeHtml(id) + "'>";
-      html += "  <div class='meta-row'>";
-      html += "    <div>" + (createdText ? escapeHtml(createdText) : "") + "</div>";
-      html += "    <div class='pill'>" + (isOwner ? "Your post" : "Feed") + "</div>";
-      html += "  </div>";
-
-      html += "  <div class='stmt-text'>" + escapeHtml(text) + "</div>";
-
-      if (sourceUrl) {
-        html += "  <div id='" + escapeHtml(previewMountId) + "' class='loading'>Loading preview...</div>";
-      }
-
-      // Buttons: ONLY owner AND only if not already reacted
-      if (isOwner && !reaction) {
-        html += "  <div class='actions' id='actions-" + escapeHtml(id) + "'>";
-        html += "    <button class='btn-accept' onclick=\"reactToFeedStatement('" + escapeHtml(id) + "','accepted')\">✅ Accept</button>";
-        html += "    <button class='btn-modify' onclick=\"reactToFeedStatement('" + escapeHtml(id) + "','modified')\">✏️ Modify</button>";
-        html += "    <button class='btn-deny' onclick=\"reactToFeedStatement('" + escapeHtml(id) + "','denied')\">❌ Deny</button>";
-        html += "  </div>";
-        html += "  <div id='result-" + escapeHtml(id) + "'></div>";
-        html += "  <div class='muted'>Only you can react to your own post.</div>";
-      } else if (isOwner && reaction) {
-        // Owner already reacted -> show Generate Card
-        html += "  <div id='result-" + escapeHtml(id) + "'>" + makeResultHtml(reaction, text) + "</div>";
-      } else {
-        // Not owner -> no buttons
-        if (reaction) {
-          html += "  <div class='muted'>Marked: <b>" + escapeHtml(labelFromReaction(reaction)) + "</b></div>";
-        }
-      }
-
-      html += "</div>";
-      return { html: html, previewMountId: previewMountId, sourceUrl: sourceUrl };
-    }
-
-    // --- React (feed) ---
-    async function reactToFeedStatement(id, action){
-      try{
-        // Hide buttons immediately
-        var actionsEl = document.getElementById("actions-" + id);
-        if (actionsEl) actionsEl.style.display = "none";
-
-        await reactStatement(id, action);
-
-        var text = stmtTextById[id] || "";
-        var resultEl = document.getElementById("result-" + id);
-        if (resultEl) resultEl.innerHTML = makeResultHtml(action, text);
-
-      } catch(err){
-        // Re-show buttons on error
-        var actionsEl2 = document.getElementById("actions-" + id);
-        if (actionsEl2) actionsEl2.style.display = "flex";
-
-        var resultEl2 = document.getElementById("result-" + id);
-        if (resultEl2) resultEl2.innerHTML = "<div class='error'>Error: " + escapeHtml(err.message) + "</div>";
-      }
-    }
-
-    // --- Load profile + feed ---
-    async function init(){
-      try{
-        // Profile needed for card generation
-        var p = await getProfile();
-        var u = p.response ? (p.response.User || p.response.user || p.response) : {};
-        me.full_name = u.full_name || "";
-        me.username  = u.username || "";
-
-      } catch(e){
-        // Still allow feed to load
-      }
-
-      try{
-        var res = await getFeed();
-        var list = [];
-        if (res.response && res.response.statements) list = res.response.statements;
-        else if (res.response && res.response.results) list = res.response.results;
-        else if (Array.isArray(res.response)) list = res.response;
-
-        if (!list || list.length === 0){
-          document.getElementById("feedList").innerHTML =
-            "<div class='card'><div class='muted' style='text-align:center;'>No posts in feed yet.</div></div>";
-          return;
-        }
-
-        // Render
-        var out = "";
-        var previews = [];
-        for (var i=0; i<list.length; i++){
-          var r = renderCard(list[i]);
-          out += r.html;
-          if (r.sourceUrl) previews.push({ mountId: r.previewMountId, url: r.sourceUrl });
-        }
-        document.getElementById("feedList").innerHTML = out;
-
-        // Load previews after DOM insert
-        for (var j=0; j<previews.length; j++){
-          loadLinkPreview(previews[j].url, previews[j].mountId);
-        }
-
-      } catch(err){
-        document.getElementById("feedList").innerHTML = "";
-        document.getElementById("feedError").innerText = "Feed error: " + (err.message || err);
-      }
-    }
-
-    init();
-  </script>
 </body>
 </html>
