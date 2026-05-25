@@ -15,7 +15,7 @@ body {
   padding-bottom: 70px;
 }
 
-/* ---------- TOP BAR (MATCH DASHBOARD) ---------- */
+/* ---------- TOP BAR ---------- */
 .topbar {
   background: #1d3557;
   color: white;
@@ -27,14 +27,13 @@ body {
   align-items: center;
 }
 
-.topbar button {
-  background: none;
-  border: 1px solid white;
+.topbar a {
   color: white;
+  border: 1px solid white;
   padding: 6px 14px;
   border-radius: 6px;
   font-size: 12px;
-  cursor: pointer;
+  text-decoration: none;
 }
 
 /* ---------- CONTAINER ---------- */
@@ -52,7 +51,7 @@ body {
   border-radius: 14px;
 }
 
-/* ✅ OWNER NAME */
+/* ---------- OWNER NAME ---------- */
 .owner {
   font-weight: bold;
   color: #1d3557;
@@ -149,7 +148,7 @@ body {
 <!-- ✅ TOP BAR -->
 <div class="topbar">
   Verilay
-  <button onclick="logout()">Logout</button>
+  <a href="explore.html">Explore</a>
 </div>
 
 <div class="container" id="feed"></div>
@@ -167,7 +166,7 @@ body {
 /* ---------- GLOBALS ---------- */
 const myUserId = localStorage.getItem("user_id");
 let myProfile = {};
-let userCache = {}; // ✅ store user names
+let userCache = {};
 
 /* ---------- LOAD PROFILE ---------- */
 async function loadProfile(){
@@ -183,7 +182,6 @@ async function getUserName(userId){
   if(userCache[userId]) return userCache[userId];
 
   try {
-    // ✅ fetch user details from Bubble
     const res = await fetch(
       "https://verilay-88625.bubbleapps.io/api/1.1/obj/User/" + userId,
       { headers: authHeaders() }
@@ -245,7 +243,6 @@ async function loadFeed(){
 
     html += `<div class="card">`;
 
-    /* ✅ SHOW FULL NAME */
     html += `<div class="owner">${ownerName}</div>`;
 
     html += `<p>${text}</p>`;
@@ -254,7 +251,6 @@ async function loadFeed(){
       html += getPreviewHTML(url);
     }
 
-    /* ✅ ONLY OWNER CAN REACT */
     if(isOwner){
       html += `
         <div id="action-${id}">
@@ -291,12 +287,6 @@ async function react(id, action, text){
        Generate Card
     </a>
   `;
-}
-
-/* ---------- LOGOUT ---------- */
-function logout(){
-  localStorage.clear();
-  window.location.href = "login.html";
 }
 
 /* ---------- INIT ---------- */
