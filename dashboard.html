@@ -1,219 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Verilay – Profile</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;color:#1a1a2e;padding-bottom:70px}
-.header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
-.logo{color:#e8a838;font-size:22px;font-weight:800;letter-spacing:4px}
-.logout-btn{background:transparent;border:2px solid #e8a838;color:#e8a838;padding:6px 18px;border-radius:20px;font-weight:600;cursor:pointer;font-size:14px}
-.profile-section{text-align:center;padding:24px 20px 12px;background:#fff}
-.avatar{width:80px;height:80px;border-radius:50%;background:#1a1a2e;color:#e8a838;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;margin:0 auto 8px}
-.username{font-size:18px;font-weight:700;color:#1a1a2e}
-.tabs{display:flex;background:#fff;border-bottom:2px solid #eee;overflow-x:auto}
-.tab{flex:1;text-align:center;padding:12px 6px;font-size:13px;font-weight:600;color:#888;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
-.tab.active{color:#e8a838;border-bottom-color:#e8a838}
-.tab-content{display:none;padding:16px}
-.tab-content.active{display:block}
-.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.card .stmt{font-size:15px;line-height:1.5;margin-bottom:6px}
-.card .meta{font-size:12px;color:#888}
-.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;margin-top:6px}
-.b-accepted{background:#e6f9e6;color:#2e7d32}
-.b-modified{background:#fff3e0;color:#e65100}
-.b-denied{background:#ffebee;color:#c62828}
-.b-pending{background:#f0f0f0;color:#888}
-.post-form{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.post-form textarea{width:100%;border:1px solid #ddd;border-radius:8px;padding:12px;font-size:15px;resize:vertical;min-height:80px;font-family:inherit}
-.post-form input[type="url"]{width:100%;border:1px solid #ddd;border-radius:8px;padding:12px;font-size:14px;margin-top:10px;font-family:inherit}
-.btn-primary{width:100%;background:#1a1a2e;color:#fff;border:none;padding:14px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;margin-top:12px}
-.news-box{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:16px}
-.news-box input{width:100%;border:1px solid #ddd;border-radius:8px;padding:12px;font-size:15px;margin-top:10px;font-family:inherit}
-.ncard{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.ncard img{width:100%;height:180px;object-fit:cover}
-.ncard .nbody{padding:12px}
-.ncard .ntitle{font-size:15px;font-weight:600;margin-bottom:4px}
-.ncard .ndesc{font-size:13px;color:#666;margin-bottom:6px}
-.ncard .nsrc{font-size:12px;color:#e8a838}
-.npost-btn{background:#e8a838;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;margin-top:6px}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #eee;z-index:100}
-.nav-item{text-align:center;text-decoration:none;color:#888;font-size:11px}
-.nav-item.active{color:#1a1a2e}
-.nav-icon{display:block;font-size:22px;margin-bottom:2px}
-.error-msg{color:#c62828;text-align:center;padding:12px;font-size:14px}
-.loading{text-align:center;padding:20px;color:#888}
-.empty{text-align:center;padding:40px 20px;color:#aaa}
-.settings-row{background:#fff;padding:16px;border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
-</style>
-</head>
-<body>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Verilay – Profile</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f5f5;color:#1a1a2e;padding-bottom:70px}
 
-<div class="header">
-  <div class="logo">VERILAY</div>
-  <button class="logout-btn" onclick="logout()">Logout</button>
-</div>
+    .header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+    .logo{color:#e8a838;font-size:22px;font-weight:800;letter-spacing:4px}
+    .logout-btn{background:transparent;border:2px solid #e8a838;color:#e8a838;padding:6px 18px;border-radius:20px;font-weight:800;cursor:pointer}
 
-<div class="profile-section">
-  <div class="avatar" id="av">V</div>
-  <div class="username" id="uname">Loading...</div>
-</div>
+    .profile{background:#fff;text-align:center;padding:22px 16px 14px}
+    .avatar{width:78px;height:78px;border-radius:50%;background:#1a1a2e;color:#e8a838;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;margin:0 auto 8px}
+    .username{font-size:18px;font-weight:900}
 
-<div class="tabs">
-  <div class="tab active" onclick="switchTab('statements')">Statements</div>
-  <div class="tab" onclick="switchTab('newpost')">New Post</div>
-  <div class="tab" onclick="switchTab('scannews')">Scan News</div>
-  <div class="tab" onclick="switchTab('settings')">Settings</div>
-</div>
+    .tabs{display:flex;background:#fff;border-bottom:2px solid #eee}
+    .tab{flex:1;text-align:center;padding:12px 6px;font-size:13px;font-weight:900;color:#888;cursor:pointer;border-bottom:3px solid transparent}
+    .tab.active{color:#e8a838;border-bottom-color:#e8a838}
 
-<!-- STATEMENTS -->
-<div class="tab-content active" id="tab-statements">
-  <div id="stmtBox"><div class="loading">Loading statements...</div></div>
-</div>
+    .tab-content{display:none;padding:16px}
+    .tab-content.active{display:block}
 
-<!-- NEW POST -->
-<div class="tab-content" id="tab-newpost">
-  <div class="post-form">
-    <textarea id="postText" placeholder="Write your statement..."></textarea>
-    <input type="url" id="postUrl" placeholder="Paste source URL (optional)">
-    <button class="btn-primary" onclick="submitPost()">Post Statement</button>
-    <div id="postStatus" style="margin-top:8px;text-align:center;font-size:14px"></div>
-  </div>
-</div>
+    .card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+    .stmt{font-size:15px;line-height:1.5;margin-bottom:8px}
+    .source{color:#e8a838;text-decoration:none;font-weight:800;font-size:13px}
+    .meta{margin-top:8px}
+    .badge{display:inline-block;padding:4px 10px;border-radius:14px;font-size:11px;font-weight:900}
+    .b-accepted{background:#e6f9e6;color:#2e7d32}
+    .b-modified{background:#fff3e0;color:#e65100}
+    .b-denied{background:#ffebee;color:#c62828}
+    .b-pending{background:#f2f2f2;color:#777}
 
-<!-- SCAN NEWS -->
-<div class="tab-content" id="tab-scannews">
-  <div class="news-box">
-    <strong>Search news about any topic</strong>
-    <input type="text" id="newsQ" placeholder="Search topic or name...">
-    <button class="btn-primary" onclick="scanNews()">Scan News</button>
-    <div id="newsErr" style="margin-top:8px;text-align:center;font-size:14px"></div>
-  </div>
-  <div id="newsResults"></div>
-</div>
+    .post-form{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+    textarea{width:100%;border:1px solid #ddd;border-radius:10px;padding:12px;font-size:15px;min-height:90px;font-family:inherit}
+    input{width:100%;border:1px solid #ddd;border-radius:10px;padding:12px;font-size:14px;margin-top:10px;font-family:inherit}
+    .btn{width:100%;background:#1a1a2e;color:#fff;border:none;padding:13px;border-radius:10px;font-weight:900;cursor:pointer;margin-top:12px}
+    #postStatus{margin-top:8px;text-align:center;font-size:14px}
 
-<!-- SETTINGS -->
-<div class="tab-content" id="tab-settings">
-  <div class="settings-row" onclick="logout()"><span>🚪 Logout</span><span>→</span></div>
-</div>
+    .loading{text-align:center;padding:28px;color:#888}
+    .empty{text-align:center;padding:40px 20px;color:#aaa}
+    .error-msg{color:#c62828;text-align:center;padding:18px}
 
-<!-- BOTTOM NAV -->
-<div class="bottom-nav">
-  <a href="feed.html" class="nav-item"><span class="nav-icon">🏠</span>Feed</a>
-  <a href="dashboard.html" class="nav-item active"><span class="nav-icon">👤</span>Profile</a>
-</div>
-
-<script>
-/* ========== CONFIG — UPDATE THESE ========== */
-var BUBBLE = 'https://verilay.bubbleapps.io';   // your Bubble app URL
-var API    = BUBBLE + '/api/1.1/obj';
-var GNEWS  = '';  // paste your GNews API key here (get free key at gnews.io)
-/* =========================================== */
-
-function getToken(){return localStorage.getItem('token')}
-function getUserId(){return localStorage.getItem('user_id')}
-function getUserName(){return localStorage.getItem('username')||'User'}
-function requireAuth(){if(!getToken())window.location.href='login.html'}
-function logout(){localStorage.clear();window.location.href='login.html'}
-function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
-
-/* PROFILE */
-function loadProfile(){
-  var n=getUserName();
-  document.getElementById('uname').textContent=n;
-  document.getElementById('av').textContent=n.charAt(0).toUpperCase();
-}
-
-/* TABS */
-var tabIds=['statements','newpost','scannews','settings'];
-function switchTab(id){
-  document.querySelectorAll('.tab').forEach(function(t,i){t.classList.toggle('active',tabIds[i]===id)});
-  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active')});
-  document.getElementById('tab-'+id).classList.add('active');
-}
-
-/* STATEMENTS */
-async function getMyStatements(){
-  var box=document.getElementById('stmtBox');
-  try{
-    var uid=getUserId();
-    var c=JSON.stringify([{key:'Created By',constraint_type:'equals',value:uid}]);
-    var r=await fetch(API+'/statement?constraints='+encodeURIComponent(c)+'&sort_field=Created%20Date&descending=true',
-      {headers:{'Authorization':'Bearer '+getToken()}});
-    if(!r.ok)throw new Error(r.status);
-    var d=await r.json();
-    var items=d.response.results||[];
-    if(!items.length){box.innerHTML='<div class="empty">No statements yet. Post your first one!</div>';return}
-    box.innerHTML=items.map(function(s){
-      var st=s.reaction||'pending';
-      return '<div class="card"><div class="stmt">'+esc(s.statement||'')+'</div>'+
-        (s.source_url?'<a href="'+s.source_url+'" target="_blank" style="font-size:13px;color:#e8a838">🔗 Source</a><br>':'')+
-        '<span class="meta">'+new Date(s['Created Date']).toLocaleDateString()+'</span> '+
-        '<span class="badge b-'+st.toLowerCase()+'">'+st.toUpperCase()+'</span></div>';
-    }).join('');
-  }catch(e){box.innerHTML='<div class="error-msg">Error loading statements</div>';console.error(e)}
-}
-
-/* POST */
-async function submitPost(){
-  var text=document.getElementById('postText').value.trim();
-  var url=document.getElementById('postUrl').value.trim();
-  var st=document.getElementById('postStatus');
-  if(!text){st.innerHTML='<span style="color:red">Please write a statement</span>';return}
-  st.innerHTML='<span style="color:#888">Posting...</span>';
-  try{
-    var r=await fetch(API+'/statement',{method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+getToken()},
-      body:JSON.stringify({statement:text,source_url:url,username:getUserName()})});
-    if(!r.ok)throw new Error(r.status);
-    st.innerHTML='<span style="color:green">✅ Posted!</span>';
-    document.getElementById('postText').value='';
-    document.getElementById('postUrl').value='';
-    getMyStatements();
-    setTimeout(function(){st.innerHTML=''},2000);
-  }catch(e){st.innerHTML='<span style="color:red">Error posting</span>';console.error(e)}
-}
-
-/* SCAN NEWS */
-var savedArticles=[];
-async function scanNews(){
-  var q=document.getElementById('newsQ').value.trim();
-  var err=document.getElementById('newsErr');
-  var res=document.getElementById('newsResults');
-  if(!q){err.innerHTML='<span style="color:red">Enter a topic</span>';return}
-  if(!GNEWS){err.innerHTML='<span style="color:red">News API key not set. Add your GNews key in the code.</span>';return}
-  err.innerHTML='';res.innerHTML='<div class="loading">Searching...</div>';
-  try{
-    var r=await fetch('https://gnews.io/api/v4/search?q='+encodeURIComponent(q)+'&lang=en&max=10&apikey='+GNEWS);
-    if(!r.ok)throw new Error(r.status);
-    var d=await r.json();
-    savedArticles=d.articles||[];
-    if(!savedArticles.length){res.innerHTML='<div class="empty">No news found</div>';return}
-    res.innerHTML=savedArticles.map(function(a,i){
-      return '<div class="ncard">'+
-        (a.image?'<img src="'+a.image+'" onerror="this.style.display=\'none\'">':'')+
-        '<div class="nbody"><div class="ntitle">'+esc(a.title)+'</div>'+
-        '<div class="ndesc">'+esc(a.description||'')+'</div>'+
-        '<div class="nsrc">'+esc(a.source&&a.source.name||'')+'</div>'+
-        '<a href="'+a.url+'" target="_blank" style="font-size:12px;color:#1a1a2e">Read ↗</a><br>'+
-        '<button class="npost-btn" onclick="postFromNews('+i+')">Post to Verilay</button></div></div>';
-    }).join('');
-  }catch(e){res.innerHTML='';err.innerHTML='<span style="color:red">Search failed</span>';console.error(e)}
-}
-
-function postFromNews(i){
-  var a=savedArticles[i];if(!a)return;
-  switchTab('newpost');
-  document.getElementById('postText').value=a.title;
-  document.getElementById('postUrl').value=a.url;
-}
-
-/* INIT */
-requireAuth();
-loadProfile();
-getMyStatements();
-</script>
-</body>
-</html>
+    /* News cards */
+    .ncard{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+    .ncard img{width:100%;height:180px;object-fit:cover}
+    .nbody{padding:12px}
+    .ntitle{font-size:15px;font-weight:900;margin-bottom:6px}
+    .ndesc{font-size:13px;color:#666;margin-bottom:8px}
+    .nsrc{font-size:12px;color:#e8a838;font-weight:900;margin-bottom:6px}
