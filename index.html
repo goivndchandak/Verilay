@@ -1,128 +1,209 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <title>Verilay</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Verilay — The layer of truth the internet needs</title>
+  <meta name="description" content="Control your narrative. Accept, modify or deny any statement about you. Generate Verilay'd Cards and share." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0B1F3A;
-      color: white;
+    :root{
+      --navy:#0B1F3A;
+      --navy2:#07162A;
+      --saffron:#F59E0B;
+      --bg:#F8FAFC;
+      --card:#FFFFFF;
+      --muted:#93A4B8;
+      --text:#0B1220;
+      --shadow: 0 10px 30px rgba(2,8,23,.10);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(245,158,11,.25), transparent 60%),
+                  radial-gradient(900px 500px at 90% 10%, rgba(99,102,241,.20), transparent 55%),
+                  linear-gradient(180deg, var(--navy), var(--navy2));
+      color:#fff;
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px 18px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:14px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;
+      font-weight:800;letter-spacing:.10em;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background:var(--saffron);box-shadow:0 0 0 4px rgba(245,158,11,.15);
+    }
+    .navlinks{display:flex;gap:14px;align-items:center;color:rgba(255,255,255,.85);font-weight:600;font-size:14px}
+    .pill{
+      padding:10px 14px;border-radius:999px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(8px);
+    }
+    .cta{
+      background:var(--saffron);color:#111827;border:0;
+      padding:10px 14px;border-radius:999px;font-weight:800;
+      box-shadow:0 12px 26px rgba(245,158,11,.24);
+      cursor:pointer;
     }
 
-    .container {
-      padding: 60px 20px;
-      text-align: centre;
+    .hero{
+      display:grid;grid-template-columns: 1.2fr .8fr;
+      gap:26px;align-items:center;
+      padding:44px 0 24px;
     }
-
-    .hero h1 {
-      font-size: 44px;
-      margin-bottom: 10px;
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr; padding-top:26px;}
+      .navlinks{display:none}
     }
-
-    .hero p {
-      font-size: 18px;
-      colour: #ccc;
+    .kicker{color:rgba(255,255,255,.85);font-weight:700;letter-spacing:.06em;font-size:12px}
+    h1{
+      margin:10px 0 10px;
+      font-size:52px;line-height:1.05;
+      letter-spacing:-.02em;
     }
-
-    .btn {
-      padding: 12px 24px;
-      border-radius: 8px;
-      border: none;
-      margin: 10px;
-      cursor: pointer;
-      font-size: 16px;
+    @media (max-width: 520px){h1{font-size:40px}}
+    .sub{
+      color:rgba(255,255,255,.82);
+      font-size:16px;line-height:1.6;margin:0 0 18px;
+      max-width:54ch;
     }
-
-    .primary {
-      background: #F59E0B;
-      colour: black;
+    .heroActions{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:12px 16px;border-radius:14px;font-weight:800;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.08);
+      cursor:pointer;
     }
-
-    .secondary {
-      background: transparent;
-      border: 1px solid white;
-      colour: white;
+    .btnPrimary{
+      background:var(--saffron);
+      border-color: transparent;color:#111827;
+      box-shadow:0 12px 26px rgba(245,158,11,.24);
     }
+    .hint{margin-top:12px;color:rgba(255,255,255,.68);font-size:13px}
 
-    .card {
-      background: white;
-      colour: black;
-      padding: 20px;
-      border-radius: 16px;
-      width: 300px;
-      margin: auto;
-      margin-top: 40px;
+    .mock{
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      overflow:hidden;
     }
-
-    .section {
-      padding: 60px 20px;
-      background: #F8FAFC;
-      colour: black;
+    .mockTop{
+      padding:14px 16px;display:flex;align-items:center;justify-content:space-between;
+      border-bottom:1px solid rgba(255,255,255,.12);
     }
-
-    .steps {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: centre;
-      gap: 20px;
+    .mockTitle{font-weight:900;letter-spacing:.12em;font-size:12px}
+    .mockCard{
+      padding:16px;
+      display:grid;gap:12px;
     }
+    .miniCard{
+      background: rgba(255,255,255,.92);
+      color:#0b1220;border-radius:16px;padding:14px;
+    }
+    .stamp{
+      display:inline-flex;align-items:center;gap:8px;font-weight:900;
+      color:#065F46;background:#DCFCE7;border-radius:999px;padding:6px 10px;font-size:12px
+    }
+    .quote{font-size:16px;font-weight:700;margin:10px 0 6px}
+    .meta{font-size:12px;color:#64748B;font-weight:700}
 
-    .step {
-      width: 250px;
-      padding: 20px;
-      border-radius: 12px;
-      background: white;
+    .below{
+      background: var(--bg);
+      color: var(--text);
+      margin-top: 34px;
+      border-top-left-radius: 26px;
+      border-top-right-radius: 26px;
+      box-shadow: 0 -20px 60px rgba(0,0,0,.25);
+    }
+    .section{padding:54px 0}
+    .grid{
+      display:grid;grid-template-columns:repeat(3,1fr);
+      gap:14px;
+    }
+    @media (max-width: 900px){.grid{grid-template-columns:1fr}}
+    .tile{
+      background: var(--card);
+      border-radius: var(--radius);
+      padding:18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(2,8,23,.06);
+    }
+    .tile h3{margin:8px 0 6px;font-size:16px}
+    .tile p{margin:0;color:#475569;line-height:1.55}
+    .icon{
+      width:40px;height:40px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      background: rgba(245,158,11,.14);
+      border:1px solid rgba(245,158,11,.22);
+      font-weight:900;color:#8a5a05;
+    }
+    .footer{
+      padding:28px 0;color:#64748B;font-weight:700;font-size:13px;
+      display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px
     }
   </style>
 </head>
 
 <body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <span class="dot"></span>
+        <span>VERILAY</span>
+      </div>
 
-<div class="container hero">
-  <h1>Control your narrative.</h1>
-  <p>Accept, Modify or Deny any statement about you.</p>
+      <div class="navlinks">
+        <a class="pill" href="#how">How it works</a>
+        <a class="pill" href="#features">Features</a>
+        <a class="pill" href="login.html">Login</a>
+        <button class="cta" onclick="location.href='signup.html'">Sign up free</button>
+      </div>
 
-  <button class="btn primary" onclick="window.location='signup.html'">
-    Get Started Free
-  </button>
-
-  <button class="btn secondary" onclick="window.location='feed.html'">
-    View Demo
-  </button>
-
-  <div class="card">
-    <b>✅ ACCEPTED</b>
-    <p>"Partnership confirmed"</p>
-    <small>— @username</small>
-  </div>
-</div>
-
-<div class="section">
-  <h2 style="text-align:center;">How It Works</h2>
-
-  <div class="steps">
-
-    <div class="step">
-      <h3>Post</h3>
-      <p>Create or scan a statement</p>
+      <button class="cta" onclick="location.href='signup.html'">Sign up free</button>
     </div>
 
-    <div class="step">
-      <h3>React</h3>
-      <p>Accept, Modify or Deny</p>
-    </div>
+    <div class="hero">
+      <div>
+        <div class="kicker">A PERSONAL TRUTH LAYER FOR THE INTERNET</div>
+        <h1>Control your narrative. Publicly.</h1>
+        <p class="sub">
+          Accept, modify, or deny any statement or news about you — then share a verified
+          <b>Verilay’d Card</b> as your stamp of truth.
+        </p>
 
-    <div class="step">
-      <h3>Share</h3>
-      <p>Generate Verilay Card</p>
-    </div>
+        <div class="heroActions">
+          <button class="btn btnPrimary" onclick="location.href='signup.html'">Get started free</button>
+          <button class="btn" onclick="location.href='login.html'">Login</button>
+          <button class="btn" onclick="location.href='feed.html'">View demo feed</button>
+        </div>
+        <div class="hint">Minimal. Elegant. Built for an Instagram-first world.</div>
+      </div>
 
-  </div>
-</div>
-
-</body>
-</html>
-``
+      <div class="mock" aria-label="Product preview">
+        <div class="mockTop">
+          <div class="mockTitle">VERILAY’D CARD PREVIEW</div>
+          <div style="opacity:.75;font-weight:800;font-size:12px">verilay.co.in</div>
+        </div>
+        <div class="mockCard">
+          <div class="miniCard">
+            <span class="stamp">✅ ACCEPTED</span>
+            <div class="quote">“Partnership confirmed”</div>
+            <div class="meta">— @username</div>
+          </div>
+          <div class="miniCard" style="background:#fff7ed">
+            <span class="stamp" style="background:#FEF3C7;color:#92400E">✏️ MODIFIED</span>
