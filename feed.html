@@ -170,3 +170,316 @@
     .chip.red{border-color: rgba(220,38,38,.26); background: rgba(220,38,38,.08)}
     .status{
       padding:0 12px 12px;
+      color:var(--muted);
+      font-size:12px;font-weight:800;
+    }
+
+    .tabbar{
+      position:fixed;left:0;right:0;bottom:0;z-index:50;
+      background:#fff;
+      border-top:1px solid var(--line);
+      padding:10px 12px env(safe-area-inset-bottom);
+    }
+    .tabs{
+      max-width:780px;margin:0 auto;
+      display:grid;grid-template-columns:repeat(5,1fr);
+      gap:8px;
+    }
+    .tab{
+      display:flex;flex-direction:column;align-items:center;gap:6px;
+      color:var(--muted);
+      font-weight:800;font-size:11px;
+      text-decoration:none;
+      padding:8px 6px;border-radius:14px;
+    }
+    .tab.active{color:var(--navy);background:rgba(11,31,58,.06)}
+    .tab svg{width:20px;height:20px}
+    .toast{
+      position:fixed;left:50%;transform:translateX(-50%);
+      bottom:92px;z-index:60;
+      background:rgba(11,18,32,.92);color:#fff;
+      padding:10px 12px;border-radius:999px;
+      font-weight:800;font-size:13px;
+      display:none;
+    }
+    .modalBg{
+      position:fixed;inset:0;background:rgba(2,8,23,.45);
+      display:none;align-items:flex-end;justify-content:center;z-index:80;
+    }
+    .modal{
+      width:min(780px,100%);
+      background:#fff;border-top-left-radius:22px;border-top-right-radius:22px;
+      padding:12px;border:1px solid var(--line);
+    }
+    .modalTop{display:flex;justify-content:space-between;align-items:center;padding:8px 6px}
+    .modalTitle{font-weight:900}
+  </style>
+
+  <script src="js/api.js" defer></script>
+</head>
+
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span><span>VERILAY</span></div>
+      <div style="display:flex;gap:10px">
+        <button class="iconBtn" title="Verilay'd Card" onclick="location.href='card.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 7h10v10H7z"/><path d="M7 7l10 10"/>
+          </svg>
+        </button>
+        <button class="iconBtn" title="Profile" onclick="location.href='dashboard.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="8" r="4"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="stories" id="stories">
+      <div class="story"><div class="avatar"></div><div class="storyName">You</div></div>
+      <div class="story"><div class="avatar"></div><div class="storyName">Trending</div></div>
+      <div class="story"><div class="avatar"></div><div class="storyName">Founders</div></div>
+      <div class="story"><div class="avatar"></div><div class="storyName">Brands</div></div>
+      <div class="story"><div class="avatar"></div><div class="storyName">Media</div></div>
+    </div>
+
+    <div class="composer">
+      <div class="row">
+        <input class="input" id="sourceUrl" placeholder="Paste a news/source link (optional)" />
+      </div>
+      <div style="height:10px"></div>
+      <textarea class="textarea" id="statementText" placeholder="Write a statement about you…"></textarea>
+      <div style="height:10px"></div>
+      <div class="row" style="justify-content:space-between">
+        <button class="secondary" onclick="location.href='explore.html'">Explore</button>
+        <button class="primary" id="postBtn">Post</button>
+      </div>
+      <div style="margin-top:10px;color:var(--muted);font-weight:800;font-size:12px">
+        After posting, only you can Accept / Modify / Deny your own statement.
+      </div>
+    </div>
+
+    <div class="feed" id="feed"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="modalBg" id="modalBg">
+    <div class="modal">
+      <div class="modalTop">
+        <div class="modalTitle">Write your modification</div>
+        <button class="iconBtn" onclick="closeModal()" title="Close">✕</button>
+      </div>
+      <textarea class="textarea" id="modifyText" placeholder="Your corrected version…"></textarea>
+      <div style="height:10px"></div>
+      <div class="row" style="justify-content:flex-end">
+        <button class="primary" id="saveModifyBtn">Save modification</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabbar">
+    <div class="tabs">
+      <a class="tab active" href="feed.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/>
+        </svg>
+        Feed
+      </a>
+      <a class="tab" href="explore.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+        </svg>
+        Explore
+      </a>
+      <a class="tab" href="dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14"/><path d="M5 12h14"/>
+        </svg>
+        Create
+      </a>
+      <a class="tab" href="card.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M7 7h10v10H7z"/><path d="M7 7l10 10"/>
+        </svg>
+        Card
+      </a>
+      <a class="tab" href="dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="8" r="4"/>
+        </svg>
+        Profile
+      </a>
+    </div>
+  </div>
+
+<script>
+  // --- Guard: require auth token for app pages ---
+  function requireAuth(){
+    try{
+      if(typeof getToken !== "function") return; // api.js not loaded yet
+      const t = getToken();
+      if(!t) location.href = "login.html";
+    }catch(e){
+      // if api.js fails to load, we still don't want blank screen
+      console.error(e);
+    }
+  }
+  requireAuth();
+
+  const feedEl = document.getElementById("feed");
+  const toastEl = document.getElementById("toast");
+  const modalBg = document.getElementById("modalBg");
+  const modifyTextEl = document.getElementById("modifyText");
+  let modifyTargetId = null;
+
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.style.display = "block";
+    setTimeout(()=> toastEl.style.display="none", 1600);
+  }
+
+  function safeHost(url){
+    try{ return new URL(url).host.replace("www.",""); }catch(e){ return ""; }
+  }
+
+  function getOwnerId(post){
+    // Bubble objects can vary by field naming; we try common ones.
+    return post["Created By"] || post.created_by || post.creator || post.user_id || post.owner || "";
+  }
+
+  function getText(post){
+    return post.text || post.statement || post.body || post.content || "";
+  }
+
+  function getSourceUrl(post){
+    return post.source_url || post.sourceUrl || post.url || "";
+  }
+
+  function renderPost(post){
+    const myId = (typeof getUserId === "function") ? getUserId() : "";
+    const ownerId = String(getOwnerId(post) || "");
+    const isMine = myId && ownerId && (String(myId) === ownerId);
+
+    const text = getText(post);
+    const url = getSourceUrl(post);
+    const host = url ? safeHost(url) : "";
+
+    const wrap = document.createElement("div");
+    wrap.className = "post";
+
+    wrap.innerHTML = `
+      <div class="postHead">
+        <div class="who">
+          <div class="mini"></div>
+          <div>
+            <div class="handle">@${(post.username || post.handle || "user")}</div>
+            <div class="time">${post.time || "Just now"}</div>
+          </div>
+        </div>
+        <div class="time">Verilay</div>
+      </div>
+
+      <div class="postBody">
+        <p class="text">${escapeHtml(text || "")}</p>
+
+        ${url ? `
+          <div class="linkCard" role="link" tabindex="0" onclick="window.open('${escapeAttr(url)}','_blank')">
+            <div class="thumb"></div>
+            <div class="linkInfo">
+              <div class="host">${escapeHtml(host)}</div>
+              <div class="url">${escapeHtml(url)}</div>
+            </div>
+          </div>
+        ` : ``}
+      </div>
+
+      <div class="actions" style="${isMine ? "" : "opacity:.55; pointer-events:none"}">
+        <button class="chip green" onclick="reactNow('${escapeAttr(post._id || post.id || "")}','accepted')">✅ Accepted</button>
+        <button class="chip amber" onclick="openModify('${escapeAttr(post._id || post.id || "")}')">✏️ Modified</button>
+        <button class="chip red" onclick="reactNow('${escapeAttr(post._id || post.id || "")}','denied')">❌ Denied</button>
+      </div>
+      <div class="status">${isMine ? "Only you can verify your own statement." : "Only the owner can verify this statement."}</div>
+    `;
+    return wrap;
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+  function escapeAttr(s){
+    return String(s).replace(/"/g,'&quot;');
+  }
+
+  async function loadFeed(){
+    feedEl.innerHTML = "";
+    try{
+      const data = await getFeed();
+      const list = (data && data.response && (data.response.statements || data.response.results)) ? (data.response.statements || data.response.results) : [];
+      if(!list || list.length===0){
+        feedEl.innerHTML = `<div style="padding:20px;color:var(--muted);font-weight:800">No posts yet. Be the first to post a statement.</div>`;
+        return;
+      }
+      list.forEach(p => feedEl.appendChild(renderPost(p)));
+    }catch(e){
+      console.error(e);
+      feedEl.innerHTML = `<div style="padding:20px;color:#b91c1c;font-weight:900">Feed error: ${escapeHtml(e.message || "Unable to load")}</div>`;
+    }
+  }
+
+  async function reactNow(id, action){
+    if(!id){ toast("Missing statement id"); return; }
+    try{
+      await reactStatement(id, action);
+      toast("Saved: " + action.toUpperCase());
+    }catch(e){
+      toast(e.message || "Reaction failed");
+    }
+  }
+
+  function openModify(id){
+    modifyTargetId = id;
+    modifyTextEl.value = "";
+    modalBg.style.display = "flex";
+  }
+  function closeModal(){
+    modalBg.style.display = "none";
+    modifyTargetId = null;
+  }
+
+  document.getElementById("saveModifyBtn").addEventListener("click", async () => {
+    if(!modifyTargetId) return;
+    // NOTE: your current api.js has reactStatement(statementId, action) only.
+    // We'll still mark as "modified". If you want to save the text too, your Bubble workflow needs a field for modification_text.
+    try{
+      await reactStatement(modifyTargetId, "modified");
+      closeModal();
+      toast("Saved: MODIFIED");
+    }catch(e){
+      toast(e.message || "Modify failed");
+    }
+  });
+
+  document.getElementById("postBtn").addEventListener("click", async ()=>{
+    const text = document.getElementById("statementText").value.trim();
+    const url = document.getElementById("sourceUrl").value.trim();
+    if(!text){ toast("Write a statement first"); return; }
+    try{
+      // Uses addStatement(text, sourceUrl) from api.js
+      await addStatement(text, url);
+      document.getElementById("statementText").value = "";
+      document.getElementById("sourceUrl").value = "";
+      toast("Posted");
+      loadFeed();
+    }catch(e){
+      toast(e.message || "Post failed");
+    }
+  });
+
+  // initial load
+  window.addEventListener("load", loadFeed);
+</script>
+
+</body>
+</html>
