@@ -1,252 +1,219 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Profile - Verilay</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #fafafa; padding-bottom: 70px; }
-    .topbar { background: #1d3557; color: white; padding: 15px 20px; font-size: 20px; font-weight: bold; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-    .topbar span { color: #FF9933; letter-spacing: 3px; }
-    .logout-btn { background: transparent; color: #FF9933; border: 1px solid #FF9933; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; cursor: pointer; }
-    .profile-header { text-align: center; padding: 25px 15px 15px; background: white; border-bottom: 1px solid #eee; }
-    .avatar { width: 70px; height: 70px; border-radius: 50%; background: #1d3557; color: #FF9933; font-size: 28px; font-weight: bold; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
-    .profile-name { font-size: 18px; font-weight: bold; color: #1d3557; }
-    .profile-bio { font-size: 13px; color: #888; margin-top: 4px; }
-    .tabs { display: flex; background: white; border-bottom: 1px solid #eee; overflow-x: auto; }
-    .tab { flex: 1; text-align: center; padding: 12px 5px; font-size: 12px; font-weight: bold; color: #999; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
-    .tab.active { color: #1d3557; border-bottom-color: #FF9933; }
-    .tab-content { display: none; max-width: 600px; margin: 0 auto; padding: 15px; }
-    .tab-content.active { display: block; }
-    .card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .card-text { font-size: 14px; line-height: 1.6; color: #333; }
-    .card-date { font-size: 11px; color: #999; margin-top: 5px; }
-    .card-link { font-size: 12px; margin-top: 5px; }
-    .card-link a { color: #1d3557; text-decoration: none; }
-    .card-actions { margin-top: 10px; }
-    .card-actions button { padding: 7px 14px; border: none; border-radius: 20px; cursor: pointer; font-size: 11px; margin-right: 5px; color: white; font-weight: bold; }
-    .preview-card { border: 1px solid #eee; border-radius: 12px; overflow: hidden; margin-top: 10px; background: #fff; }
-    .preview-card img { width: 100%; max-height: 200px; object-fit: cover; display: block; }
-    .preview-info { padding: 10px; }
-    .preview-title { font-weight: bold; color: #1d3557; font-size: 13px; }
-    .preview-desc { color: #888; font-size: 12px; margin-top: 4px; }
-    .preview-domain { color: #FF9933; font-size: 11px; font-weight: bold; margin-top: 6px; }
-    .form-group { margin-bottom: 12px; }
-    .form-group label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; font-weight: bold; }
-    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-    .form-group textarea { min-height: 80px; resize: vertical; }
-    .btn { width: 100%; padding: 12px; background: #FF9933; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; }
-    .btn:hover { background: #e68a2e; }
-    .btn-navy { background: #1d3557; }
-    .btn-navy:hover { background: #0d1b2a; }
-    .msg { font-size: 12px; margin-top: 8px; text-align: center; }
-    .msg-ok { color: green; }
-    .msg-err { color: red; }
-    .news-card { background: white; padding: 12px; margin-bottom: 10px; border-radius: 10px; border-left: 3px solid #FF9933; }
-    .news-card h4 { font-size: 13px; color: #1d3557; margin-bottom: 4px; }
-    .news-card p { font-size: 12px; color: #888; }
-    .news-card a { font-size: 11px; color: #FF9933; }
-    .gen-card-btn { display: inline-block; font-size: 12px; color: white; background: #FF9933; padding: 5px 14px; border-radius: 20px; text-decoration: none; font-weight: bold; }
-    .marked-label { font-size: 13px; color: #1d3557; font-weight: bold; }
-    .result-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
-    .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; align-items: center; height: 60px; border-top: 1px solid #eee; z-index: 100; }
-    .bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
-    .bottomnav a.active { color: #1d3557; font-weight: bold; }
-    .bottomnav a span { font-size: 22px; display: block; }
-    .loading { text-align: center; color: #999; padding: 20px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Verilay – Profile</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;color:#1a1a2e;padding-bottom:70px}
+.header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.logo{color:#e8a838;font-size:22px;font-weight:800;letter-spacing:4px}
+.logout-btn{background:transparent;border:2px solid #e8a838;color:#e8a838;padding:6px 18px;border-radius:20px;font-weight:600;cursor:pointer;font-size:14px}
+.profile-section{text-align:center;padding:24px 20px 12px;background:#fff}
+.avatar{width:80px;height:80px;border-radius:50%;background:#1a1a2e;color:#e8a838;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;margin:0 auto 8px}
+.username{font-size:18px;font-weight:700;color:#1a1a2e}
+.tabs{display:flex;background:#fff;border-bottom:2px solid #eee;overflow-x:auto}
+.tab{flex:1;text-align:center;padding:12px 6px;font-size:13px;font-weight:600;color:#888;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tab.active{color:#e8a838;border-bottom-color:#e8a838}
+.tab-content{display:none;padding:16px}
+.tab-content.active{display:block}
+.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card .stmt{font-size:15px;line-height:1.5;margin-bottom:6px}
+.card .meta{font-size:12px;color:#888}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;margin-top:6px}
+.b-accepted{background:#e6f9e6;color:#2e7d32}
+.b-modified{background:#fff3e0;color:#e65100}
+.b-denied{background:#ffebee;color:#c62828}
+.b-pending{background:#f0f0f0;color:#888}
+.post-form{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.post-form textarea{width:100%;border:1px solid #ddd;border-radius:8px;padding:12px;font-size:15px;resize:vertical;min-height:80px;font-family:inherit}
+.post-form input[type="url"]{width:100%;border:1px solid #ddd;border-radius:8px;padding:12px;font-size:14px;margin-top:10px;font-family:inherit}
+.btn-primary{width:100%;background:#1a1a2e;color:#fff;border:none;padding:14px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;margin-top:12px}
+.news-box{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:16px}
+.news-box input{width:100%;border:1px solid #ddd;border-radius:8px;padding:12px;font-size:15px;margin-top:10px;font-family:inherit}
+.ncard{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ncard img{width:100%;height:180px;object-fit:cover}
+.ncard .nbody{padding:12px}
+.ncard .ntitle{font-size:15px;font-weight:600;margin-bottom:4px}
+.ncard .ndesc{font-size:13px;color:#666;margin-bottom:6px}
+.ncard .nsrc{font-size:12px;color:#e8a838}
+.npost-btn{background:#e8a838;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;margin-top:6px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #eee;z-index:100}
+.nav-item{text-align:center;text-decoration:none;color:#888;font-size:11px}
+.nav-item.active{color:#1a1a2e}
+.nav-icon{display:block;font-size:22px;margin-bottom:2px}
+.error-msg{color:#c62828;text-align:center;padding:12px;font-size:14px}
+.loading{text-align:center;padding:20px;color:#888}
+.empty{text-align:center;padding:40px 20px;color:#aaa}
+.settings-row{background:#fff;padding:16px;border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+</style>
 </head>
 <body>
-<div class="topbar">
-  <span>VERILAY</span>
-  <button class="logout-btn" onclick="localStorage.clear();window.location.href='login.html';">Logout</button>
+
+<div class="header">
+  <div class="logo">VERILAY</div>
+  <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
-<div class="profile-header">
-  <div class="avatar" id="avatarLetter">V</div>
-  <div class="profile-name" id="profileName">Loading...</div>
-  <div class="profile-bio" id="profileBio"></div>
+
+<div class="profile-section">
+  <div class="avatar" id="av">V</div>
+  <div class="username" id="uname">Loading...</div>
 </div>
+
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('statementsTab',this)">Statements</div>
-  <div class="tab" onclick="switchTab('newPostTab',this)">New Post</div>
-  <div class="tab" onclick="switchTab('scanTab',this)">Scan News</div>
-  <div class="tab" onclick="switchTab('settingsTab',this)">Settings</div>
+  <div class="tab active" onclick="switchTab('statements')">Statements</div>
+  <div class="tab" onclick="switchTab('newpost')">New Post</div>
+  <div class="tab" onclick="switchTab('scannews')">Scan News</div>
+  <div class="tab" onclick="switchTab('settings')">Settings</div>
 </div>
-<div class="tab-content active" id="statementsTab">
-  <div id="statementsContainer"><div class="loading">Loading statements...</div></div>
+
+<!-- STATEMENTS -->
+<div class="tab-content active" id="tab-statements">
+  <div id="stmtBox"><div class="loading">Loading statements...</div></div>
 </div>
-<div class="tab-content" id="newPostTab">
-  <div class="card">
-    <div class="form-group">
-      <label>Source URL (optional - paste first for auto headline)</label>
-      <input type="text" id="sourceUrl" placeholder="https://example.com/article..." onpaste="setTimeout(fetchPreview,200)" onblur="fetchPreview()">
-      <div id="urlPreviewBox"></div>
-    </div>
-    <div class="form-group">
-      <label>Write your statement</label>
-      <textarea id="newStatement" placeholder="Write your truth or it auto-fills from URL above..."></textarea>
-    </div>
-    <button class="btn" onclick="postStatement()">Post Statement</button>
-    <div id="postMsg" class="msg"></div>
-    <div id="postResult"></div>
+
+<!-- NEW POST -->
+<div class="tab-content" id="tab-newpost">
+  <div class="post-form">
+    <textarea id="postText" placeholder="Write your statement..."></textarea>
+    <input type="url" id="postUrl" placeholder="Paste source URL (optional)">
+    <button class="btn-primary" onclick="submitPost()">Post Statement</button>
+    <div id="postStatus" style="margin-top:8px;text-align:center;font-size:14px"></div>
   </div>
 </div>
-<div class="tab-content" id="scanTab">
-  <div class="card">
-    <div class="form-group">
-      <label>Search news about any topic</label>
-      <input type="text" id="newsQuery" placeholder="Search topic or name...">
-    </div>
-    <button class="btn btn-navy" onclick="scanNews()">Scan News</button>
-    <div id="newsResults" style="margin-top:15px;"></div>
+
+<!-- SCAN NEWS -->
+<div class="tab-content" id="tab-scannews">
+  <div class="news-box">
+    <strong>Search news about any topic</strong>
+    <input type="text" id="newsQ" placeholder="Search topic or name...">
+    <button class="btn-primary" onclick="scanNews()">Scan News</button>
+    <div id="newsErr" style="margin-top:8px;text-align:center;font-size:14px"></div>
   </div>
+  <div id="newsResults"></div>
 </div>
-<div class="tab-content" id="settingsTab">
-  <div class="card">
-    <div class="form-group"><label>Full Name</label><input id="setName" placeholder="Your name"></div>
-    <div class="form-group"><label>Username</label><input id="setUsername" placeholder="@username"></div>
-    <div class="form-group"><label>Bio</label><textarea id="setBio" placeholder="About you..."></textarea></div>
-    <div class="form-group"><label>LinkedIn URL</label><input id="setLinkedin" placeholder="https://linkedin.com/in/..."></div>
-    <div class="form-group"><label>Instagram URL</label><input id="setInstagram" placeholder="https://instagram.com/..."></div>
-    <div class="form-group"><label>Twitter URL</label><input id="setTwitter" placeholder="https://twitter.com/..."></div>
-    <button class="btn" onclick="saveSettings()">Save Settings</button>
-    <div id="settingsMsg" class="msg"></div>
-  </div>
+
+<!-- SETTINGS -->
+<div class="tab-content" id="tab-settings">
+  <div class="settings-row" onclick="logout()"><span>🚪 Logout</span><span>→</span></div>
 </div>
-<div class="bottomnav">
-  <a href="feed.html"><span>&#127968;</span> Feed</a>
-  <a href="dashboard.html" class="active"><span>&#128100;</span> Profile</a>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <a href="feed.html" class="nav-item"><span class="nav-icon">🏠</span>Feed</a>
+  <a href="dashboard.html" class="nav-item active"><span class="nav-icon">👤</span>Profile</a>
 </div>
-<script src="js/api.js"></script>
+
 <script>
-if (!localStorage.getItem("token")) { window.location.href = "login.html"; }
-window._stmtTexts = {};
-var lastPostedId = "";
-function escapeHtml(str) { return String(str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-function getDomain(u) { try { return new URL(u).hostname.replace("www.",""); } catch(e) { return ""; } }
-function switchTab(tabId, el) { document.querySelectorAll(".tab-content").forEach(function(t){t.classList.remove("active");}); document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active");}); document.getElementById(tabId).classList.add("active"); el.classList.add("active"); }
-function buildCardLink(text, verdict) { return "card.html?text=" + encodeURIComponent(text||"") + "&verdict=" + encodeURIComponent(verdict||"accepted"); }
-function makeResultHtml(label, cardUrl) { return "<div class='result-row'><span class='marked-label'>This is marked " + label + "</span><a class='gen-card-btn' href='" + cardUrl + "'>&#127912; Generate Card</a></div>"; }
-async function fetchPreview() {
-  var urlInput = document.getElementById("sourceUrl");
-  var textInput = document.getElementById("newStatement");
-  var previewBox = document.getElementById("urlPreviewBox");
-  var postMsg = document.getElementById("postMsg");
-  var url = urlInput.value.trim();
-  if (!url || !url.startsWith("http")) return;
-  try {
-    postMsg.innerText = "Fetching headline from link...";
-    postMsg.className = "msg";
-    var res = await fetch("https://api.microlink.io?url=" + encodeURIComponent(url));
-    var data = await res.json();
-    if (data && data.status === "success" && data.data) {
-      var og = data.data;
-      if (!textInput.value.trim() || textInput.value.trim().startsWith("http")) { textInput.value = og.title || ""; }
-      if (previewBox) {
-        var img = (og.image && og.image.url) ? og.image.url : "";
-        var dom = getDomain(url);
-        previewBox.innerHTML = "<div class='preview-card'>" + (img ? "<img src='" + escapeHtml(img) + "' onerror=\"this.style.display='none'\">" : "") + "<div class='preview-info'><div class='preview-title'>" + escapeHtml(og.title||"") + "</div><div class='preview-desc'>" + escapeHtml((og.description||"").substring(0,120)) + "</div><div class='preview-domain'>" + escapeHtml(dom) + "</div></div></div>";
-      }
-      postMsg.innerText = "Headline auto-filled! Edit if needed.";
-      postMsg.className = "msg msg-ok";
-    } else { postMsg.innerText = ""; }
-  } catch(e) { postMsg.innerText = ""; }
+/* ========== CONFIG — UPDATE THESE ========== */
+var BUBBLE = 'https://verilay.bubbleapps.io';   // your Bubble app URL
+var API    = BUBBLE + '/api/1.1/obj';
+var GNEWS  = '';  // paste your GNews API key here (get free key at gnews.io)
+/* =========================================== */
+
+function getToken(){return localStorage.getItem('token')}
+function getUserId(){return localStorage.getItem('user_id')}
+function getUserName(){return localStorage.getItem('username')||'User'}
+function requireAuth(){if(!getToken())window.location.href='login.html'}
+function logout(){localStorage.clear();window.location.href='login.html'}
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+/* PROFILE */
+function loadProfile(){
+  var n=getUserName();
+  document.getElementById('uname').textContent=n;
+  document.getElementById('av').textContent=n.charAt(0).toUpperCase();
 }
-async function loadProfile() {
-  try {
-    var res = await getProfile();
-    var u = res.response || {};
-    document.getElementById("profileName").innerText = u.full_name || u.username || u.email || "User";
-    document.getElementById("profileBio").innerText = u.bio || "";
-    document.getElementById("avatarLetter").innerText = (u.full_name || u.username || u.email || "V").charAt(0).toUpperCase();
-    document.getElementById("setName").value = u.full_name || "";
-    document.getElementById("setUsername").value = u.username || "";
-    document.getElementById("setBio").value = u.bio || "";
-    document.getElementById("setLinkedin").value = u.linkedin_url || "";
-    document.getElementById("setInstagram").value = u.instagram_url || "";
-    document.getElementById("setTwitter").value = u.twitter_url || "";
-  } catch(e) {}
+
+/* TABS */
+var tabIds=['statements','newpost','scannews','settings'];
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach(function(t,i){t.classList.toggle('active',tabIds[i]===id)});
+  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active')});
+  document.getElementById('tab-'+id).classList.add('active');
 }
-async function loadStatements() {
-  var container = document.getElementById("statementsContainer");
-  try {
-    var res = await getMyStatements();
-    var list = [];
-    if (res.response && res.response.results) list = res.response.results;
-    else if (Array.isArray(res.response)) list = res.response;
-    container.innerHTML = "";
-    if (list.length === 0) { container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No statements yet.</p></div>"; return; }
-    window._stmtTexts = {};
-    for (var i = 0; i < list.length; i++) {
-      var item = list[i]; var id = item._id;
-      window._stmtTexts[id] = item.text || "";
-      var sourceLink = item.source_url ? "<div class='card-link'>&#128279; <a href='" + escapeHtml(item.source_url) + "' target='_blank'>Source</a></div>" : "";
-      var dateStr = (item.Created_Date||item.created_date) ? new Date(item.Created_Date||item.created_date).toLocaleDateString() : "";
-      var previewHtml = "";
-      var pTitle=item.preview_title||"", pImg=item.preview_image||"", pDesc=item.preview_description||"", pUrl=item.source_url||"";
-      if (pUrl && (pTitle||pImg)) { previewHtml = "<div class='preview-card'>" + (pImg?"<img src='"+escapeHtml(pImg)+"' onerror=\"this.style.display='none'\">":"") + "<div class='preview-info'>" + (pTitle?"<div class='preview-title'>"+escapeHtml(pTitle)+"</div>":"") + (pDesc?"<div class='preview-desc'>"+escapeHtml(pDesc.substring(0,120))+"</div>":"") + "<div class='preview-domain'>"+escapeHtml(getDomain(pUrl))+"</div></div></div>"; }
-      var reactBtns = "<div class='card-actions' id='actions-"+id+"'><button style='background:#2d6a4f;' onclick=\"reactPost('"+id+"','accepted')\">&#9989; Accept</button><button style='background:#f77f00;' onclick=\"reactPost('"+id+"','modified')\">&#9999;&#65039; Modify</button><button style='background:#d62828;' onclick=\"reactPost('"+id+"','denied')\">&#10060; Deny</button></div>";
-      container.innerHTML += "<div class='card'><div class='card-text'>"+escapeHtml(item.text||"")+"</div>"+previewHtml+sourceLink+"<div class='card-date'>"+dateStr+"</div>"+reactBtns+"<div id='result-"+id+"'></div></div>";
-    }
-  } catch(e) { container.innerHTML = "<div class='msg msg-err'>Error: "+escapeHtml(e.message)+"</div>"; }
+
+/* STATEMENTS */
+async function getMyStatements(){
+  var box=document.getElementById('stmtBox');
+  try{
+    var uid=getUserId();
+    var c=JSON.stringify([{key:'Created By',constraint_type:'equals',value:uid}]);
+    var r=await fetch(API+'/statement?constraints='+encodeURIComponent(c)+'&sort_field=Created%20Date&descending=true',
+      {headers:{'Authorization':'Bearer '+getToken()}});
+    if(!r.ok)throw new Error(r.status);
+    var d=await r.json();
+    var items=d.response.results||[];
+    if(!items.length){box.innerHTML='<div class="empty">No statements yet. Post your first one!</div>';return}
+    box.innerHTML=items.map(function(s){
+      var st=s.reaction||'pending';
+      return '<div class="card"><div class="stmt">'+esc(s.statement||'')+'</div>'+
+        (s.source_url?'<a href="'+s.source_url+'" target="_blank" style="font-size:13px;color:#e8a838">🔗 Source</a><br>':'')+
+        '<span class="meta">'+new Date(s['Created Date']).toLocaleDateString()+'</span> '+
+        '<span class="badge b-'+st.toLowerCase()+'">'+st.toUpperCase()+'</span></div>';
+    }).join('');
+  }catch(e){box.innerHTML='<div class="error-msg">Error loading statements</div>';console.error(e)}
 }
-async function postStatement() {
-  var text = document.getElementById("newStatement").value.trim();
-  var sourceUrl = document.getElementById("sourceUrl").value.trim();
-  var msg = document.getElementById("postMsg");
-  var resultDiv = document.getElementById("postResult");
-  msg.innerText = ""; msg.className = "msg"; resultDiv.innerHTML = "";
-  if (!text) { msg.innerText = "Write a statement first"; msg.className = "msg msg-err"; return; }
-  msg.innerText = "Posting...";
-  try {
-    var res = await addStatement(text, sourceUrl || "");
-    lastPostedId = "";
-    if (res.response) lastPostedId = res.response.id || res.response._id || "";
-    if (res.id) lastPostedId = res.id;
-    if (res._id) lastPostedId = res._id;
-    msg.innerText = "Posted!"; msg.className = "msg msg-ok";
-    document.getElementById("newStatement").value = "";
-    document.getElementById("sourceUrl").value = "";
-    document.getElementById("urlPreviewBox").innerHTML = "";
-    if (lastPostedId) {
-      window._stmtTexts[lastPostedId] = text;
-      resultDiv.innerHTML = "<div class='card-actions' id='actions-"+lastPostedId+"' style='margin-top:10px;'><button style='background:#2d6a4f;color:white;' onclick=\"reactPost('"+lastPostedId+"','accepted')\">&#9989; Accept</button><button style='background:#f77f00;color:white;' onclick=\"reactPost('"+lastPostedId+"','modified')\">&#9999;&#65039; Modify</button><button style='background:#d62828;color:white;' onclick=\"reactPost('"+lastPostedId+"','denied')\">&#10060; Deny</button></div><div id='result-"+lastPostedId+"'></div>";
-    }
-    loadStatements();
-  } catch(e) { msg.innerText = "Error: " + e.message; msg.className = "msg msg-err"; }
+
+/* POST */
+async function submitPost(){
+  var text=document.getElementById('postText').value.trim();
+  var url=document.getElementById('postUrl').value.trim();
+  var st=document.getElementById('postStatus');
+  if(!text){st.innerHTML='<span style="color:red">Please write a statement</span>';return}
+  st.innerHTML='<span style="color:#888">Posting...</span>';
+  try{
+    var r=await fetch(API+'/statement',{method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+getToken()},
+      body:JSON.stringify({statement:text,source_url:url,username:getUserName()})});
+    if(!r.ok)throw new Error(r.status);
+    st.innerHTML='<span style="color:green">✅ Posted!</span>';
+    document.getElementById('postText').value='';
+    document.getElementById('postUrl').value='';
+    getMyStatements();
+    setTimeout(function(){st.innerHTML=''},2000);
+  }catch(e){st.innerHTML='<span style="color:red">Error posting</span>';console.error(e)}
 }
-async function reactPost(id, action) {
-  try {
-    await reactStatement(id, action);
-    var actionsEl = document.getElementById("actions-" + id);
-    if (actionsEl) actionsEl.style.display = "none";
-    var resultEl = document.getElementById("result-" + id);
-    if (resultEl) { var label = action.charAt(0).toUpperCase() + action.slice(1); var text = (window._stmtTexts && window._stmtTexts[id]) || ""; resultEl.innerHTML = makeResultHtml(label, buildCardLink(text, action)); }
-  } catch(e) { console.error(e); }
+
+/* SCAN NEWS */
+var savedArticles=[];
+async function scanNews(){
+  var q=document.getElementById('newsQ').value.trim();
+  var err=document.getElementById('newsErr');
+  var res=document.getElementById('newsResults');
+  if(!q){err.innerHTML='<span style="color:red">Enter a topic</span>';return}
+  if(!GNEWS){err.innerHTML='<span style="color:red">News API key not set. Add your GNews key in the code.</span>';return}
+  err.innerHTML='';res.innerHTML='<div class="loading">Searching...</div>';
+  try{
+    var r=await fetch('https://gnews.io/api/v4/search?q='+encodeURIComponent(q)+'&lang=en&max=10&apikey='+GNEWS);
+    if(!r.ok)throw new Error(r.status);
+    var d=await r.json();
+    savedArticles=d.articles||[];
+    if(!savedArticles.length){res.innerHTML='<div class="empty">No news found</div>';return}
+    res.innerHTML=savedArticles.map(function(a,i){
+      return '<div class="ncard">'+
+        (a.image?'<img src="'+a.image+'" onerror="this.style.display=\'none\'">':'')+
+        '<div class="nbody"><div class="ntitle">'+esc(a.title)+'</div>'+
+        '<div class="ndesc">'+esc(a.description||'')+'</div>'+
+        '<div class="nsrc">'+esc(a.source&&a.source.name||'')+'</div>'+
+        '<a href="'+a.url+'" target="_blank" style="font-size:12px;color:#1a1a2e">Read ↗</a><br>'+
+        '<button class="npost-btn" onclick="postFromNews('+i+')">Post to Verilay</button></div></div>';
+    }).join('');
+  }catch(e){res.innerHTML='';err.innerHTML='<span style="color:red">Search failed</span>';console.error(e)}
 }
-async function scanNews() {
-  var query = document.getElementById("newsQuery").value.trim();
-  var container = document.getElementById("newsResults");
-  if (!query) { container.innerHTML = "<div class='msg msg-err'>Enter a topic</div>"; return; }
-  container.innerHTML = "<div class='loading'>Scanning...</div>";
-  try {
-    var res = await searchNews(query);
-    var articles = res.results || [];
-    container.innerHTML = "";
-    if (articles.length === 0) { container.innerHTML = "<div class='msg'>No articles found</div>"; return; }
-    for (var i = 0; i < articles.length; i++) { var a = articles[i]; container.innerHTML += "<div class='news-card'><h4>"+escapeHtml(a.title||"")+"</h4><p>"+escapeHtml((a.description||"").substring(0,100))+"</p>"+(a.link?"<a href='"+escapeHtml(a.link)+"' target='_blank'>Read more</a>":"")+"</div>"; }
-  } catch(e) { container.innerHTML = "<div class='msg msg-err'>Error: "+escapeHtml(e.message)+"</div>"; }
+
+function postFromNews(i){
+  var a=savedArticles[i];if(!a)return;
+  switchTab('newpost');
+  document.getElementById('postText').value=a.title;
+  document.getElementById('postUrl').value=a.url;
 }
-async function saveSettings() {
-  var msg = document.getElementById("settingsMsg");
-  msg.innerText = "Saving..."; msg.className = "msg";
-  try {
-    await updateProfile({ full_name: document.getElementById("setName").value.trim(), username: document.getElementById("setUsername").value.trim(), bio: document.getElementById("setBio").value.trim(), linkedin_url: document.getElementById("setLinkedin").value.trim(), instagram_url: document.getElementById("setInstagram").value.trim(), twitter_url: document.getElementById("setTwitter").value.trim() });
-    msg.innerText = "Saved!"; msg.className = "msg msg-ok"; loadProfile();
-  } catch(e) { msg.innerText = "Error: " + e.message; msg.className = "msg msg-err"; }
-}
+
+/* INIT */
+requireAuth();
 loadProfile();
-loadStatements();
+getMyStatements();
 </script>
 </body>
 </html>
