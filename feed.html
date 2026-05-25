@@ -2,149 +2,93 @@
 <html>
 <head>
   <title>Feed - Verilay</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #fafafa; padding-bottom: 70px; }
-    .topbar { background: #1d3557; color: white; padding: 15px 20px; font-size: 20px; font-weight: bold; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-    .topbar a { color: white; text-decoration: none; font-size: 13px; border: 1px solid white; padding: 6px 14px; border-radius: 20px; }
-    .content { max-width: 600px; margin: 0 auto; padding: 15px; }
-    .card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .card-user { font-weight: bold; color: #1d3557; margin-bottom: 8px; font-size: 14px; }
-    .card-text { font-size: 15px; line-height: 1.5; margin-bottom: 8px; }
-    .card-link { font-size: 12px; margin-bottom: 10px; }
-    .card-link a { color: #1d3557; text-decoration: underline; }
-    .card-date { font-size: 11px; color: #999; margin-bottom: 10px; }
-    .card-actions button { padding: 8px 14px; border: none; border-radius: 20px; cursor: pointer; font-size: 12px; margin-right: 6px; color: white; }
-    .btn-accept { background: #2d6a4f; }
-    .btn-deny { background: #d62828; }
-    .btn-modify { background: #f77f00; }
-    .card-status { margin-top: 8px; font-size: 12px; font-weight: bold; color: #1d3557; }
-    .card-share { margin-top: 8px; }
-    .card-share a { font-size: 12px; color: #FF9933; text-decoration: none; font-weight: bold; }
-    .card-share a:hover { text-decoration: underline; }
-    .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; align-items: center; height: 60px; border-top: 1px solid #eee; z-index: 100; }
-    .bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
-    .bottomnav a.active { color: #1d3557; font-weight: bold; }
-    .bottomnav a span { font-size: 22px; display: block; }
-    .empty { text-align: center; color: #999; padding: 40px; }
-    .error { color: red; text-align: center; padding: 10px; }
-    .info { color: green; text-align: center; padding: 5px; font-size: 13px; }
+    body {
+      font-family: Arial;
+      background: #F8FAFC;
+      margin: 0;
+    }
+
+    .header {
+      background: #0B1F3A;
+      color: white;
+      padding: 15px;
+      text-align: centre;
+    }
+
+    .feed {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .post {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .actions button {
+      margin-right: 10px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .accept { background: #DCFCE7; }
+    .deny { background: #FEE2E2; }
+    .modify { background: #FEF3C7; }
+
+    .active {
+      border: 2px solid black;
+    }
+
+    iframe {
+      width: 100%;
+      height: 200px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
   </style>
 </head>
+
 <body>
 
-<div class="topbar">
-  Verilay
-  <a href="explore.html">&#128269; Explore</a>
+<div class="header">Verilay Feed</div>
+
+<div class="feed">
+  <div class="post">
+    <b>@username</b>
+    <p>"We have signed a partnership"</p>
+
+    <iframe src="https://example.com"></iframe>
+
+    <div class="actions">
+      <button class="accept" onclick="react(this)">Accept</button>
+      <button class="modify" onclick="react(this)">Modify</button>
+      <button class="deny" onclick="react(this)">Deny</button>
+    </div>
+
+    <small id="status"></small>
+  </div>
 </div>
 
-<div class="content">
-  <div id="error" class="error"></div>
-  <div id="info" class="info"></div>
-  <div id="feed"></div>
-</div>
-
-<div class="bottomnav">
-  <a href="feed.html" class="active"><span>&#127968;</span> Feed</a>
-  <a href="dashboard.html"><span>&#128100;</span> Profile</a>
-</div>
-
-<script src="js/api.js"></script>
 <script>
-if (!localStorage.getItem("token")) { window.location.href = "login.html"; }
-var myId = localStorage.getItem("user_id");
-var myName = "";
-var myUsername = "";
+function react(btn) {
+  let parent = btn.parentElement;
+  let buttons = parent.querySelectorAll("button");
 
-function escapeHtml(str) {
-  return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  buttons.forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+
+  let status = btn.innerText;
+  parent.nextElementSibling.innerText = "You marked this as " + status;
 }
-
-function buildCardLink(text, verdict, userName, userHandle) {
-  var name = encodeURIComponent(userName || myName || "");
-  var uname = encodeURIComponent(userHandle || myUsername || "");
-  var t = encodeURIComponent(text || "");
-  var v = encodeURIComponent(verdict || "accept");
-  return "card.html?name=" + name + "&username=" + uname + "&text=" + t + "&verdict=" + v;
-}
-
-async function loadMyProfile() {
-  try {
-    var res = await getProfile();
-    var user = res.response ? (res.response.User || res.response.user || res.response) : {};
-    myName = user.full_name || "";
-    myUsername = user.username || "";
-  } catch (err) { console.error(err); }
-}
-
-async function loadFeed() {
-  document.getElementById("error").innerText = "";
-  document.getElementById("info").innerText = "Loading feed...";
-  try {
-    var res = await getFeed();
-    var list = [];
-    if (res.response && res.response.statements) list = res.response.statements;
-    else if (res.response && Array.isArray(res.response)) list = res.response;
-
-    list = list.filter(function(item) {
-      var creatorId = item.created_by || item.Created_By || "";
-      return creatorId !== myId;
-    });
-
-    var feed = document.getElementById("feed");
-    feed.innerHTML = "";
-    if (list.length === 0) {
-      feed.innerHTML = "<div class='empty'>No statements from people you follow yet.<br>Go to Explore and follow people!</div>";
-      document.getElementById("info").innerText = "";
-      return;
-    }
-    for (var i = 0; i < list.length; i++) {
-      var item = list[i];
-      var id = item._id;
-      var text = item.text || "";
-      var sourceUrl = item.source_url || "";
-      var date = item.Created_Date ? new Date(item.Created_Date).toLocaleDateString() : "";
-      var user = item.created_by_full_name || item.Created_By || "";
-      var linkHtml = "";
-      if (sourceUrl) linkHtml = "<div class='card-link'>&#128279; <a href='" + escapeHtml(sourceUrl) + "' target='_blank'>View Source</a></div>";
-
-      var shareHtml = "<div class='card-share'>"
-        + "<a href='" + buildCardLink(text, "accept", myName, myUsername) + "'>&#127912; Share as Verilay'd Card</a>"
-        + "</div>";
-
-      var card = "<div class='card'>"
-        + "<div class='card-user'>@" + escapeHtml(String(user)) + "</div>"
-        + "<div class='card-text'>" + escapeHtml(text) + "</div>"
-        + linkHtml
-        + "<div class='card-date'>" + date + "</div>"
-        + "<div class='card-actions'>"
-        + "  <button class='btn-accept' onclick=\"react('" + id + "','accept')\">&#9989; Accept</button>"
-        + "  <button class='btn-deny' onclick=\"react('" + id + "','deny')\">&#10060; Deny</button>"
-        + "  <button class='btn-modify' onclick=\"react('" + id + "','modify')\">&#9999;&#65039; Modify</button>"
-        + "</div>"
-        + "<div class='card-status' id='status-" + id + "'></div>"
-        + shareHtml
-        + "</div>";
-      feed.innerHTML += card;
-    }
-    document.getElementById("info").innerText = "";
-  } catch (err) {
-    console.error(err);
-    document.getElementById("error").innerText = "Feed error: " + err.message;
-  }
-}
-
-async function react(id, action) {
-  try {
-    await reactStatement(id, action);
-    var el = document.getElementById("status-" + id);
-    if (el) el.innerText = "You marked this as: " + action.toUpperCase() + " ✅";
-  } catch (err) { console.error(err); }
-}
-
-loadMyProfile();
-loadFeed();
 </script>
+
 </body>
 </html>
