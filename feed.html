@@ -1,103 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Feed - Verilay</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #fafafa; padding-bottom: 70px; }
-    .topbar { background: #1d3557; color: white; padding: 15px 20px; font-size: 20px; font-weight: bold; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-    .topbar span { color: #FF9933; letter-spacing: 3px; }
-    .explore-btn { background: #FF9933; color: white; border: none; padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; }
-    .content { max-width: 600px; margin: 0 auto; padding: 15px; }
-    .card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; }
-    .card-text { font-size: 14px; line-height: 1.6; color: #333; margin-bottom: 10px; }
-    .card-date { font-size: 11px; color: #999; margin-top: 8px; }
-    .card-link { font-size: 12px; margin-top: 5px; }
-    .card-link a { color: #1d3557; text-decoration: none; }
-    .card-actions { margin-top: 10px; }
-    .card-actions button { padding: 7px 14px; border: none; border-radius: 20px; cursor: pointer; font-size: 11px; margin-right: 5px; color: white; font-weight: bold; }
-    .preview-card { border: 1px solid #eee; border-radius: 12px; overflow: hidden; margin-top: 10px; background: #fff; }
-    .preview-card img { width: 100%; max-height: 220px; object-fit: cover; display: block; }
-    .preview-info { padding: 12px; }
-    .preview-title { font-weight: bold; color: #1d3557; font-size: 14px; line-height: 1.3; }
-    .preview-desc { color: #888; font-size: 12px; line-height: 1.4; margin-top: 6px; }
-    .preview-domain { color: #FF9933; font-size: 11px; font-weight: bold; margin-top: 8px; letter-spacing: 1px; }
-    .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; align-items: center; height: 60px; border-top: 1px solid #eee; z-index: 100; }
-    .bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
-    .bottomnav a.active { color: #1d3557; font-weight: bold; }
-    .bottomnav a span { font-size: 22px; display: block; }
-    .loading { text-align: center; color: #999; padding: 30px; font-size: 14px; }
-    .error { color: red; text-align: center; padding: 20px; font-size: 14px; }
-    .gen-card-btn { display: inline-block; font-size: 12px; color: white; background: #FF9933; padding: 5px 14px; border-radius: 20px; text-decoration: none; font-weight: bold; }
-    .marked-label { font-size: 13px; color: #1d3557; font-weight: bold; }
-    .result-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Verilay – Feed</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;color:#1a1a2e;padding-bottom:70px}
+.header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.logo{color:#e8a838;font-size:22px;font-weight:800;letter-spacing:4px}
+.explore-btn{background:#e8a838;color:#fff;border:none;padding:8px 20px;border-radius:20px;font-weight:600;cursor:pointer;font-size:14px}
+.feed-card{background:#fff;border-radius:12px;padding:16px;margin:12px 16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.feed-user{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:8px}
+.feed-stmt{font-size:15px;line-height:1.5;margin-bottom:10px}
+
+/* LINK PREVIEW */
+.lp{border:1px solid #eee;border-radius:10px;overflow:hidden;margin:10px 0;cursor:pointer}
+.lp img{width:100%;height:180px;object-fit:cover;display:block}
+.lp .lp-body{padding:10px 12px}
+.lp .lp-title{font-size:14px;font-weight:600;color:#1a1a2e;margin-bottom:4px}
+.lp .lp-desc{font-size:12px;color:#666;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lp .lp-domain{font-size:11px;color:#e8a838}
+
+.source-link{font-size:13px;color:#e8a838;text-decoration:none;display:inline-block;margin-bottom:10px}
+.reactions{display:flex;gap:8px;flex-wrap:wrap}
+.react-btn{border:none;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;color:#fff;display:flex;align-items:center;gap:4px}
+.react-btn.accept{background:#2e7d32}
+.react-btn.modify{background:#e8a838}
+.react-btn.deny{background:#c62828}
+.reacted-label{font-size:13px;color:#888;font-style:italic;margin-top:6px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #eee;z-index:100}
+.nav-item{text-align:center;text-decoration:none;color:#888;font-size:11px}
+.nav-item.active{color:#1a1a2e}
+.nav-icon{display:block;font-size:22px;margin-bottom:2px}
+.loading{text-align:center;padding:30px;color:#888}
+.empty{text-align:center;padding:40px 20px;color:#aaa}
+.error-msg{color:#c62828;text-align:center;padding:20px;font-size:14px}
+</style>
 </head>
 <body>
-<div class="topbar">
-  <span>VERILAY</span>
-  <button class="explore-btn" onclick="window.location.href='explore.html'">Explore</button>
+
+<div class="header">
+  <div class="logo">VERILAY</div>
+  <button class="explore-btn" onclick="getFeed()">Explore</button>
 </div>
-<div class="content">
-  <div id="feedContainer"><div class="loading">Loading feed...</div></div>
+
+<div id="feedBox"><div class="loading">Loading feed...</div></div>
+
+<div class="bottom-nav">
+  <a href="feed.html" class="nav-item active"><span class="nav-icon">🏠</span>Feed</a>
+  <a href="dashboard.html" class="nav-item"><span class="nav-icon">👤</span>Profile</a>
 </div>
-<div class="bottomnav">
-  <a href="feed.html" class="active"><span>&#127968;</span> Feed</a>
-  <a href="dashboard.html"><span>&#128100;</span> Profile</a>
-</div>
-<script src="js/api.js"></script>
+
 <script>
-if (!localStorage.getItem("token")) { window.location.href = "login.html"; }
-window._feedTexts = {};
-function escapeHtml(str) { return String(str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-function getDomain(u) { try { return new URL(u).hostname.replace("www.",""); } catch(e) { return ""; } }
-function buildCardLink(text, verdict) { return "card.html?text=" + encodeURIComponent(text||"") + "&verdict=" + encodeURIComponent(verdict||"accepted"); }
-function makeResultHtml(label, cardUrl) { return "<div class='result-row'><span class='marked-label'>This is marked " + label + "</span><a class='gen-card-btn' href='" + cardUrl + "'>&#127912; Generate Card</a></div>"; }
-async function loadFeed() {
-  var container = document.getElementById("feedContainer");
-  try {
-    var res = await getFeed();
-    var list = [];
-    if (res.response && res.response.statements) list = res.response.statements;
-    else if (res.response && res.response.results) list = res.response.results;
-    else if (Array.isArray(res.response)) list = res.response;
-    container.innerHTML = "";
-    if (list.length === 0) { container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No statements yet. Be the first to post!</p></div>"; return; }
-    var currentUser = getUserId();
-    window._feedTexts = {};
-    for (var i = 0; i < list.length; i++) {
-      var item = list[i]; var id = item._id;
-      window._feedTexts[id] = item.text || "";
-      var sourceLink = item.source_url ? "<div class='card-link'>&#128279; <a href='" + escapeHtml(item.source_url) + "' target='_blank'>Source</a></div>" : "";
-      var dateStr = (item.Created_Date||item.created_date) ? new Date(item.Created_Date||item.created_date).toLocaleDateString() : "";
-      var previewHtml = "";
-      var pTitle=item.preview_title||"", pDesc=item.preview_description||"", pImg=item.preview_image||"", pUrl=item.source_url||"";
-      var pDomain = item.preview_domain || getDomain(pUrl);
-      if (pUrl && (pTitle || pImg)) {
-        previewHtml = "<div class='preview-card'>" + (pImg ? "<img src='" + escapeHtml(pImg) + "' onerror=\"this.style.display='none'\">" : "") + "<div class='preview-info'>" + (pTitle ? "<div class='preview-title'>" + escapeHtml(pTitle) + "</div>" : "") + (pDesc ? "<div class='preview-desc'>" + escapeHtml(pDesc).substring(0,150) + "</div>" : "") + (pDomain ? "<div class='preview-domain'>" + escapeHtml(getDomain(pDomain)) + "</div>" : "") + "</div></div>";
-      }
-      var createdBy = item["Created By"] || item.created_by || item._creator || "";
-      var reactBtns = "";
-      if (createdBy === currentUser) {
-        reactBtns = "<div class='card-actions' id='factions-" + id + "'><button style='background:#2d6a4f;' onclick=\"reactFeed('" + id + "','accepted')\">&#9989; Accept</button><button style='background:#f77f00;' onclick=\"reactFeed('" + id + "','modified')\">&#9999;&#65039; Modify</button><button style='background:#d62828;' onclick=\"reactFeed('" + id + "','denied')\">&#10060; Deny</button></div>";
-      }
-      container.innerHTML += "<div class='card'><div class='card-text'>" + escapeHtml(item.text||"") + "</div>" + previewHtml + sourceLink + "<div class='card-date'>" + dateStr + "</div>" + reactBtns + "<div id='fresult-" + id + "'></div></div>";
+/* ========== CONFIG — UPDATE THESE ========== */
+var BUBBLE = 'https://verilay.bubbleapps.io';   // your Bubble app URL
+var API    = BUBBLE + '/api/1.1/obj';
+/* =========================================== */
+
+function getToken(){return localStorage.getItem('token')}
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+/* ===== LINK PREVIEW — fetches OG tags from the ACTUAL news URL ===== */
+async function fetchPreview(url,containerId){
+  if(!url)return;
+  try{
+    /* Use allorigins CORS proxy to fetch the actual page HTML */
+    var proxy='https://api.allorigins.win/get?url='+encodeURIComponent(url);
+    var r=await fetch(proxy);
+    if(!r.ok)return;
+    var d=await r.json();
+    var html=d.contents;
+    if(!html)return;
+
+    var parser=new DOMParser();
+    var doc=parser.parseFromString(html,'text/html');
+
+    function getMeta(prop){
+      var el=doc.querySelector('meta[property="'+prop+'"]')||doc.querySelector('meta[name="'+prop+'"]');
+      return el?el.getAttribute('content'):'';
     }
-  } catch (err) {
-    container.innerHTML = "<div class='error'>Feed error: " + escapeHtml(err.message) + "</div>";
-  }
+
+    var title=getMeta('og:title')||'';
+    if(!title){var t=doc.querySelector('title');if(t)title=t.textContent}
+    var desc=getMeta('og:description')||getMeta('description')||'';
+    var image=getMeta('og:image')||'';
+    var site=getMeta('og:site_name')||'';
+    if(!site)try{site=new URL(url).hostname.replace('www.','')}catch(e){}
+
+    if(!title&&!image)return; /* nothing useful to show */
+
+    var el=document.getElementById(containerId);
+    if(!el)return;
+
+    el.innerHTML='<div class="lp" onclick="window.open(\''+url+'\',\'_blank\')">'+
+      (image?'<img src="'+image+'" onerror="this.style.display=\'none\'">':'')+
+      '<div class="lp-body">'+
+      '<div class="lp-title">'+esc(title)+'</div>'+
+      (desc?'<div class="lp-desc">'+esc(desc)+'</div>':'')+
+      '<div class="lp-domain">'+esc(site)+'</div>'+
+      '</div></div>';
+  }catch(e){console.error('Preview error:',url,e)}
 }
-async function reactFeed(id, action) {
-  try {
-    await reactStatement(id, action);
-    var actionsEl = document.getElementById("factions-" + id);
-    if (actionsEl) actionsEl.style.display = "none";
-    var resultEl = document.getElementById("fresult-" + id);
-    if (resultEl) { var label = action.charAt(0).toUpperCase() + action.slice(1); var text = (window._feedTexts && window._feedTexts[id]) || ""; resultEl.innerHTML = makeResultHtml(label, buildCardLink(text, action)); }
-  } catch (err) { console.error(err); }
+
+/* ===== FEED ===== */
+async function getFeed(){
+  var box=document.getElementById('feedBox');
+  try{
+    var headers={};
+    var tk=getToken();
+    if(tk)headers['Authorization']='Bearer '+tk;
+
+    var r=await fetch(API+'/statement?sort_field=Created%20Date&descending=true&limit=50',{headers:headers});
+    if(!r.ok)throw new Error(r.status);
+    var d=await r.json();
+    var items=d.response.results||[];
+    if(!items.length){box.innerHTML='<div class="empty">No statements yet</div>';return}
+
+    box.innerHTML='';
+    items.forEach(function(s){
+      var card=document.createElement('div');
+      card.className='feed-card';
+
+      var statusLabel='';
+      if(s.reaction)statusLabel='<strong>'+s.reaction.toUpperCase()+':</strong> ';
+
+      var previewId='pv-'+s._id;
+
+      card.innerHTML=
+        '<div class="feed-user">'+esc(s.username||'Anonymous')+'</div>'+
+        '<div class="feed-stmt">'+statusLabel+esc(s.statement||'')+'</div>'+
+        '<div id="'+previewId+'"></div>'+
+        (s.source_url?'<a href="'+s.source_url+'" target="_blank" class="source-link">🔗 Source</a>':'')+
+        '<div class="reactions">'+
+          '<button class="react-btn accept" onclick="react(\''+s._id+'\',\'accepted\',this)">✅ Accept</button>'+
+          '<button class="react-btn modify" onclick="react(\''+s._id+'\',\'modified\',this)">✏️ Modify</button>'+
+          '<button class="react-btn deny" onclick="react(\''+s._id+'\',\'denied\',this)">❌ Deny</button>'+
+        '</div>';
+
+      box.appendChild(card);
+
+      /* Fetch preview from the ACTUAL source_url (not the page URL) */
+      if(s.source_url){
+        fetchPreview(s.source_url,previewId);
+      }
+    });
+  }catch(e){box.innerHTML='<div class="error-msg">Error loading feed</div>';console.error(e)}
 }
-loadFeed();
+
+/* ===== REACTIONS ===== */
+async function react(id,reaction,btn){
+  try{
+    var r=await fetch(API+'/statement/'+id,{method:'PATCH',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+getToken()},
+      body:JSON.stringify({reaction:reaction})});
+    if(!r.ok)throw new Error(r.status);
+    /* Replace buttons with label */
+    var parent=btn.parentElement;
+    parent.innerHTML='<div class="reacted-label">This is marked '+reaction.toUpperCase()+'</div>';
+  }catch(e){alert('Reaction failed');console.error(e)}
+}
+
+/* INIT */
+if(!getToken()){window.location.href='login.html'}
+getFeed();
 </script>
 </body>
 </html>
