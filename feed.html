@@ -10,14 +10,19 @@
     .topbar span { color: #FF9933; letter-spacing: 3px; }
     .explore-btn { background: #FF9933; color: white; border: none; padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; }
     .content { max-width: 600px; margin: 0 auto; padding: 15px; }
-    .card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .card-user { font-size: 13px; color: #1d3557; font-weight: bold; margin-bottom: 5px; }
-    .card p { font-size: 14px; line-height: 1.5; }
-    .card-date { font-size: 11px; color: #999; margin-top: 5px; }
+    .card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; }
+    .card-text { font-size: 14px; line-height: 1.6; color: #333; margin-bottom: 10px; }
+    .card-date { font-size: 11px; color: #999; margin-top: 8px; }
     .card-link { font-size: 12px; margin-top: 5px; }
-    .card-link a { color: #1d3557; }
-    .card-actions { margin-top: 8px; }
-    .card-actions button { padding: 6px 12px; border: none; border-radius: 15px; cursor: pointer; font-size: 11px; margin-right: 5px; color: white; }
+    .card-link a { color: #1d3557; text-decoration: none; }
+    .card-actions { margin-top: 10px; }
+    .card-actions button { padding: 7px 14px; border: none; border-radius: 20px; cursor: pointer; font-size: 11px; margin-right: 5px; color: white; font-weight: bold; }
+    .preview-card { border: 1px solid #eee; border-radius: 12px; overflow: hidden; margin-top: 10px; background: #fff; }
+    .preview-card img { width: 100%; max-height: 220px; object-fit: cover; display: block; }
+    .preview-info { padding: 12px; }
+    .preview-title { font-weight: bold; color: #1d3557; font-size: 14px; line-height: 1.3; }
+    .preview-desc { color: #888; font-size: 12px; line-height: 1.4; margin-top: 6px; }
+    .preview-domain { color: #FF9933; font-size: 11px; font-weight: bold; margin-top: 8px; letter-spacing: 1px; }
     .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; align-items: center; height: 60px; border-top: 1px solid #eee; z-index: 100; }
     .bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
     .bottomnav a.active { color: #1d3557; font-weight: bold; }
@@ -44,23 +49,11 @@
 <script src="js/api.js"></script>
 <script>
 if (!localStorage.getItem("token")) { window.location.href = "login.html"; }
-
 window._feedTexts = {};
-
-function escapeHtml(str) {
-  return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
-
-function buildCardLink(text, verdict) {
-  var t = encodeURIComponent(text || "");
-  var v = encodeURIComponent(verdict || "accepted");
-  return "card.html?text=" + t + "&verdict=" + v;
-}
-
-function makeResultHtml(label, cardUrl) {
-  return "<div class='result-row'><span class='marked-label'>This is marked " + label + "</span><a class='gen-card-btn' href='" + cardUrl + "'>&#127912; Generate Card</a></div>";
-}
-
+function escapeHtml(str) { return String(str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function getDomain(u) { try { return new URL(u).hostname.replace("www.",""); } catch(e) { return ""; } }
+function buildCardLink(text, verdict) { return "card.html?text=" + encodeURIComponent(text||"") + "&verdict=" + encodeURIComponent(verdict||"accepted"); }
+function makeResultHtml(label, cardUrl) { return "<div class='result-row'><span class='marked-label'>This is marked " + label + "</span><a class='gen-card-btn' href='" + cardUrl + "'>&#127912; Generate Card</a></div>"; }
 async function loadFeed() {
   var container = document.getElementById("feedContainer");
   try {
@@ -70,62 +63,40 @@ async function loadFeed() {
     else if (res.response && res.response.results) list = res.response.results;
     else if (Array.isArray(res.response)) list = res.response;
     container.innerHTML = "";
-    if (list.length === 0) {
-      container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No statements yet. Be the first to post!</p></div>";
-      return;
-    }
+    if (list.length === 0) { container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No statements yet. Be the first to post!</p></div>"; return; }
     var currentUser = getUserId();
     window._feedTexts = {};
     for (var i = 0; i < list.length; i++) {
-      var item = list[i];
-      var id = item._id;
+      var item = list[i]; var id = item._id;
       window._feedTexts[id] = item.text || "";
-      var sourceLink = "";
-      if (item.source_url) {
-        sourceLink = "<div class='card-link'>&#128279; <a href='" + escapeHtml(item.source_url) + "' target='_blank'>Source</a></div>";
-      }
-      var dateStr = "";
-      if (item.Created_Date || item.created_date) {
-        dateStr = new Date(item.Created_Date || item.created_date).toLocaleDateString();
+      var sourceLink = item.source_url ? "<div class='card-link'>&#128279; <a href='" + escapeHtml(item.source_url) + "' target='_blank'>Source</a></div>" : "";
+      var dateStr = (item.Created_Date||item.created_date) ? new Date(item.Created_Date||item.created_date).toLocaleDateString() : "";
+      var previewHtml = "";
+      var pTitle=item.preview_title||"", pDesc=item.preview_description||"", pImg=item.preview_image||"", pUrl=item.source_url||"";
+      var pDomain = item.preview_domain || getDomain(pUrl);
+      if (pUrl && (pTitle || pImg)) {
+        previewHtml = "<div class='preview-card'>" + (pImg ? "<img src='" + escapeHtml(pImg) + "' onerror=\"this.style.display='none'\">" : "") + "<div class='preview-info'>" + (pTitle ? "<div class='preview-title'>" + escapeHtml(pTitle) + "</div>" : "") + (pDesc ? "<div class='preview-desc'>" + escapeHtml(pDesc).substring(0,150) + "</div>" : "") + (pDomain ? "<div class='preview-domain'>" + escapeHtml(getDomain(pDomain)) + "</div>" : "") + "</div></div>";
       }
       var createdBy = item["Created By"] || item.created_by || item._creator || "";
       var reactBtns = "";
       if (createdBy === currentUser) {
-        reactBtns = "<div class='card-actions' id='factions-" + id + "'>"
-          + "<button style='background:#2d6a4f;color:white;' onclick=\"reactFeed('" + id + "','accepted')\">&#9989; Accept</button>"
-          + "<button style='background:#f77f00;color:white;' onclick=\"reactFeed('" + id + "','modified')\">&#9999;&#65039; Modify</button>"
-          + "<button style='background:#d62828;color:white;' onclick=\"reactFeed('" + id + "','denied')\">&#10060; Deny</button>"
-          + "</div>";
+        reactBtns = "<div class='card-actions' id='factions-" + id + "'><button style='background:#2d6a4f;' onclick=\"reactFeed('" + id + "','accepted')\">&#9989; Accept</button><button style='background:#f77f00;' onclick=\"reactFeed('" + id + "','modified')\">&#9999;&#65039; Modify</button><button style='background:#d62828;' onclick=\"reactFeed('" + id + "','denied')\">&#10060; Deny</button></div>";
       }
-      container.innerHTML += "<div class='card'>"
-        + "<p>" + escapeHtml(item.text || "") + "</p>"
-        + sourceLink
-        + "<div class='card-date'>" + dateStr + "</div>"
-        + reactBtns
-        + "<div id='fresult-" + id + "'></div>"
-        + "</div>";
+      container.innerHTML += "<div class='card'><div class='card-text'>" + escapeHtml(item.text||"") + "</div>" + previewHtml + sourceLink + "<div class='card-date'>" + dateStr + "</div>" + reactBtns + "<div id='fresult-" + id + "'></div></div>";
     }
   } catch (err) {
     container.innerHTML = "<div class='error'>Feed error: " + escapeHtml(err.message) + "</div>";
   }
 }
-
 async function reactFeed(id, action) {
   try {
     await reactStatement(id, action);
     var actionsEl = document.getElementById("factions-" + id);
     if (actionsEl) actionsEl.style.display = "none";
     var resultEl = document.getElementById("fresult-" + id);
-    if (resultEl) {
-      var label = action.charAt(0).toUpperCase() + action.slice(1);
-      var text = (window._feedTexts && window._feedTexts[id]) || "";
-      resultEl.innerHTML = makeResultHtml(label, buildCardLink(text, action));
-    }
-  } catch (err) {
-    console.error(err);
-  }
+    if (resultEl) { var label = action.charAt(0).toUpperCase() + action.slice(1); var text = (window._feedTexts && window._feedTexts[id]) || ""; resultEl.innerHTML = makeResultHtml(label, buildCardLink(text, action)); }
+  } catch (err) { console.error(err); }
 }
-
 loadFeed();
 </script>
 </body>
