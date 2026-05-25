@@ -9,7 +9,7 @@
 /* ========= CONFIG (EDIT THESE) ========= */
 var BUBBLE = 'https://verilay.bubbleapps.io';      // <-- CHANGE to your Bubble app URL if different
 var API_BASE = BUBBLE + '/api/1.1/obj';            // Bubble Data API
-var NEWS_API_KEY = '';                              // <-- Paste your Newsdata.io key here
+var NEWS_API_KEY = 'pub_592aba825f6745448b3744626b1d16d6';                              // <-- Paste your Newsdata.io key here
 var NEWS_LANGUAGE = 'en';                           // en/hi etc
 /* ====================================== */
 
