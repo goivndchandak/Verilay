@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Profile - Verilay</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
@@ -43,22 +44,26 @@
     .news-card a { font-size: 12px; color: #1d3557; }
     .news-actions { margin-top: 10px; }
     .news-actions button { padding: 6px 12px; border: none; border-radius: 15px; cursor: pointer; font-size: 11px; margin-right: 5px; color: white; }
-    .search-box { display: flex; gap: 10px; margin-bottom: 15px; }
-    .search-box input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-    .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; align-items: center; height: 60px; border-top: 1px solid #eee; z-index: 100; }
-    .bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
-    .bottomnav a.active { color: #1d3557; font-weight: bold; }
-    .bottomnav a span { font-size: 22px; display: block; }
+    .scan-btn { width: 100%; padding: 14px; border: none; border-radius: 10px; cursor: pointer; color: white; background: #ff9933; font-size: 16px; font-weight: bold; }
+    .scan-info { text-align: center; color: #888; font-size: 13px; margin-bottom: 12px; }
     .error { color: red; font-size: 12px; margin-top: 5px; }
     .success { color: green; font-size: 12px; margin-top: 5px; }
     .gen-card-btn { display: inline-block; font-size: 12px; color: white; background: #FF9933; padding: 5px 14px; border-radius: 20px; text-decoration: none; font-weight: bold; }
     .marked-label { font-size: 13px; color: #1d3557; font-weight: bold; }
     .result-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff4e6; display: flex; justify-content: space-around; align-items: center; height: 60px; border-top: 1px solid #eee; z-index: 100; }
+    .bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
+    .bottomnav a.active { color: #1d3557; font-weight: bold; }
+    .bottomnav a span { font-size: 22px; display: block; }
   </style>
 </head>
 <body>
+
 <div class="topbar">My Profile <button onclick="logout()">Logout</button></div>
+
 <div class="content">
+
+  <!-- PROFILE HEADER -->
   <div class="profile-header">
     <div class="avatar" id="avatarInitial">?</div>
     <h2 id="profileName">Loading...</h2>
@@ -66,17 +71,25 @@
     <p id="profileBio"></p>
     <div class="social-links" id="socialLinks"></div>
   </div>
+
+  <!-- STATS -->
   <div class="stats">
     <div class="stat"><div class="stat-num" id="statStatements">0</div><div class="stat-label">Statements</div></div>
     <div class="stat"><div class="stat-num" id="statScore">0</div><div class="stat-label">Verilay Score</div></div>
   </div>
+
+  <!-- TABS -->
   <div class="tabs">
     <div class="tab active" id="tab-statements" onclick="showTab('statements')">Statements</div>
     <div class="tab" id="tab-post" onclick="showTab('post')">New Post</div>
     <div class="tab" id="tab-news" onclick="showTab('news')">Scan News</div>
     <div class="tab" id="tab-settings" onclick="showTab('settings')">Settings</div>
   </div>
+
+  <!-- STATEMENTS -->
   <div class="section active" id="sec-statements"><div id="myStatements"></div></div>
+
+  <!-- NEW POST -->
   <div class="section" id="sec-post">
     <div class="card">
       <h3 style="margin-bottom:15px; color:#1d3557;">Add New Statement</h3>
@@ -88,26 +101,28 @@
       <div id="postReactSection" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
         <p style="font-size:13px; color:#666; margin-bottom:8px;"><strong>Now react to your statement:</strong></p>
         <div class="card-actions">
-          <button style="background:#2d6a4f;color:white;" onclick="reactToPost('accepted')">&#9989; Accept</button>
-          <button style="background:#f77f00;color:white;" onclick="reactToPost('modified')">&#9999;&#65039; Modify</button>
-          <button style="background:#d62828;color:white;" onclick="reactToPost('denied')">&#10060; Deny</button>
+          <button style="background:#2d6a4f;color:white;" onclick="reactToPost('accepted')">✅ Accept</button>
+          <button style="background:#f77f00;color:white;" onclick="reactToPost('modified')">✏️ Modify</button>
+          <button style="background:#d62828;color:white;" onclick="reactToPost('denied')">❌ Deny</button>
         </div>
         <div id="postReactResult"></div>
       </div>
     </div>
   </div>
+
+  <!-- ✅ SCAN NEWS (AUTO-DETECT NAME) -->
   <div class="section" id="sec-news">
     <div class="card">
-      <h3 style="margin-bottom:15px; color:#1d3557;">&#128240; Scan News from Internet</h3>
-      <div class="search-box">
-        <input id="newsQuery" placeholder="Search topic or your name...">
-        <button style="padding:10px 20px; border:none; border-radius:8px; cursor:pointer; color:white; background:#ff9933;" onclick="scanNews()">Scan</button>
-      </div>
+      <h3 style="margin-bottom:10px; color:#1d3557;">📰 Scan News</h3>
+      <p class="scan-info">Scanning latest news for: <strong id="scanNameLabel">Loading...</strong></p>
+      <button class="scan-btn" onclick="scanNews()">🔍 Scan News</button>
       <div id="newsError" class="error"></div>
       <div id="newsInfo" class="success"></div>
       <div id="newsResults"></div>
     </div>
   </div>
+
+  <!-- SETTINGS -->
   <div class="section" id="sec-settings">
     <div class="card">
       <h3 style="margin-bottom:15px; color:#1d3557;">Edit Profile</h3>
@@ -122,11 +137,15 @@
       <div id="settingsErr" class="error"></div>
     </div>
   </div>
+
 </div>
+
+<!-- BOTTOM NAV -->
 <div class="bottomnav">
-  <a href="feed.html"><span>&#127968;</span> Feed</a>
-  <a href="dashboard.html" class="active"><span>&#128100;</span> Profile</a>
+  <a href="feed.html"><span>🏠</span> Feed</a>
+  <a href="dashboard.html" class="active"><span>👤</span> Profile</a>
 </div>
+
 <script src="js/api.js"></script>
 <script>
 if (!localStorage.getItem("token")) { window.location.href = "login.html"; }
@@ -158,6 +177,10 @@ async function loadProfile() {
     document.getElementById("profileUsername").innerText = "@" + (user.username || "unknown");
     document.getElementById("profileBio").innerText = user.bio || "";
     document.getElementById("avatarInitial").innerText = (user.full_name || "?").charAt(0).toUpperCase();
+
+    // ✅ AUTO-SET SCAN NEWS LABEL
+    document.getElementById("scanNameLabel").innerText = user.full_name || "your name";
+
     var links = "";
     if (user.linkedin_url) links += "<a href='" + escapeHtml(user.linkedin_url) + "' target='_blank'>LinkedIn</a>";
     if (user.instagram_url) links += "<a href='" + escapeHtml(user.instagram_url) + "' target='_blank'>Instagram</a>";
@@ -191,7 +214,7 @@ function buildCardLink(text, verdict) {
 }
 
 function makeResultHtml(label, cardUrl) {
-  return "<div class='result-row'><span class='marked-label'>This is marked " + label + "</span><a class='gen-card-btn' href='" + cardUrl + "'>&#127912; Generate Card</a></div>";
+  return "<div class='result-row'><span class='marked-label'>This is marked " + label + "</span><a class='gen-card-btn' href='" + cardUrl + "'>🎨 Generate Card</a></div>";
 }
 
 async function loadMyStatements() {
@@ -211,11 +234,11 @@ async function loadMyStatements() {
       var id = item._id;
       window._stmtTexts[id] = item.text || "";
       var sourceLink = "";
-      if (item.source_url) sourceLink = "<div class='card-link'>&#128279; <a href='" + escapeHtml(item.source_url) + "' target='_blank'>Source</a></div>";
+      if (item.source_url) sourceLink = "<div class='card-link'>🔗 <a href='" + escapeHtml(item.source_url) + "' target='_blank'>Source</a></div>";
       var reactBtns = "<div class='card-actions' id='actions-" + id + "'>"
-        + "<button style='background:#2d6a4f;color:white;' onclick=\"reactToStatement('" + id + "','accepted')\">&#9989; Accept</button>"
-        + "<button style='background:#f77f00;color:white;' onclick=\"reactToStatement('" + id + "','modified')\">&#9999;&#65039; Modify</button>"
-        + "<button style='background:#d62828;color:white;' onclick=\"reactToStatement('" + id + "','denied')\">&#10060; Deny</button>"
+        + "<button style='background:#2d6a4f;color:white;' onclick=\"reactToStatement('" + id + "','accepted')\">✅ Accept</button>"
+        + "<button style='background:#f77f00;color:white;' onclick=\"reactToStatement('" + id + "','modified')\">✏️ Modify</button>"
+        + "<button style='background:#d62828;color:white;' onclick=\"reactToStatement('" + id + "','denied')\">❌ Deny</button>"
         + "</div><div id='result-" + id + "'></div>";
       container.innerHTML += "<div class='card'><p>" + escapeHtml(item.text || "") + "</p>" + sourceLink
         + "<div class='card-date'>" + (item.Created_Date ? new Date(item.Created_Date).toLocaleDateString() : "") + "</div>"
@@ -248,12 +271,15 @@ async function postStatement() {
   if (!text) { document.getElementById("postErr").innerText = "Write something first"; return; }
   try {
     var res = await addStatement(text, sourceUrl);
+
+    // ✅ FIXED ID LOGIC
     lastPostedId = "";
-if (res.response) {
-  lastPostedId = res.response.id || res.response._id || res.response.status || "";
-}
-if (res.id) lastPostedId = res.id;
-if (res._id) lastPostedId = res._id;
+    if (res.response) {
+      lastPostedId = res.response.id || res.response._id || "";
+    }
+    if (res.id) lastPostedId = res.id;
+    if (res._id) lastPostedId = res._id;
+
     lastPostedText = text;
     document.getElementById("postMsg").innerText = "Statement posted! Now react to it below:";
     document.getElementById("postReactSection").style.display = "block";
@@ -278,19 +304,35 @@ async function reactToPost(action) {
   } catch (err) { document.getElementById("postReactResult").innerHTML = "<span class='error'>Error: " + err.message + "</span>"; }
 }
 
+// ✅ SCAN NEWS — AUTO-DETECT NAME FROM PROFILE
 var newsCounter = 0;
 async function scanNews() {
   document.getElementById("newsError").innerText = "";
   document.getElementById("newsInfo").innerText = "Scanning...";
-  var query = document.getElementById("newsQuery").value.trim();
-  if (!query) { document.getElementById("newsError").innerText = "Enter a topic"; document.getElementById("newsInfo").innerText = ""; return; }
+  document.getElementById("newsResults").innerHTML = "";
+
+  // ✅ AUTO-USE FULL NAME (no manual input)
+  var query = (profileData.full_name || "").trim();
+
+  if (!query) {
+    document.getElementById("newsError").innerText = "Please set your Full Name in Settings first.";
+    document.getElementById("newsInfo").innerText = "";
+    return;
+  }
+
   try {
     var res = await searchNews(query);
     var articles = res.articles || [];
     var container = document.getElementById("newsResults");
-    container.innerHTML = "";
-    if (articles.length === 0) { container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No news found.</p></div>"; document.getElementById("newsInfo").innerText = ""; return; }
-    document.getElementById("newsInfo").innerText = articles.length + " articles found";
+
+    if (articles.length === 0) {
+      container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No news found for \"" + escapeHtml(query) + "\".</p></div>";
+      document.getElementById("newsInfo").innerText = "";
+      return;
+    }
+
+    document.getElementById("newsInfo").innerText = articles.length + " articles found for \"" + escapeHtml(query) + "\"";
+
     for (var i = 0; i < articles.length; i++) {
       var a = articles[i];
       newsCounter++;
@@ -301,22 +343,30 @@ async function scanNews() {
       container.innerHTML += "<div class='news-card'>" + imgHtml
         + "<h4>" + escapeHtml(a.title || "") + "</h4>"
         + "<p>" + escapeHtml(a.description || "") + "</p>"
-        + "<a href='" + escapeHtml(a.url || "") + "' target='_blank'>Read full article &#8599;</a>"
+        + "<a href='" + escapeHtml(a.url || "") + "' target='_blank'>Read full article ↗</a>"
         + "<div class='news-actions' id='nactions-" + nid + "'>"
-        + "  <button style='background:#2d6a4f;color:white;' onclick=\"reactToNews('" + nid + "','accepted')\">&#9989; Accept</button>"
-        + "  <button style='background:#f77f00;color:white;' onclick=\"reactToNews('" + nid + "','modified')\">&#9999;&#65039; Modify</button>"
-        + "  <button style='background:#d62828;color:white;' onclick=\"reactToNews('" + nid + "','denied')\">&#10060; Deny</button>"
+        + "  <button style='background:#2d6a4f;color:white;' onclick=\"reactToNews('" + nid + "','accepted')\">✅ Accept</button>"
+        + "  <button style='background:#f77f00;color:white;' onclick=\"reactToNews('" + nid + "','modified')\">✏️ Modify</button>"
+        + "  <button style='background:#d62828;color:white;' onclick=\"reactToNews('" + nid + "','denied')\">❌ Deny</button>"
         + "</div><div id='nresult-" + nid + "'></div></div>";
     }
   } catch (err) { document.getElementById("newsError").innerText = "News error: " + err.message; document.getElementById("newsInfo").innerText = ""; }
 }
 
+// ✅ FIXED NEWS REACT (checks both .id and ._id)
 async function reactToNews(nid, action) {
   var title = (window._newsTexts && window._newsTexts[nid]) || "";
   var url = (window._newsUrls && window._newsUrls[nid]) || "";
   try {
     var res = await addStatement(action.toUpperCase() + ": " + title, url);
-    if (res.response && res.response.id) { await reactStatement(res.response.id, action); }
+
+    var stmtId = "";
+    if (res.response) { stmtId = res.response.id || res.response._id || ""; }
+    if (res.id) stmtId = res.id;
+    if (res._id) stmtId = res._id;
+
+    if (stmtId) { await reactStatement(stmtId, action); }
+
     var actionsEl = document.getElementById("nactions-" + nid);
     if (actionsEl) actionsEl.style.display = "none";
     var resultEl = document.getElementById("nresult-" + nid);
