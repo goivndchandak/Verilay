@@ -1,177 +1,111 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Explore - Verilay</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-
-body {
-  margin: 0;
-  font-family: Arial;
-  background:#fafafa;
-}
-
-.topbar {
-  background:#1d3557;
-  color:white;
-  padding:15px 20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:20px;
-  font-weight:bold;
-}
-
-.container {
-  padding:15px;
-}
-
-input {
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #ddd;
-  margin-bottom:15px;
-}
-
-.user {
-  background:white;
-  padding:12px;
-  border-radius:12px;
-  margin-bottom:10px;
-}
-
-.name {
-  font-weight:bold;
-  color:#1d3557;
-}
-
-.username {
-  font-size:12px;
-  color:#666;
-}
-
-.btn {
-  margin-top:8px;
-  padding:6px 12px;
-  border:none;
-  border-radius:20px;
-  cursor:pointer;
-  color:white;
-}
-
-.follow { background:#1d3557; }
-.unfollow { background:#aaa; }
-
-.bottomnav {
- position:fixed;
- bottom:0;
- left:0;
- right:0;
- background:#fff4e6;
- display:flex;
- justify-content:space-around;
- height:60px;
- align-items:center;
-}
-
-</style>
+  <title>Explore - Verilay</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #fafafa; padding-bottom: 70px; }
+    .topbar { background: #1d3557; color: white; padding: 15px 20px; font-size: 20px; font-weight: bold; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+    .topbar a { color: white; text-decoration: none; font-size: 13px; }
+    .content { max-width: 600px; margin: 0 auto; padding: 15px; }
+    .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
+    .search-box input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+    .search-box button { padding: 12px 20px; background: #1d3557; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    .user-card { background: white; padding: 18px; margin-bottom: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .user-info h3 { font-size: 15px; color: #1d3557; }
+    .user-info p { font-size: 12px; color: #666; margin-top: 3px; }
+    .follow-btn { padding: 8px 20px; background: #1d3557; color: white; border: none; border-radius: 20px; cursor: pointer; font-size: 13px; }
+    .follow-btn.followed { background: #ccc; color: #333; }
+    .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; align-items: center; height: 60px; border-top: 1px solid #eee; z-index: 100; }
+    .bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
+    .bottomnav a.active { color: #1d3557; font-weight: bold; }
+    .bottomnav a span { font-size: 22px; display: block; }
+    .empty { text-align: center; color: #999; padding: 40px; }
+    .error { color: red; text-align: center; padding: 10px; }
+    .info { color: green; text-align: center; padding: 5px; font-size: 13px; }
+  </style>
 </head>
-
 <body>
 
 <div class="topbar">
   Explore
-  <a href="feed.html" style="color:white;font-size:12px;">Back</a>
+  <a href="feed.html">&#8592; Back to Feed</a>
 </div>
 
-<div class="container">
-
-<input placeholder="Search users..." onkeyup="search(this.value)">
-
-<div id="results"></div>
-
+<div class="content">
+  <div class="search-box">
+    <input id="searchInput" placeholder="Search by name or username...">
+    <button onclick="doSearch()">Search</button>
+  </div>
+  <div id="error" class="error"></div>
+  <div id="info" class="info"></div>
+  <div id="results"></div>
 </div>
 
 <div class="bottomnav">
-  <a href="feed.html">🏠</a>
-  <a href="dashboard.html">👤</a>
+  <a href="feed.html"><span>&#127968;</span> Feed</a>
+  <a href="dashboard.html"><span>&#128100;</span> Profile</a>
 </div>
-
 <script src="js/api.js"></script>
-
 <script>
+if (!localStorage.getItem("token")) { window.location.href = "login.html"; }
+var myId = localStorage.getItem("user_id");
 
-let following = [];
-
-/* ---------- LOAD FOLLOWING ---------- */
-async function loadFollowing(){
-  const res = await getFollowing();
-  const list = res.response.results || [];
-  following = list.map(f => f.following);
+function escapeHtml(str) {
+  return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
-/* ---------- SEARCH USERS ---------- */
-async function search(query){
+async function doSearch() {
+  document.getElementById("error").innerText = "";
+  document.getElementById("info").innerText = "";
+  var query = document.getElementById("searchInput").value.trim().toLowerCase();
+  try {
+    var res = await searchUsers(query);
+    var list = [];
+    if (res.response && res.response.users) list = res.response.users;
+    else if (Array.isArray(res.response)) list = res.response;
 
-  if(query.length < 2){
-    document.getElementById("results").innerHTML = "";
-    return;
-  }
+    if (query) {
+      list = list.filter(function(u) {
+        var name = (u.full_name || "").toLowerCase();
+        var uname = (u.username || "").toLowerCase();
+        return name.indexOf(query) !== -1 || uname.indexOf(query) !== -1;
+      });
+    }
+    list = list.filter(function(u) { return u._id !== myId; });
 
-  const res = await searchUsers(query);
-  const users = res.response.results || [];
+    var results = document.getElementById("results");
+    results.innerHTML = "";
+    if (list.length === 0) { results.innerHTML = "<div class='empty'>No users found</div>"; return; }
 
-  let html = "";
-
-  users.forEach(u => {
-
-    const isFollowed = following.includes(u._id);
-
-    html += `
-      <div class="user">
-        <div class="name">${u.full_name}</div>
-        <div class="username">@${u.username}</div>
-
-        <button class="btn ${isFollowed ? 'unfollow':'follow'}"
-          onclick="${isFollowed ? `unfollow('${u._id}')` : `follow('${u._id}')`}">
-          ${isFollowed ? "Following":"Follow"}
-        </button>
-      </div>
-    `;
-  });
-
-  document.getElementById("results").innerHTML = html;
+    for (var i = 0; i < list.length; i++) {
+      var u = list[i];
+      var card = "<div class='user-card'>"
+        + "<div class='user-info'>"
+        + "  <h3>" + escapeHtml(u.full_name || "Unknown") + "</h3>"
+        + "  <p>@" + escapeHtml(u.username || "") + "</p>"
+        + "  <p>" + escapeHtml(u.bio || "") + "</p>"
+        + "</div>"
+        + "<button class='follow-btn' id='follow-" + u._id + "' onclick=\"doFollow('" + u._id + "')\">"
+        + "  Follow"
+        + "</button>"
+        + "</div>";
+      results.innerHTML += card;
+    }
+  } catch (err) { document.getElementById("error").innerText = "Error: " + err.message; }
 }
 
-/* ---------- FOLLOW ---------- */
-async function follow(id){
-  await followUser(id);
-  loadFollowing();
-  alert("Followed");
+async function doFollow(userId) {
+  try {
+    await followUser(userId);
+    var btn = document.getElementById("follow-" + userId);
+    if (btn) { btn.innerText = "Following ✅"; btn.className = "follow-btn followed"; btn.disabled = true; }
+    document.getElementById("info").innerText = "Followed successfully ✅";
+  } catch (err) { document.getElementById("error").innerText = "Follow failed: " + err.message; }
 }
 
-/* ---------- UNFOLLOW ---------- */
-async function unfollow(id){
-  // find follow record
-  const res = await getFollowing();
-  const list = res.response.results || [];
-
-  const f = list.find(x => x.following === id);
-  if(f){
-    await unfollowUser(f._id);
-  }
-
-  loadFollowing();
-  alert("Unfollowed");
-}
-
-/* ---------- INIT ---------- */
-loadFollowing();
-
+doSearch();
 </script>
-
 </body>
 </html>
