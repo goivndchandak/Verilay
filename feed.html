@@ -26,35 +26,54 @@ body { margin: 0; font-family: Arial; background: #fafafa; padding-bottom: 70px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-/* OWNER ROW */
+/* ✅ OWNER ROW */
 .owner-row {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
 }
+
 .owner-avatar {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: #1d3557; color: white; font-size: 14px;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: #1d3557; color: white; font-size: 16px;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden; flex-shrink: 0;
 }
 .owner-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.owner-info { flex: 1; }
-.owner-name { font-weight: bold; color: #1d3557; font-size: 14px; }
 
-/* REACTION BADGE */
+.owner-name {
+  font-weight: bold; color: #1d3557; font-size: 15px;
+}
+
+/* ✅ REACTION BADGE — RECTANGULAR SOFT EDGE BOX */
 .reaction-badge {
   display: inline-block;
-  padding: 5px 14px;
+  padding: 6px 16px;
   border-radius: 8px;
-  font-size: 12px;
-  font-weight: bold;
+  font-size: 13px;
+  font-weight: 800;
   color: white;
   margin-left: 10px;
   vertical-align: middle;
-  letter-spacing: 0.3px;
 }
 .badge-accepted { background: #2d6a4f; }
 .badge-modified { background: #f77f00; }
 .badge-denied { background: #d62828; }
+
+/* NO REACTION — SUBTLE LABEL */
+.no-reaction {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #999;
+  background: #f0f0f0;
+  margin-left: 10px;
+  vertical-align: middle;
+}
 
 .stmt-text { font-size: 15px; line-height: 1.4; margin-bottom: 8px; }
 
@@ -84,16 +103,13 @@ body { margin: 0; font-family: Arial; background: #fafafa; padding-bottom: 70px;
 
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
   Verilay
   <a href="explore.html">Explore</a>
 </div>
 
-<!-- FEED -->
 <div class="container" id="feed"><div class="muted">Loading feed...</div></div>
 
-<!-- BOTTOM NAV -->
 <div class="bottomnav">
   <a href="feed.html" class="active"><span>🏠</span>Feed</a>
   <a href="dashboard.html"><span>👤</span>Profile</a>
@@ -108,7 +124,6 @@ function escapeHtml(str) {
   return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
-/* ========== GET USER INFO ========== */
 async function getUserInfo(userId){
   if (!userId) return { name: "User", photo: "" };
   if (userCache[userId]) return userCache[userId];
@@ -129,7 +144,6 @@ async function getUserInfo(userId){
   }
 }
 
-/* ========== IMAGE PREVIEW ========== */
 function getPreviewHTML(url){
   if (!url) return "";
   if (!/^https?:\/\//i.test(url)) url = "https://" + url;
@@ -139,10 +153,11 @@ function getPreviewHTML(url){
     + "</div>";
 }
 
-/* ========== REACTION HELPERS ========== */
 function getReaction(item) {
-  var r = (item.reaction_type || item.reaction || item.verdict || "").toLowerCase();
-  if (r === "accepted" || r === "modified" || r === "denied") return r;
+  var r = (item.reaction_type || item.reaction || item.verdict || item.status || "").toLowerCase();
+  if (r === "accepted" || r === "accept") return "accepted";
+  if (r === "modified" || r === "modify") return "modified";
+  if (r === "denied" || r === "deny") return "denied";
   return "";
 }
 
@@ -153,13 +168,30 @@ function getReactionBadgeHtml(reaction) {
   return "";
 }
 
-/* ========== LOAD FEED ========== */
+/* ✅ ALSO CHECK TEXT PREFIX FOR REACTION */
+function getReactionFromText(text) {
+  var t = (text || "").trim().toUpperCase();
+  if (t.startsWith("ACCEPTED:")) return "accepted";
+  if (t.startsWith("MODIFIED:")) return "modified";
+  if (t.startsWith("DENIED:")) return "denied";
+  if (t.startsWith("ACCEPT:")) return "accepted";
+  if (t.startsWith("MODIFY:")) return "modified";
+  if (t.startsWith("DENY:")) return "denied";
+  return "";
+}
+
+/* ✅ CLEAN TEXT (remove reaction prefix) */
+function cleanText(text) {
+  return (text || "")
+    .replace(/^(ACCEPTED|MODIFIED|DENIED|ACCEPT|MODIFY|DENY):\s*/i, "")
+    .trim();
+}
+
 async function loadFeed(){
   try {
     const res = await getFeed();
     const list = res.response.statements || res.response.results || [];
 
-    // ✅ SHOW ALL STATEMENTS (no filtering)
     if (list.length === 0) {
       document.getElementById("feed").innerHTML =
         "<div class='muted'>No posts yet.</div>";
@@ -169,10 +201,16 @@ async function loadFeed(){
     let html = "";
 
     for (let item of list) {
-      const text = item.text || "";
+      const rawText = item.text || "";
       const url = item.source_url || "";
       const created = item.Created_Date || item.created_date || "";
-      const reaction = getReaction(item);
+
+      // ✅ GET REACTION FROM FIELD OR TEXT PREFIX
+      let reaction = getReaction(item);
+      if (!reaction) reaction = getReactionFromText(rawText);
+
+      // ✅ CLEAN TEXT (remove ACCEPTED: prefix etc)
+      const text = cleanText(rawText);
 
       const ownerId = item["Created By"] || item.created_by || item.user_id || item.creator;
       const ownerInfo = await getUserInfo(ownerId);
@@ -187,19 +225,23 @@ async function loadFeed(){
 
       html += "<div class='card'>";
 
-      // ✅ OWNER ROW + REACTION BADGE BESIDE NAME
+      // ✅ OWNER ROW + REACTION BADGE RIGHT BESIDE NAME
       html += "<div class='owner-row'>";
       html += avatarHtml;
-      html += "<div class='owner-info'>";
       html += "<span class='owner-name'>" + escapeHtml(ownerInfo.name) + "</span>";
-      if (reaction) html += getReactionBadgeHtml(reaction);
-      html += "</div>";
+
+      if (reaction) {
+        html += getReactionBadgeHtml(reaction);
+      } else {
+        html += "<span class='no-reaction'>Pending</span>";
+      }
+
       html += "</div>";
 
       // TEXT
       html += "<div class='stmt-text'>" + escapeHtml(text) + "</div>";
 
-      // ✅ IMAGE PREVIEW
+      // IMAGE PREVIEW
       if (url) html += getPreviewHTML(url);
 
       // DATE
@@ -209,8 +251,6 @@ async function loadFeed(){
         } catch(e){}
       }
 
-      // ✅ NO BUTTONS — FEED IS READ-ONLY
-
       html += "</div>";
     }
 
@@ -218,11 +258,10 @@ async function loadFeed(){
 
   } catch(err) {
     document.getElementById("feed").innerHTML =
-      "<div class='muted'>Error loading feed: " + escapeHtml(err.message) + "</div>";
+      "<div class='muted'>Error: " + escapeHtml(err.message) + "</div>";
   }
 }
 
-/* ========== INIT ========== */
 loadFeed();
 
 </script>
