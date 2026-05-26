@@ -26,7 +26,7 @@ body { margin: 0; font-family: Arial; background: #fafafa; padding-bottom: 70px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-/* ✅ OWNER ROW WITH REACTION BESIDE NAME */
+/* OWNER ROW */
 .owner-row {
   display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
 }
@@ -37,10 +37,10 @@ body { margin: 0; font-family: Arial; background: #fafafa; padding-bottom: 70px;
   overflow: hidden; flex-shrink: 0;
 }
 .owner-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.owner-name { font-weight: bold; color: #1d3557; font-size: 14px; }
 .owner-info { flex: 1; }
+.owner-name { font-weight: bold; color: #1d3557; font-size: 14px; }
 
-/* ✅ REACTION BADGE (beside name) */
+/* REACTION BADGE */
 .reaction-badge {
   display: inline-block; padding: 3px 10px; border-radius: 999px;
   font-size: 10px; font-weight: bold; color: white;
@@ -78,13 +78,16 @@ body { margin: 0; font-family: Arial; background: #fafafa; padding-bottom: 70px;
 
 <body>
 
+<!-- TOP BAR -->
 <div class="topbar">
   Verilay
   <a href="explore.html">Explore</a>
 </div>
 
+<!-- FEED -->
 <div class="container" id="feed"><div class="muted">Loading feed...</div></div>
 
+<!-- BOTTOM NAV -->
 <div class="bottomnav">
   <a href="feed.html" class="active"><span>🏠</span>Feed</a>
   <a href="dashboard.html"><span>👤</span>Profile</a>
@@ -99,6 +102,7 @@ function escapeHtml(str) {
   return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
+/* ========== GET USER INFO ========== */
 async function getUserInfo(userId){
   if (!userId) return { name: "User", photo: "" };
   if (userCache[userId]) return userCache[userId];
@@ -119,6 +123,7 @@ async function getUserInfo(userId){
   }
 }
 
+/* ========== IMAGE PREVIEW ========== */
 function getPreviewHTML(url){
   if (!url) return "";
   if (!/^https?:\/\//i.test(url)) url = "https://" + url;
@@ -128,6 +133,7 @@ function getPreviewHTML(url){
     + "</div>";
 }
 
+/* ========== REACTION HELPERS ========== */
 function getReaction(item) {
   var r = (item.reaction_type || item.reaction || item.verdict || "").toLowerCase();
   if (r === "accepted" || r === "modified" || r === "denied") return r;
@@ -141,17 +147,16 @@ function getReactionBadgeHtml(reaction) {
   return "";
 }
 
+/* ========== LOAD FEED ========== */
 async function loadFeed(){
   try {
     const res = await getFeed();
-    const all = res.response.statements || res.response.results || [];
+    const list = res.response.statements || res.response.results || [];
 
-    // ✅ ONLY SHOW REACTED STATEMENTS (no unreacted posts)
-    const list = all.filter(item => getReaction(item) !== "");
-
+    // ✅ SHOW ALL STATEMENTS (no filtering)
     if (list.length === 0) {
       document.getElementById("feed").innerHTML =
-        "<div class='muted'>No verified truths yet. Be the first to react on your Profile!</div>";
+        "<div class='muted'>No posts yet.</div>";
       return;
     }
 
@@ -181,19 +186,21 @@ async function loadFeed(){
       html += avatarHtml;
       html += "<div class='owner-info'>";
       html += "<span class='owner-name'>" + escapeHtml(ownerInfo.name) + "</span>";
-      html += getReactionBadgeHtml(reaction);
+      if (reaction) html += getReactionBadgeHtml(reaction);
       html += "</div>";
       html += "</div>";
 
       // TEXT
       html += "<div class='stmt-text'>" + escapeHtml(text) + "</div>";
 
-      // IMAGE PREVIEW
+      // ✅ IMAGE PREVIEW
       if (url) html += getPreviewHTML(url);
 
       // DATE
       if (created) {
-        try { html += "<div class='card-date'>" + new Date(created).toLocaleDateString() + "</div>"; } catch(e){}
+        try {
+          html += "<div class='card-date'>" + new Date(created).toLocaleDateString() + "</div>";
+        } catch(e){}
       }
 
       // ✅ NO BUTTONS — FEED IS READ-ONLY
@@ -209,6 +216,7 @@ async function loadFeed(){
   }
 }
 
+/* ========== INIT ========== */
 loadFeed();
 
 </script>
