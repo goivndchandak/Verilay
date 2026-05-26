@@ -26,6 +26,7 @@ body { margin: 0; font-family: Arial; background: #fafafa; padding-bottom: 70px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
+/* ✅ OWNER ROW WITH REACTION BESIDE NAME */
 .owner-row {
   display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
 }
@@ -37,6 +38,17 @@ body { margin: 0; font-family: Arial; background: #fafafa; padding-bottom: 70px;
 }
 .owner-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .owner-name { font-weight: bold; color: #1d3557; font-size: 14px; }
+.owner-info { flex: 1; }
+
+/* ✅ REACTION BADGE (beside name) */
+.reaction-badge {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  font-size: 10px; font-weight: bold; color: white;
+  margin-left: 8px; vertical-align: middle;
+}
+.badge-accepted { background: #2d6a4f; }
+.badge-modified { background: #f77f00; }
+.badge-denied { background: #d62828; }
 
 .stmt-text { font-size: 15px; line-height: 1.4; margin-bottom: 8px; }
 
@@ -48,14 +60,6 @@ body { margin: 0; font-family: Arial; background: #fafafa; padding-bottom: 70px;
   display: block; font-size: 12px; margin-top: 6px;
   color: #1d3557; text-decoration: none;
 }
-
-.reaction-badge {
-  display: inline-block; padding: 5px 12px; border-radius: 999px;
-  font-size: 11px; font-weight: bold; color: white; margin-top: 8px;
-}
-.badge-accepted { background: #2d6a4f; }
-.badge-modified { background: #f77f00; }
-.badge-denied { background: #d62828; }
 
 .card-date { font-size: 11px; color: #999; margin-top: 6px; }
 
@@ -79,7 +83,7 @@ body { margin: 0; font-family: Arial; background: #fafafa; padding-bottom: 70px;
   <a href="explore.html">Explore</a>
 </div>
 
-<div class="container" id="feed"></div>
+<div class="container" id="feed"><div class="muted">Loading feed...</div></div>
 
 <div class="bottomnav">
   <a href="feed.html" class="active"><span>🏠</span>Feed</a>
@@ -89,18 +93,14 @@ body { margin: 0; font-family: Arial; background: #fafafa; padding-bottom: 70px;
 <script src="js/api.js"></script>
 <script>
 
-const myUserId = localStorage.getItem("user_id");
-let myProfile = {};
 let userCache = {};
 
-async function loadProfile(){
-  try {
-    const res = await getProfile();
-    myProfile = res.response || {};
-  } catch(e){}
+function escapeHtml(str) {
+  return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
 async function getUserInfo(userId){
+  if (!userId) return { name: "User", photo: "" };
   if (userCache[userId]) return userCache[userId];
   try {
     const res = await fetch(
@@ -119,10 +119,6 @@ async function getUserInfo(userId){
   }
 }
 
-function escapeHtml(str) {
-  return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
-
 function getPreviewHTML(url){
   if (!url) return "";
   if (!/^https?:\/\//i.test(url)) url = "https://" + url;
@@ -132,76 +128,87 @@ function getPreviewHTML(url){
     + "</div>";
 }
 
-function getReactionBadge(item) {
+function getReaction(item) {
   var r = (item.reaction_type || item.reaction || item.verdict || "").toLowerCase();
-  if (r === "accepted") return "<span class='reaction-badge badge-accepted'>✅ Accepted</span>";
-  if (r === "modified") return "<span class='reaction-badge badge-modified'>✏️ Modified</span>";
-  if (r === "denied") return "<span class='reaction-badge badge-denied'>❌ Denied</span>";
+  if (r === "accepted" || r === "modified" || r === "denied") return r;
   return "";
 }
 
-function hasReaction(item) {
-  var r = (item.reaction_type || item.reaction || item.verdict || "").toLowerCase();
-  return (r === "accepted" || r === "modified" || r === "denied");
+function getReactionBadgeHtml(reaction) {
+  if (reaction === "accepted") return "<span class='reaction-badge badge-accepted'>✅ Accepted</span>";
+  if (reaction === "modified") return "<span class='reaction-badge badge-modified'>✏️ Modified</span>";
+  if (reaction === "denied") return "<span class='reaction-badge badge-denied'>❌ Denied</span>";
+  return "";
 }
 
 async function loadFeed(){
-  const res = await getFeed();
-  const all = res.response.statements || res.response.results || [];
+  try {
+    const res = await getFeed();
+    const all = res.response.statements || res.response.results || [];
 
-  // ✅ ONLY SHOW REACTED STATEMENTS
-  const list = all.filter(item => hasReaction(item));
+    // ✅ ONLY SHOW REACTED STATEMENTS (no unreacted posts)
+    const list = all.filter(item => getReaction(item) !== "");
 
-  if (list.length === 0) {
-    document.getElementById("feed").innerHTML = "<div class='muted'>No verified truths yet. Be the first to react!</div>";
-    return;
-  }
-
-  let html = "";
-
-  for (let item of list) {
-    const text = item.text || "";
-    const url = item.source_url || "";
-    const created = item.Created_Date || item.created_date || "";
-
-    const ownerId = item["Created By"] || item.created_by || item.user_id || item.creator;
-    const ownerInfo = await getUserInfo(ownerId);
-
-    // AVATAR
-    let avatarHtml = "";
-    if (ownerInfo.photo) {
-      avatarHtml = "<div class='owner-avatar'><img src='" + escapeHtml(ownerInfo.photo) + "'></div>";
-    } else {
-      avatarHtml = "<div class='owner-avatar'>" + escapeHtml((ownerInfo.name || "?").charAt(0)) + "</div>";
+    if (list.length === 0) {
+      document.getElementById("feed").innerHTML =
+        "<div class='muted'>No verified truths yet. Be the first to react on your Profile!</div>";
+      return;
     }
 
-    html += "<div class='card'>";
+    let html = "";
 
-    // OWNER ROW
-    html += "<div class='owner-row'>" + avatarHtml
-      + "<div class='owner-name'>" + escapeHtml(ownerInfo.name) + "</div></div>";
+    for (let item of list) {
+      const text = item.text || "";
+      const url = item.source_url || "";
+      const created = item.Created_Date || item.created_date || "";
+      const reaction = getReaction(item);
 
-    // TEXT
-    html += "<div class='stmt-text'>" + escapeHtml(text) + "</div>";
+      const ownerId = item["Created By"] || item.created_by || item.user_id || item.creator;
+      const ownerInfo = await getUserInfo(ownerId);
 
-    // IMAGE PREVIEW
-    if (url) html += getPreviewHTML(url);
+      // AVATAR
+      let avatarHtml = "";
+      if (ownerInfo.photo) {
+        avatarHtml = "<div class='owner-avatar'><img src='" + escapeHtml(ownerInfo.photo) + "'></div>";
+      } else {
+        avatarHtml = "<div class='owner-avatar'>" + escapeHtml((ownerInfo.name || "?").charAt(0)) + "</div>";
+      }
 
-    // REACTION BADGE (no buttons)
-    html += getReactionBadge(item);
+      html += "<div class='card'>";
 
-    // DATE
-    if (created) {
-      try { html += "<div class='card-date'>" + new Date(created).toLocaleDateString() + "</div>"; } catch(e){}
+      // ✅ OWNER ROW + REACTION BADGE BESIDE NAME
+      html += "<div class='owner-row'>";
+      html += avatarHtml;
+      html += "<div class='owner-info'>";
+      html += "<span class='owner-name'>" + escapeHtml(ownerInfo.name) + "</span>";
+      html += getReactionBadgeHtml(reaction);
+      html += "</div>";
+      html += "</div>";
+
+      // TEXT
+      html += "<div class='stmt-text'>" + escapeHtml(text) + "</div>";
+
+      // IMAGE PREVIEW
+      if (url) html += getPreviewHTML(url);
+
+      // DATE
+      if (created) {
+        try { html += "<div class='card-date'>" + new Date(created).toLocaleDateString() + "</div>"; } catch(e){}
+      }
+
+      // ✅ NO BUTTONS — FEED IS READ-ONLY
+
+      html += "</div>";
     }
 
-    html += "</div>";
-  }
+    document.getElementById("feed").innerHTML = html;
 
-  document.getElementById("feed").innerHTML = html;
+  } catch(err) {
+    document.getElementById("feed").innerHTML =
+      "<div class='muted'>Error loading feed: " + escapeHtml(err.message) + "</div>";
+  }
 }
 
-loadProfile();
 loadFeed();
 
 </script>
