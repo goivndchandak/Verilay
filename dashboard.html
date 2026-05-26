@@ -7,51 +7,193 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: Arial, sans-serif; background: #fafafa; padding-bottom: 70px; }
-    .topbar { background: #1d3557; color: white; padding: 15px 20px; font-size: 20px; font-weight: bold; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-    .topbar button { background: none; border: 1px solid white; color: white; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+
+    /* TOP BAR */
+    .topbar {
+      background: #1d3557; color: white;
+      padding: 15px 20px; font-size: 20px; font-weight: bold;
+      position: sticky; top: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .topbar-right { display: flex; gap: 10px; align-items: center; }
+    .topbar-btn {
+      background: none; border: 1px solid white; color: white;
+      padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px;
+      text-decoration: none;
+    }
+
     .content { max-width: 600px; margin: 0 auto; padding: 15px; }
-    .profile-header { background: white; padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .avatar { width: 80px; height: 80px; border-radius: 50%; background: #1d3557; color: white; font-size: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+
+    /* PROFILE HEADER */
+    .profile-header {
+      background: white; padding: 25px; border-radius: 12px;
+      text-align: center; margin-bottom: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: #1d3557; color: white; font-size: 32px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 10px;
+    }
     .profile-header h2 { font-size: 20px; color: #1d3557; }
     .profile-header p { color: #666; font-size: 13px; margin-top: 4px; }
     .social-links { margin-top: 12px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
     .social-links a { font-size: 12px; color: #1d3557; text-decoration: none; padding: 5px 12px; border: 1px solid #1d3557; border-radius: 20px; }
-    .stats { display: flex; justify-content: space-around; background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+
+    /* STATS */
+    .stats {
+      display: flex; justify-content: space-around; background: white;
+      padding: 15px; border-radius: 12px; margin-bottom: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
     .stat { text-align: center; }
     .stat-num { font-size: 22px; font-weight: bold; color: #1d3557; }
     .stat-label { font-size: 11px; color: #999; }
-    .tabs { display: flex; background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-size: 12px; font-weight: bold; color: #999; border-bottom: 3px solid transparent; }
+
+    /* TABS */
+    .tabs {
+      display: flex; background: white; border-radius: 12px;
+      margin-bottom: 15px; overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .tab {
+      flex: 1; padding: 12px; text-align: center; cursor: pointer;
+      font-size: 13px; font-weight: bold; color: #999;
+      border-bottom: 3px solid transparent;
+    }
     .tab.active { color: #1d3557; border-bottom-color: #1d3557; }
+
     .section { display: none; }
     .section.active { display: block; }
-    .form-group { margin-bottom: 12px; }
-    .form-group label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; }
-    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-    .btn { padding: 12px 24px; background: #1d3557; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; margin-top: 10px; }
-    .card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+
+    /* CARD */
+    .card {
+      background: white; padding: 15px; margin-bottom: 12px;
+      border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
     .card p { font-size: 14px; line-height: 1.5; }
     .card-date { font-size: 11px; color: #999; margin-top: 5px; }
     .card-link { font-size: 12px; margin-top: 5px; }
     .card-link a { color: #1d3557; }
     .card-actions { margin-top: 8px; }
-    .card-actions button { padding: 6px 12px; border: none; border-radius: 15px; cursor: pointer; font-size: 11px; margin-right: 5px; color: white; }
-    textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-    .news-card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 4px solid #ff9933; }
+    .card-actions button {
+      padding: 6px 12px; border: none; border-radius: 15px;
+      cursor: pointer; font-size: 11px; margin-right: 5px; color: white;
+    }
+
+    /* FORMS */
+    .form-group { margin-bottom: 12px; }
+    .form-group label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; }
+    .form-group input, .form-group textarea {
+      width: 100%; padding: 10px; border: 1px solid #ddd;
+      border-radius: 8px; font-size: 14px;
+    }
+    textarea {
+      width: 100%; padding: 10px; margin-bottom: 10px;
+      border: 1px solid #ddd; border-radius: 8px; font-size: 14px;
+    }
+
+    .btn {
+      padding: 12px 24px; background: #1d3557; color: white;
+      border: none; border-radius: 8px; cursor: pointer; font-size: 14px;
+      margin-top: 10px;
+    }
+
+    /* NEW POST TOGGLE */
+    .new-post-toggle {
+      width: 100%; padding: 12px; background: #1d3557; color: white;
+      border: none; border-radius: 10px; cursor: pointer;
+      font-size: 14px; font-weight: bold; margin-bottom: 12px;
+    }
+    .new-post-area { display: none; }
+    .new-post-area.open { display: block; }
+
+    /* NEWS */
+    .news-card {
+      background: white; padding: 15px; margin-bottom: 12px;
+      border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border-left: 4px solid #ff9933;
+    }
     .news-card h4 { font-size: 14px; color: #1d3557; margin-bottom: 5px; }
     .news-card p { font-size: 13px; color: #555; line-height: 1.4; margin-bottom: 8px; }
     .news-card img { width: 100%; border-radius: 8px; margin-bottom: 8px; }
     .news-card a { font-size: 12px; color: #1d3557; }
     .news-actions { margin-top: 10px; }
-    .news-actions button { padding: 6px 12px; border: none; border-radius: 15px; cursor: pointer; font-size: 11px; margin-right: 5px; color: white; }
-    .scan-btn { width: 100%; padding: 14px; border: none; border-radius: 10px; cursor: pointer; color: white; background: #ff9933; font-size: 16px; font-weight: bold; }
+    .news-actions button {
+      padding: 6px 12px; border: none; border-radius: 15px;
+      cursor: pointer; font-size: 11px; margin-right: 5px; color: white;
+    }
+
+    /* SCAN BUTTONS */
+    .scan-btn {
+      width: 100%; padding: 14px; border: none; border-radius: 10px;
+      cursor: pointer; color: white; background: #ff9933;
+      font-size: 15px; font-weight: bold; margin-bottom: 12px;
+    }
     .scan-info { text-align: center; color: #888; font-size: 13px; margin-bottom: 12px; }
+
+    /* URL PREVIEW */
+    .url-section { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
+    .url-section h4 { font-size: 14px; color: #1d3557; margin-bottom: 10px; }
+    .url-input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .url-input-row input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+    .url-input-row button {
+      padding: 10px 16px; border: none; border-radius: 8px;
+      background: #1d3557; color: white; cursor: pointer; font-weight: bold; font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .url-preview {
+      background: #fff; border: 1px solid #eee; border-radius: 12px;
+      overflow: hidden; margin-bottom: 10px;
+    }
+    .url-preview img {
+      width: 100%; height: 200px; object-fit: cover;
+    }
+    .url-preview .body { padding: 12px; }
+    .url-preview .title { font-size: 14px; font-weight: bold; color: #1d3557; margin-bottom: 4px; }
+    .url-preview .desc { font-size: 12px; color: #666; line-height: 1.4; margin-bottom: 6px; }
+    .url-preview .link { font-size: 11px; color: #1d3557; }
+
+    /* SETTINGS OVERLAY */
+    .settings-overlay {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5); z-index: 200;
+      justify-content: center; align-items: flex-start; padding-top: 60px;
+    }
+    .settings-overlay.open { display: flex; }
+    .settings-panel {
+      background: white; width: 90%; max-width: 500px;
+      border-radius: 14px; padding: 20px;
+      max-height: 80vh; overflow-y: auto;
+    }
+    .settings-panel h3 { color: #1d3557; margin-bottom: 15px; }
+    .logout-btn {
+      width: 100%; padding: 12px; background: #d62828; color: white;
+      border: none; border-radius: 8px; cursor: pointer;
+      font-size: 14px; font-weight: bold; margin-top: 15px;
+    }
+    .close-btn {
+      float: right; background: none; border: none;
+      font-size: 20px; cursor: pointer; color: #999;
+    }
+
+    /* UTILITIES */
     .error { color: red; font-size: 12px; margin-top: 5px; }
     .success { color: green; font-size: 12px; margin-top: 5px; }
     .gen-card-btn { display: inline-block; font-size: 12px; color: white; background: #FF9933; padding: 5px 14px; border-radius: 20px; text-decoration: none; font-weight: bold; }
     .marked-label { font-size: 13px; color: #1d3557; font-weight: bold; }
     .result-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
-    .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff4e6; display: flex; justify-content: space-around; align-items: center; height: 60px; border-top: 1px solid #eee; z-index: 100; }
+    .or-divider { text-align: center; color: #bbb; font-size: 13px; font-weight: bold; margin: 12px 0; }
+
+    /* BOTTOM NAV */
+    .bottomnav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #fff4e6; display: flex; justify-content: space-around;
+      align-items: center; height: 60px;
+      border-top: 1px solid #eee; z-index: 100;
+    }
     .bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
     .bottomnav a.active { color: #1d3557; font-weight: bold; }
     .bottomnav a span { font-size: 22px; display: block; }
@@ -59,7 +201,31 @@
 </head>
 <body>
 
-<div class="topbar">My Profile <button onclick="logout()">Logout</button></div>
+<!-- ✅ TOP BAR -->
+<div class="topbar">
+  My Profile
+  <div class="topbar-right">
+    <button class="topbar-btn" onclick="openSettings()">⚙️ Settings</button>
+  </div>
+</div>
+
+<!-- ✅ SETTINGS OVERLAY -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-panel">
+    <button class="close-btn" onclick="closeSettings()">✕</button>
+    <h3>Edit Profile</h3>
+    <div class="form-group"><label>Full Name</label><input id="editName" placeholder="Your name"></div>
+    <div class="form-group"><label>Username</label><input id="editUsername" placeholder="username"></div>
+    <div class="form-group"><label>Bio</label><textarea id="editBio" placeholder="Write about yourself..." rows="3"></textarea></div>
+    <div class="form-group"><label>LinkedIn URL</label><input id="editLinkedin" placeholder="https://linkedin.com/in/..."></div>
+    <div class="form-group"><label>Instagram URL</label><input id="editInstagram" placeholder="https://instagram.com/..."></div>
+    <div class="form-group"><label>Twitter / X URL</label><input id="editTwitter" placeholder="https://twitter.com/..."></div>
+    <button class="btn" onclick="saveProfile()">Save Profile</button>
+    <div id="settingsMsg" class="success"></div>
+    <div id="settingsErr" class="error"></div>
+    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+  </div>
+</div>
 
 <div class="content">
 
@@ -78,63 +244,72 @@
     <div class="stat"><div class="stat-num" id="statScore">0</div><div class="stat-label">Verilay Score</div></div>
   </div>
 
-  <!-- TABS -->
+  <!-- ✅ ONLY 2 TABS -->
   <div class="tabs">
     <div class="tab active" id="tab-statements" onclick="showTab('statements')">Statements</div>
-    <div class="tab" id="tab-post" onclick="showTab('post')">New Post</div>
     <div class="tab" id="tab-news" onclick="showTab('news')">Scan News</div>
-    <div class="tab" id="tab-settings" onclick="showTab('settings')">Settings</div>
   </div>
 
-  <!-- STATEMENTS -->
-  <div class="section active" id="sec-statements"><div id="myStatements"></div></div>
+  <!-- ✅ STATEMENTS TAB (includes New Post) -->
+  <div class="section active" id="sec-statements">
 
-  <!-- NEW POST -->
-  <div class="section" id="sec-post">
-    <div class="card">
-      <h3 style="margin-bottom:15px; color:#1d3557;">Add New Statement</h3>
-      <textarea id="newStatement" placeholder="Share your truth or react to news..." rows="4"></textarea>
-      <div class="form-group"><label>News/Source Link (optional)</label><input id="sourceUrl" placeholder="https://example.com/article..."></div>
-      <button class="btn" onclick="postStatement()">Post Statement</button>
-      <div id="postMsg" class="success"></div>
-      <div id="postErr" class="error"></div>
-      <div id="postReactSection" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
-        <p style="font-size:13px; color:#666; margin-bottom:8px;"><strong>Now react to your statement:</strong></p>
-        <div class="card-actions">
-          <button style="background:#2d6a4f;color:white;" onclick="reactToPost('accepted')">✅ Accept</button>
-          <button style="background:#f77f00;color:white;" onclick="reactToPost('modified')">✏️ Modify</button>
-          <button style="background:#d62828;color:white;" onclick="reactToPost('denied')">❌ Deny</button>
+    <button class="new-post-toggle" onclick="toggleNewPost()">+ New Statement</button>
+
+    <div class="new-post-area" id="newPostArea">
+      <div class="card">
+        <h3 style="margin-bottom:15px; color:#1d3557;">Add New Statement</h3>
+        <textarea id="newStatement" placeholder="Share your truth or react to news..." rows="4"></textarea>
+        <div class="form-group"><label>News/Source Link (optional)</label><input id="sourceUrl" placeholder="https://example.com/article..."></div>
+        <button class="btn" onclick="postStatement()">Post Statement</button>
+        <div id="postMsg" class="success"></div>
+        <div id="postErr" class="error"></div>
+        <div id="postReactSection" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
+          <p style="font-size:13px; color:#666; margin-bottom:8px;"><strong>Now react to your statement:</strong></p>
+          <div class="card-actions">
+            <button style="background:#2d6a4f;color:white;" onclick="reactToPost('accepted')">✅ Accept</button>
+            <button style="background:#f77f00;color:white;" onclick="reactToPost('modified')">✏️ Modify</button>
+            <button style="background:#d62828;color:white;" onclick="reactToPost('denied')">❌ Deny</button>
+          </div>
+          <div id="postReactResult"></div>
         </div>
-        <div id="postReactResult"></div>
       </div>
     </div>
+
+    <div id="myStatements"></div>
   </div>
 
-  <!-- ✅ SCAN NEWS (AUTO-DETECT NAME) -->
+  <!-- ✅ SCAN NEWS TAB (2 OPTIONS) -->
   <div class="section" id="sec-news">
     <div class="card">
-      <h3 style="margin-bottom:10px; color:#1d3557;">📰 Scan News</h3>
-      <p class="scan-info">Scanning latest news for: <strong id="scanNameLabel">Loading...</strong></p>
+
+      <!-- OPTION 1: SCAN YOUR NEWS -->
+      <h3 style="margin-bottom:10px; color:#1d3557;">📰 Scan Your News</h3>
+      <p class="scan-info">Auto-scanning news for: <strong id="scanNameLabel">Loading...</strong></p>
       <button class="scan-btn" onclick="scanNews()">🔍 Scan News</button>
       <div id="newsError" class="error"></div>
       <div id="newsInfo" class="success"></div>
       <div id="newsResults"></div>
-    </div>
-  </div>
 
-  <!-- SETTINGS -->
-  <div class="section" id="sec-settings">
-    <div class="card">
-      <h3 style="margin-bottom:15px; color:#1d3557;">Edit Profile</h3>
-      <div class="form-group"><label>Full Name</label><input id="editName" placeholder="Your name"></div>
-      <div class="form-group"><label>Username</label><input id="editUsername" placeholder="username"></div>
-      <div class="form-group"><label>Bio</label><textarea id="editBio" placeholder="Write about yourself..." rows="3"></textarea></div>
-      <div class="form-group"><label>LinkedIn URL</label><input id="editLinkedin" placeholder="https://linkedin.com/in/..."></div>
-      <div class="form-group"><label>Instagram URL</label><input id="editInstagram" placeholder="https://instagram.com/..."></div>
-      <div class="form-group"><label>Twitter / X URL</label><input id="editTwitter" placeholder="https://twitter.com/..."></div>
-      <button class="btn" onclick="saveProfile()">Save Profile</button>
-      <div id="settingsMsg" class="success"></div>
-      <div id="settingsErr" class="error"></div>
+      <div class="or-divider">— OR —</div>
+
+      <!-- OPTION 2: PASTE URL -->
+      <h4 style="color:#1d3557; margin-bottom:10px;">🔗 Paste a News URL</h4>
+      <div class="url-input-row">
+        <input id="pasteUrl" placeholder="Paste news URL here...">
+        <button onclick="fetchUrlPreview()">Fetch</button>
+      </div>
+      <div id="urlError" class="error"></div>
+      <div id="urlPreviewArea"></div>
+      <div id="urlReactArea" style="display:none;">
+        <p style="font-size:13px; color:#666; margin-bottom:8px;"><strong>React to this news:</strong></p>
+        <div class="card-actions">
+          <button style="background:#2d6a4f;color:white;" onclick="reactToUrl('accepted')">✅ Accept</button>
+          <button style="background:#f77f00;color:white;" onclick="reactToUrl('modified')">✏️ Modify</button>
+          <button style="background:#d62828;color:white;" onclick="reactToUrl('denied')">❌ Deny</button>
+        </div>
+        <div id="urlReactResult"></div>
+      </div>
+
     </div>
   </div>
 
@@ -157,17 +332,38 @@ window._stmtTexts = {};
 window._newsTexts = {};
 window._newsUrls = {};
 
+// URL paste state
+var pastedTitle = "";
+var pastedUrl = "";
+var pastedStmtId = "";
+
 function escapeHtml(str) { return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
+/* ========== SETTINGS OVERLAY ========== */
+function openSettings() { document.getElementById("settingsOverlay").classList.add("open"); }
+function closeSettings() { document.getElementById("settingsOverlay").classList.remove("open"); }
+
+// Close on background click
+document.addEventListener("click", function(e) {
+  var overlay = document.getElementById("settingsOverlay");
+  if (e.target === overlay) closeSettings();
+});
+
+/* ========== TABS ========== */
 function showTab(name) {
-  var sections = document.querySelectorAll(".section");
-  var tabs = document.querySelectorAll(".tab");
-  for (var i = 0; i < sections.length; i++) sections[i].classList.remove("active");
-  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove("active");
+  document.querySelectorAll(".section").forEach(function(s) { s.classList.remove("active"); });
+  document.querySelectorAll(".tab").forEach(function(t) { t.classList.remove("active"); });
   document.getElementById("sec-" + name).classList.add("active");
   document.getElementById("tab-" + name).classList.add("active");
 }
 
+/* ========== NEW POST TOGGLE ========== */
+function toggleNewPost() {
+  var area = document.getElementById("newPostArea");
+  area.classList.toggle("open");
+}
+
+/* ========== PROFILE ========== */
 async function loadProfile() {
   try {
     var res = await getProfile();
@@ -177,8 +373,6 @@ async function loadProfile() {
     document.getElementById("profileUsername").innerText = "@" + (user.username || "unknown");
     document.getElementById("profileBio").innerText = user.bio || "";
     document.getElementById("avatarInitial").innerText = (user.full_name || "?").charAt(0).toUpperCase();
-
-    // ✅ AUTO-SET SCAN NEWS LABEL
     document.getElementById("scanNameLabel").innerText = user.full_name || "your name";
 
     var links = "";
@@ -186,6 +380,8 @@ async function loadProfile() {
     if (user.instagram_url) links += "<a href='" + escapeHtml(user.instagram_url) + "' target='_blank'>Instagram</a>";
     if (user.twitter_url) links += "<a href='" + escapeHtml(user.twitter_url) + "' target='_blank'>Twitter</a>";
     document.getElementById("socialLinks").innerHTML = links;
+
+    // Fill settings form
     document.getElementById("editName").value = user.full_name || "";
     document.getElementById("editUsername").value = user.username || "";
     document.getElementById("editBio").value = user.bio || "";
@@ -199,12 +395,20 @@ async function saveProfile() {
   document.getElementById("settingsMsg").innerText = "";
   document.getElementById("settingsErr").innerText = "";
   try {
-    await updateProfile({ full_name: document.getElementById("editName").value, username: document.getElementById("editUsername").value, bio: document.getElementById("editBio").value, linkedin_url: document.getElementById("editLinkedin").value, instagram_url: document.getElementById("editInstagram").value, twitter_url: document.getElementById("editTwitter").value });
+    await updateProfile({
+      full_name: document.getElementById("editName").value,
+      username: document.getElementById("editUsername").value,
+      bio: document.getElementById("editBio").value,
+      linkedin_url: document.getElementById("editLinkedin").value,
+      instagram_url: document.getElementById("editInstagram").value,
+      twitter_url: document.getElementById("editTwitter").value
+    });
     document.getElementById("settingsMsg").innerText = "Profile saved!";
     loadProfile();
   } catch (err) { document.getElementById("settingsErr").innerText = "Error: " + err.message; }
 }
 
+/* ========== HELPERS ========== */
 function buildCardLink(text, verdict) {
   var name = encodeURIComponent(profileData.full_name || "");
   var uname = encodeURIComponent(profileData.username || "");
@@ -214,9 +418,10 @@ function buildCardLink(text, verdict) {
 }
 
 function makeResultHtml(label, cardUrl) {
-  return "<div class='result-row'><span class='marked-label'>This is marked " + label + "</span><a class='gen-card-btn' href='" + cardUrl + "'>🎨 Generate Card</a></div>";
+  return "<div class='result-row'><span class='marked-label'>Marked " + label + "</span><a class='gen-card-btn' href='" + cardUrl + "'>🎨 Generate Card</a></div>";
 }
 
+/* ========== STATEMENTS ========== */
 async function loadMyStatements() {
   try {
     var res = await getMyStatements();
@@ -261,6 +466,7 @@ async function reactToStatement(id, action) {
   } catch (err) { console.error(err); }
 }
 
+/* ========== POST STATEMENT ========== */
 async function postStatement() {
   document.getElementById("postMsg").innerText = "";
   document.getElementById("postErr").innerText = "";
@@ -271,17 +477,12 @@ async function postStatement() {
   if (!text) { document.getElementById("postErr").innerText = "Write something first"; return; }
   try {
     var res = await addStatement(text, sourceUrl);
-
-    // ✅ FIXED ID LOGIC
     lastPostedId = "";
-    if (res.response) {
-      lastPostedId = res.response.id || res.response._id || "";
-    }
+    if (res.response) { lastPostedId = res.response.id || res.response._id || ""; }
     if (res.id) lastPostedId = res.id;
     if (res._id) lastPostedId = res._id;
-
     lastPostedText = text;
-    document.getElementById("postMsg").innerText = "Statement posted! Now react to it below:";
+    document.getElementById("postMsg").innerText = "Statement posted! Now react:";
     document.getElementById("postReactSection").style.display = "block";
   } catch (err) { document.getElementById("postErr").innerText = "Error: " + err.message; }
 }
@@ -298,24 +499,23 @@ async function reactToPost(action) {
       document.getElementById("postReactSection").style.display = "none";
       document.getElementById("postMsg").innerText = "";
       document.getElementById("postReactResult").innerHTML = "";
+      document.getElementById("newPostArea").classList.remove("open");
       lastPostedId = ""; lastPostedText = "";
-      loadMyStatements(); showTab("statements");
+      loadMyStatements();
     }, 2000);
   } catch (err) { document.getElementById("postReactResult").innerHTML = "<span class='error'>Error: " + err.message + "</span>"; }
 }
 
-// ✅ SCAN NEWS — AUTO-DETECT NAME FROM PROFILE
+/* ========== SCAN NEWS (AUTO NAME) ========== */
 var newsCounter = 0;
 async function scanNews() {
   document.getElementById("newsError").innerText = "";
   document.getElementById("newsInfo").innerText = "Scanning...";
   document.getElementById("newsResults").innerHTML = "";
 
-  // ✅ AUTO-USE FULL NAME (no manual input)
   var query = (profileData.full_name || "").trim();
-
   if (!query) {
-    document.getElementById("newsError").innerText = "Please set your Full Name in Settings first.";
+    document.getElementById("newsError").innerText = "Set your Full Name in Settings first.";
     document.getElementById("newsInfo").innerText = "";
     return;
   }
@@ -331,7 +531,7 @@ async function scanNews() {
       return;
     }
 
-    document.getElementById("newsInfo").innerText = articles.length + " articles found for \"" + escapeHtml(query) + "\"";
+    document.getElementById("newsInfo").innerText = articles.length + " articles found";
 
     for (var i = 0; i < articles.length; i++) {
       var a = articles[i];
@@ -350,23 +550,22 @@ async function scanNews() {
         + "  <button style='background:#d62828;color:white;' onclick=\"reactToNews('" + nid + "','denied')\">❌ Deny</button>"
         + "</div><div id='nresult-" + nid + "'></div></div>";
     }
-  } catch (err) { document.getElementById("newsError").innerText = "News error: " + err.message; document.getElementById("newsInfo").innerText = ""; }
+  } catch (err) {
+    document.getElementById("newsError").innerText = "News error: " + err.message;
+    document.getElementById("newsInfo").innerText = "";
+  }
 }
 
-// ✅ FIXED NEWS REACT (checks both .id and ._id)
 async function reactToNews(nid, action) {
   var title = (window._newsTexts && window._newsTexts[nid]) || "";
   var url = (window._newsUrls && window._newsUrls[nid]) || "";
   try {
     var res = await addStatement(action.toUpperCase() + ": " + title, url);
-
     var stmtId = "";
     if (res.response) { stmtId = res.response.id || res.response._id || ""; }
     if (res.id) stmtId = res.id;
     if (res._id) stmtId = res._id;
-
     if (stmtId) { await reactStatement(stmtId, action); }
-
     var actionsEl = document.getElementById("nactions-" + nid);
     if (actionsEl) actionsEl.style.display = "none";
     var resultEl = document.getElementById("nresult-" + nid);
@@ -378,8 +577,95 @@ async function reactToNews(nid, action) {
   } catch (err) { var el = document.getElementById("nresult-" + nid); if (el) el.innerHTML = "<span class='error'>Error: " + err.message + "</span>"; }
 }
 
-function logout() { localStorage.removeItem("token"); localStorage.removeItem("user_id"); window.location.href = "login.html"; }
+/* ========== PASTE URL + AUTO PREVIEW ========== */
+async function fetchUrlPreview() {
+  var url = document.getElementById("pasteUrl").value.trim();
+  document.getElementById("urlError").innerText = "";
+  document.getElementById("urlPreviewArea").innerHTML = "";
+  document.getElementById("urlReactArea").style.display = "none";
+  document.getElementById("urlReactResult").innerHTML = "";
 
+  if (!url) { document.getElementById("urlError").innerText = "Paste a URL first."; return; }
+  if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+
+  // Show loading
+  document.getElementById("urlPreviewArea").innerHTML = "<p style='color:#888;font-size:12px;'>Fetching preview...</p>";
+
+  var thumbImg = "https://image.thum.io/get/" + url;
+  var title = "";
+  var desc = "";
+
+  // Try OG extraction
+  try {
+    var proxyRes = await fetch("https://r.jina.ai/" + url);
+    var html = await proxyRes.text();
+
+    function pick(regex) { var m = html.match(regex); return m && m[1] ? m[1].trim() : ""; }
+
+    title = pick(/<title[^>]*>([^<]+)<\/title>/i);
+    desc = pick(/meta\s+name="description"\s+content="([^"]+)"/i);
+    var ogImg = pick(/property="og:image"\s+content="([^"]+)"/i);
+    var ogTitle = pick(/property="og:title"\s+content="([^"]+)"/i);
+    var ogDesc = pick(/property="og:description"\s+content="([^"]+)"/i);
+
+    if (ogTitle) title = ogTitle;
+    if (ogDesc) desc = ogDesc;
+    if (ogImg && /^https?:\/\//.test(ogImg)) thumbImg = ogImg;
+  } catch (e) {
+    // fallback to thum.io image + basic title
+  }
+
+  if (!title) title = url;
+
+  pastedTitle = title;
+  pastedUrl = url;
+
+  document.getElementById("urlPreviewArea").innerHTML =
+    "<div class='url-preview'>"
+    + "<img src='" + escapeHtml(thumbImg) + "' alt='preview'>"
+    + "<div class='body'>"
+    + "<div class='title'>" + escapeHtml(title) + "</div>"
+    + (desc ? "<div class='desc'>" + escapeHtml(desc) + "</div>" : "")
+    + "<div class='link'><a href='" + escapeHtml(url) + "' target='_blank'>Read full article ↗</a></div>"
+    + "</div></div>";
+
+  document.getElementById("urlReactArea").style.display = "block";
+}
+
+async function reactToUrl(action) {
+  if (!pastedTitle || !pastedUrl) return;
+  try {
+    var res = await addStatement(action.toUpperCase() + ": " + pastedTitle, pastedUrl);
+    var stmtId = "";
+    if (res.response) { stmtId = res.response.id || res.response._id || ""; }
+    if (res.id) stmtId = res.id;
+    if (res._id) stmtId = res._id;
+    if (stmtId) { await reactStatement(stmtId, action); }
+
+    var label = action.charAt(0).toUpperCase() + action.slice(1);
+    document.getElementById("urlReactResult").innerHTML = makeResultHtml(label, buildCardLink(pastedTitle, action));
+
+    // Reset after 2s
+    setTimeout(function() {
+      document.getElementById("pasteUrl").value = "";
+      document.getElementById("urlPreviewArea").innerHTML = "";
+      document.getElementById("urlReactArea").style.display = "none";
+      document.getElementById("urlReactResult").innerHTML = "";
+      pastedTitle = ""; pastedUrl = ""; pastedStmtId = "";
+      loadMyStatements();
+    }, 2000);
+
+  } catch (err) { document.getElementById("urlReactResult").innerHTML = "<span class='error'>Error: " + err.message + "</span>"; }
+}
+
+/* ========== LOGOUT ========== */
+function logout() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user_id");
+  window.location.href = "login.html";
+}
+
+/* ========== INIT ========== */
 loadProfile();
 loadMyStatements();
 </script>
