@@ -6,146 +6,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+body { margin: 0; font-family: Arial; background: #fafafa; padding-bottom: 70px; }
 
-/* ---------- BASE ---------- */
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #fafafa;
-  padding-bottom: 70px;
-}
-
-/* ---------- TOP BAR ---------- */
 .topbar {
-  background: #1d3557;
-  color: white;
-  padding: 15px 20px;
-  font-size: 20px;
-  font-weight: bold;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background: #1d3557; color: white;
+  padding: 15px 20px; font-size: 20px; font-weight: bold;
+  display: flex; justify-content: space-between; align-items: center;
 }
-
 .topbar a {
-  color: white;
-  border: 1px solid white;
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-size: 12px;
-  text-decoration: none;
+  color: white; border: 1px solid white;
+  padding: 6px 14px; border-radius: 6px;
+  font-size: 12px; text-decoration: none;
 }
 
-/* ---------- CONTAINER ---------- */
-.container {
-  padding: 12px;
-  max-width: 600px;
-  margin: auto;
-}
+.container { padding: 12px; max-width: 600px; margin: auto; }
 
-/* ---------- CARD ---------- */
 .card {
-  background: white;
-  padding: 14px;
-  margin-bottom: 12px;
-  border-radius: 14px;
+  background: white; padding: 14px; margin-bottom: 12px; border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-/* ---------- OWNER NAME ---------- */
-.owner {
-  font-weight: bold;
-  color: #1d3557;
-  margin-bottom: 6px;
-  font-size: 14px;
+.owner-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
 }
-
-/* ---------- TEXT ---------- */
-.card p {
-  font-size: 15px;
-  line-height: 1.4;
+.owner-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #1d3557; color: white; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0;
 }
+.owner-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.owner-name { font-weight: bold; color: #1d3557; font-size: 14px; }
 
-/* ---------- PREVIEW ---------- */
+.stmt-text { font-size: 15px; line-height: 1.4; margin-bottom: 8px; }
+
 .preview img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-top: 10px;
+  width: 100%; height: 200px; object-fit: cover;
+  border-radius: 10px; margin-top: 8px;
 }
-
 .preview a {
-  display: block;
-  font-size: 12px;
-  margin-top: 6px;
-  color: #1d3557;
-  text-decoration: none;
+  display: block; font-size: 12px; margin-top: 6px;
+  color: #1d3557; text-decoration: none;
 }
 
-/* ---------- BUTTONS ---------- */
-.btn {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 20px;
-  color: white;
-  margin: 5px 5px 0 0;
-  cursor: pointer;
-  font-size: 12px;
+.reaction-badge {
+  display: inline-block; padding: 5px 12px; border-radius: 999px;
+  font-size: 11px; font-weight: bold; color: white; margin-top: 8px;
 }
+.badge-accepted { background: #2d6a4f; }
+.badge-modified { background: #f77f00; }
+.badge-denied { background: #d62828; }
 
-.accept { background: #2d6a4f; }
-.modify { background: #f77f00; }
-.deny   { background: #d62828; }
+.card-date { font-size: 11px; color: #999; margin-top: 6px; }
 
-/* ---------- CARD CTA ---------- */
-.gen-card {
-  display: inline-block;
-  background: #FF9933;
-  color: white;
-  padding: 7px 14px;
-  border-radius: 20px;
-  text-decoration: none;
-  margin-top: 8px;
-  font-size: 12px;
-}
+.muted { color: #888; font-size: 13px; text-align: center; padding: 20px; }
 
-/* ---------- BOTTOM NAV ---------- */
 .bottomnav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #fff4e6;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  height: 60px;
-  border-top: 1px solid #eee;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: #fff4e6; display: flex; justify-content: space-around;
+  align-items: center; height: 60px; border-top: 1px solid #eee;
 }
-
-.bottomnav a {
-  text-decoration: none;
-  text-align: center;
-  color: #999;
-  font-size: 11px;
-}
-
-.bottomnav a.active {
-  color: #1d3557;
-  font-weight: bold;
-}
-
-.bottomnav span {
-  font-size: 22px;
-  display: block;
-}
-
+.bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
+.bottomnav a.active { color: #1d3557; font-weight: bold; }
+.bottomnav a span { font-size: 22px; display: block; }
 </style>
 </head>
 
 <body>
 
-<!-- ✅ TOP BAR -->
 <div class="topbar">
   Verilay
   <a href="explore.html">Explore</a>
@@ -153,22 +81,18 @@ body {
 
 <div class="container" id="feed"></div>
 
-<!-- ✅ BOTTOM NAV -->
 <div class="bottomnav">
   <a href="feed.html" class="active"><span>🏠</span>Feed</a>
   <a href="dashboard.html"><span>👤</span>Profile</a>
 </div>
 
 <script src="js/api.js"></script>
-
 <script>
 
-/* ---------- GLOBALS ---------- */
 const myUserId = localStorage.getItem("user_id");
 let myProfile = {};
 let userCache = {};
 
-/* ---------- LOAD PROFILE ---------- */
 async function loadProfile(){
   try {
     const res = await getProfile();
@@ -176,124 +100,110 @@ async function loadProfile(){
   } catch(e){}
 }
 
-/* ---------- GET USER NAME ---------- */
-async function getUserName(userId){
-
-  if(userCache[userId]) return userCache[userId];
-
+async function getUserInfo(userId){
+  if (userCache[userId]) return userCache[userId];
   try {
     const res = await fetch(
-      "https://verilay-88625.bubbleapps.io/api/1.1/obj/User/" + userId,
-      { headers: authHeaders() }
+      DATA_BASE + "/User/" + userId,
+      { method: "GET", headers: authHeaders() }
     );
-
     const data = await res.json();
-    const name = data.response.full_name || "User";
-
-    userCache[userId] = name;
-    return name;
-
+    const user = data.response || {};
+    userCache[userId] = {
+      name: user.full_name || "User",
+      photo: user.profile_picture_url || ""
+    };
+    return userCache[userId];
   } catch(e){
-    return "User";
+    return { name: "User", photo: "" };
   }
 }
 
-/* ---------- IMAGE PREVIEW ---------- */
+function escapeHtml(str) {
+  return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
 function getPreviewHTML(url){
-
-  if(!url) return "";
-
-  if(!url.startsWith("http")){
-    url = "https://" + url;
-  }
-
-  const img = "https://image.thum.io/get/" + url;
-
-  return `
-    <div class="preview">
-      <img src="${img}">
-      <a href="${url}" target="_blank">Read source ↗</a>
-    </div>
-  `;
+  if (!url) return "";
+  if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+  return "<div class='preview'>"
+    + "<img src='https://image.thum.io/get/" + escapeHtml(url) + "' alt='preview'>"
+    + "<a href='" + escapeHtml(url) + "' target='_blank'>Read source ↗</a>"
+    + "</div>";
 }
 
-/* ---------- LOAD FEED ---------- */
-async function loadFeed(){
+function getReactionBadge(item) {
+  var r = (item.reaction_type || item.reaction || item.verdict || "").toLowerCase();
+  if (r === "accepted") return "<span class='reaction-badge badge-accepted'>✅ Accepted</span>";
+  if (r === "modified") return "<span class='reaction-badge badge-modified'>✏️ Modified</span>";
+  if (r === "denied") return "<span class='reaction-badge badge-denied'>❌ Denied</span>";
+  return "";
+}
 
+function hasReaction(item) {
+  var r = (item.reaction_type || item.reaction || item.verdict || "").toLowerCase();
+  return (r === "accepted" || r === "modified" || r === "denied");
+}
+
+async function loadFeed(){
   const res = await getFeed();
-  const list = res.response.statements || res.response.results || [];
+  const all = res.response.statements || res.response.results || [];
+
+  // ✅ ONLY SHOW REACTED STATEMENTS
+  const list = all.filter(item => hasReaction(item));
+
+  if (list.length === 0) {
+    document.getElementById("feed").innerHTML = "<div class='muted'>No verified truths yet. Be the first to react!</div>";
+    return;
+  }
 
   let html = "";
 
   for (let item of list) {
-
-    const id = item._id || item.id;
     const text = item.text || "";
     const url = item.source_url || "";
+    const created = item.Created_Date || item.created_date || "";
 
-    const ownerId =
-      item["Created By"] ||
-      item.created_by ||
-      item.user_id ||
-      item.creator;
+    const ownerId = item["Created By"] || item.created_by || item.user_id || item.creator;
+    const ownerInfo = await getUserInfo(ownerId);
 
-    const isOwner = (ownerId == myUserId);
-
-    const ownerName = await getUserName(ownerId);
-
-    html += `<div class="card">`;
-
-    html += `<div class="owner">${ownerName}</div>`;
-
-    html += `<p>${text}</p>`;
-
-    if(url){
-      html += getPreviewHTML(url);
+    // AVATAR
+    let avatarHtml = "";
+    if (ownerInfo.photo) {
+      avatarHtml = "<div class='owner-avatar'><img src='" + escapeHtml(ownerInfo.photo) + "'></div>";
+    } else {
+      avatarHtml = "<div class='owner-avatar'>" + escapeHtml((ownerInfo.name || "?").charAt(0)) + "</div>";
     }
 
-    if(isOwner){
-      html += `
-        <div id="action-${id}">
-          <button class="btn accept" onclick="react('${id}','accepted',\`${text}\`)">Accept</button>
-          <button class="btn modify" onclick="react('${id}','modified',\`${text}\`)">Modify</button>
-          <button class="btn deny" onclick="react('${id}','denied',\`${text}\`)">Deny</button>
-        </div>
+    html += "<div class='card'>";
 
-        <div id="result-${id}"></div>
-      `;
+    // OWNER ROW
+    html += "<div class='owner-row'>" + avatarHtml
+      + "<div class='owner-name'>" + escapeHtml(ownerInfo.name) + "</div></div>";
+
+    // TEXT
+    html += "<div class='stmt-text'>" + escapeHtml(text) + "</div>";
+
+    // IMAGE PREVIEW
+    if (url) html += getPreviewHTML(url);
+
+    // REACTION BADGE (no buttons)
+    html += getReactionBadge(item);
+
+    // DATE
+    if (created) {
+      try { html += "<div class='card-date'>" + new Date(created).toLocaleDateString() + "</div>"; } catch(e){}
     }
 
-    html += `</div>`;
+    html += "</div>";
   }
 
   document.getElementById("feed").innerHTML = html;
 }
 
-/* ---------- REACT ---------- */
-async function react(id, action, text){
-
-  await reactStatement(id, action);
-
-  document.getElementById("action-"+id).style.display = "none";
-
-  document.getElementById("result-"+id).innerHTML = `
-    Marked ${action}
-    <br>
-    <a class="gen-card"
-       href="card.html?name=${encodeURIComponent(myProfile.full_name)}
-       &username=${encodeURIComponent(myProfile.username)}
-       &text=${encodeURIComponent(text)}
-       &verdict=${action}">
-       Generate Card
-    </a>
-  `;
-}
-
-/* ---------- INIT ---------- */
 loadProfile();
 loadFeed();
 
 </script>
-
 </body>
 </html>
