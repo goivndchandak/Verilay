@@ -27,7 +27,7 @@ body {
 
 .container { padding: 10px 14px; max-width: 600px; margin: auto; }
 
-/* ✅ CARD — CLEAN, MINIMAL */
+/* CARD */
 .card {
   background: white;
   padding: 16px;
@@ -36,14 +36,10 @@ body {
   border: 1px solid rgba(0,0,0,0.06);
 }
 
-/* ✅ HEADER ROW */
+/* HEADER */
 .header-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
 }
-
 .avatar {
   width: 38px; height: 38px; border-radius: 50%;
   background: #e8ecf0; color: #1d3557; font-size: 15px; font-weight: bold;
@@ -51,72 +47,86 @@ body {
   overflow: hidden; flex-shrink: 0;
 }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
-
 .header-text { flex: 1; }
+.name { font-weight: 700; color: #1d3557; font-size: 14px; }
 
-.name {
-  font-weight: 700; color: #1d3557; font-size: 14px;
-  line-height: 1.2;
-}
+/* OWNER REACTION — subtle text */
+.owner-reaction { font-size: 12px; font-weight: 600; margin-top: 2px; }
+.r-accepted { color: #3a7d5c; }
+.r-modified { color: #c47a1a; }
+.r-denied { color: #b84040; }
+.r-pending { color: #bbb; }
 
-/* ✅ REACTION — SUBTLE ELEGANT TEXT */
-.reaction {
-  font-size: 12px;
-  font-weight: 600;
-  margin-top: 2px;
-}
-.reaction-accepted { color: #3a7d5c; }
-.reaction-modified { color: #c47a1a; }
-.reaction-denied { color: #b84040; }
-.reaction-pending { color: #aaa; }
-
-/* ✅ STATEMENT TEXT */
+/* STATEMENT */
 .stmt {
-  font-size: 15px;
-  line-height: 1.5;
-  color: #2a2a2a;
-  margin-bottom: 10px;
+  font-size: 15px; line-height: 1.5; color: #2a2a2a; margin-bottom: 10px;
 }
 
-/* ✅ PREVIEW — CLEAN CARD */
+/* PREVIEW */
 .link-preview {
-  border: 1px solid #eee;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 8px;
+  border: 1px solid #eee; border-radius: 10px;
+  overflow: hidden; margin-bottom: 8px;
 }
 .link-preview img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  display: block;
+  width: 100%; height: 180px; object-fit: cover; display: block;
 }
 .link-preview .source {
-  padding: 10px 12px;
+  padding: 10px 12px; font-size: 12px; color: #1d3557;
+  text-decoration: none; display: block; background: #fafafa;
+}
+
+/* DATE */
+.date { font-size: 11px; color: #bbb; }
+
+/* ✅ COMMUNITY REACTIONS — ELEGANT */
+.community-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.react-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 8px;
   font-size: 12px;
-  color: #1d3557;
-  text-decoration: none;
-  display: block;
-  background: #fafafa;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #e0e0e0;
+  background: white;
+  color: #555;
+  transition: all 0.2s ease;
 }
 
-/* ✅ DATE */
-.date {
+.react-btn:hover {
+  background: #f8f8f8;
+}
+
+.react-btn.active-support {
+  background: #eaf5ee;
+  border-color: #3a7d5c;
+  color: #3a7d5c;
+}
+
+.react-btn.active-disagree {
+  background: #fdf0f0;
+  border-color: #b84040;
+  color: #b84040;
+}
+
+.react-count {
   font-size: 11px;
-  color: #bbb;
-  margin-top: 4px;
-}
-
-/* ✅ DIVIDER LINE */
-.divider {
-  height: 1px;
-  background: #f0f0f0;
-  margin: 6px 0;
+  color: #999;
 }
 
 .muted { color: #999; font-size: 14px; text-align: center; padding: 40px 20px; }
 
-/* ✅ BOTTOM NAV */
+/* BOTTOM NAV */
 .bottomnav {
   position: fixed; bottom: 0; left: 0; right: 0;
   background: #fff4e6;
@@ -124,10 +134,7 @@ body {
   align-items: center; height: 60px;
   border-top: 1px solid #eee;
 }
-.bottomnav a {
-  text-decoration: none; text-align: center;
-  color: #999; font-size: 11px;
-}
+.bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
 .bottomnav a.active { color: #1d3557; font-weight: bold; }
 .bottomnav a span { font-size: 22px; display: block; }
 </style>
@@ -151,6 +158,14 @@ body {
 <script>
 
 let userCache = {};
+
+// ✅ Community reactions stored in localStorage (MVP)
+function getReactions() {
+  try { return JSON.parse(localStorage.getItem("verilay_reactions") || "{}"); } catch(e){ return {}; }
+}
+function saveReactions(obj) {
+  localStorage.setItem("verilay_reactions", JSON.stringify(obj));
+}
 
 function escapeHtml(str) {
   return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
@@ -205,16 +220,60 @@ function getReactionFromText(text) {
 }
 
 function cleanText(text) {
-  return (text || "")
-    .replace(/^(ACCEPTED|MODIFIED|DENIED|ACCEPT|MODIFY|DENY):\s*/i, "")
-    .trim();
+  return (text || "").replace(/^(ACCEPTED|MODIFIED|DENIED|ACCEPT|MODIFY|DENY):\s*/i, "").trim();
 }
 
-function getReactionLabel(reaction) {
-  if (reaction === "accepted") return "<div class='reaction reaction-accepted'>Accepted ✓</div>";
-  if (reaction === "modified") return "<div class='reaction reaction-modified'>Modified ✎</div>";
-  if (reaction === "denied") return "<div class='reaction reaction-denied'>Denied ✗</div>";
-  return "<div class='reaction reaction-pending'>Awaiting response</div>";
+function getOwnerReactionLabel(reaction) {
+  if (reaction === "accepted") return "<div class='owner-reaction r-accepted'>Accepted ✓</div>";
+  if (reaction === "modified") return "<div class='owner-reaction r-modified'>Modified ✎</div>";
+  if (reaction === "denied") return "<div class='owner-reaction r-denied'>Denied ✗</div>";
+  return "<div class='owner-reaction r-pending'>Awaiting response</div>";
+}
+
+/* ✅ TOGGLE COMMUNITY REACTION */
+function toggleReaction(stmtId, type) {
+  const reactions = getReactions();
+
+  if (!reactions[stmtId]) reactions[stmtId] = "";
+
+  if (reactions[stmtId] === type) {
+    // Un-react
+    reactions[stmtId] = "";
+  } else {
+    // React
+    reactions[stmtId] = type;
+  }
+
+  saveReactions(reactions);
+  updateReactionUI(stmtId);
+}
+
+function updateReactionUI(stmtId) {
+  const reactions = getReactions();
+  const current = reactions[stmtId] || "";
+
+  const supportBtn = document.getElementById("support-" + stmtId);
+  const disagreeBtn = document.getElementById("disagree-" + stmtId);
+
+  if (supportBtn) {
+    if (current === "support") {
+      supportBtn.className = "react-btn active-support";
+      supportBtn.innerHTML = "🤝 I Support";
+    } else {
+      supportBtn.className = "react-btn";
+      supportBtn.innerHTML = "🤝 I Support";
+    }
+  }
+
+  if (disagreeBtn) {
+    if (current === "disagree") {
+      disagreeBtn.className = "react-btn active-disagree";
+      disagreeBtn.innerHTML = "🤔 I Disagree";
+    } else {
+      disagreeBtn.className = "react-btn";
+      disagreeBtn.innerHTML = "🤔 I Disagree";
+    }
+  }
 }
 
 async function loadFeed(){
@@ -228,22 +287,22 @@ async function loadFeed(){
       return;
     }
 
+    const reactions = getReactions();
     let html = "";
 
     for (let item of list) {
       const rawText = item.text || "";
       const url = item.source_url || "";
       const created = item.Created_Date || item.created_date || "";
+      const stmtId = item._id || item.id || "";
 
       let reaction = getReaction(item);
       if (!reaction) reaction = getReactionFromText(rawText);
-
       const text = cleanText(rawText);
 
       const ownerId = item["Created By"] || item.created_by || item.user_id || item.creator;
       const ownerInfo = await getUserInfo(ownerId);
 
-      // AVATAR
       let avatarHtml = "";
       if (ownerInfo.photo) {
         avatarHtml = "<div class='avatar'><img src='" + escapeHtml(ownerInfo.photo) + "'></div>";
@@ -251,16 +310,18 @@ async function loadFeed(){
         avatarHtml = "<div class='avatar'>" + escapeHtml((ownerInfo.name || "?").charAt(0)) + "</div>";
       }
 
+      // Current user's community reaction
+      const myReaction = reactions[stmtId] || "";
+
       html += "<div class='card'>";
 
-      // ✅ HEADER: AVATAR + NAME + REACTION (subtle text below name)
+      // HEADER
       html += "<div class='header-row'>";
       html += avatarHtml;
       html += "<div class='header-text'>";
       html += "<div class='name'>" + escapeHtml(ownerInfo.name) + "</div>";
-      html += getReactionLabel(reaction);
-      html += "</div>";
-      html += "</div>";
+      html += getOwnerReactionLabel(reaction);
+      html += "</div></div>";
 
       // TEXT
       html += "<div class='stmt'>" + escapeHtml(text) + "</div>";
@@ -270,10 +331,23 @@ async function loadFeed(){
 
       // DATE
       if (created) {
-        try {
-          html += "<div class='date'>" + new Date(created).toLocaleDateString() + "</div>";
-        } catch(e){}
+        try { html += "<div class='date'>" + new Date(created).toLocaleDateString() + "</div>"; } catch(e){}
       }
+
+      // ✅ COMMUNITY REACTIONS
+      html += "<div class='community-row'>";
+
+      html += "<button class='react-btn" + (myReaction === "support" ? " active-support" : "") + "'"
+        + " id='support-" + escapeHtml(stmtId) + "'"
+        + " onclick=\"toggleReaction('" + escapeHtml(stmtId) + "','support')\">"
+        + "🤝 I Support</button>";
+
+      html += "<button class='react-btn" + (myReaction === "disagree" ? " active-disagree" : "") + "'"
+        + " id='disagree-" + escapeHtml(stmtId) + "'"
+        + " onclick=\"toggleReaction('" + escapeHtml(stmtId) + "','disagree')\">"
+        + "🤔 I Disagree</button>";
+
+      html += "</div>";
 
       html += "</div>";
     }
