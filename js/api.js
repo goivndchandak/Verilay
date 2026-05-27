@@ -1,12 +1,202 @@
 // ============================================================
 // VERILAY - API LAYER (api.js)
 // ============================================================
-// REPLACE NEWS_API_KEY with your actual NewsData.io key
+// MULTI-SOURCE NEWS ENGINE (4 FREE SOURCES)
 // ============================================================
 
-var API_BASE  = "https://verilay-88625.bubbleapps.io/api/1.1/wf";
+var API_BASE  = "httpsheaders: authHeaders(),var API_BASE  = "https://verilay-88625.bubbleapps.io/api/1.1/wf";
+    body: JSON.stringify({ user_id: targetUserId })
+  });
+  return handleResponse(res);
+}
+
+async function unfollowUser(followId) {
+  var res = await fetch(DATA_BASE + "/Follow/" + followId, {
+    method: "DELETE",
+    headers: authHeaders()
+  });
+  return handleResponse(res);
+}
+
+// ============================================================
+// SEARCH USERS (Bubble type: User)
+// ============================================================
+
+async function searchUsers(query) {
+  var constraints = JSON.stringify([
+    { key: "full_name", constraint_type: "text contains", value: query }
+  ]);
+  var url = DATA_BASE + "/User"
+    + "?constraints=" + encodeURIComponent(constraints)
+    + "&limit=20";
+  var res = await fetch(url, {
+    method: "GET",
+    headers: authHeaders()
+  });
+  return handleResponse(res);
+}
+
+// ============================================================
+// ✅ MULTI-SOURCE NEWS ENGINE (4 FREE SOURCES)
+// ============================================================
+
+// ---------- SOURCE 1: NewsData.io ----------
+async function searchNewsData(query) {
+  try {
+    var url = "https://newsdata.io/api/1/news"
+      + "?apikey=" + NEWS_API_KEY
+      + "&q=" + encodeURIComponent(query)
+      + "&language=en";
+    var res = await fetch(url);
+    var data = await res.json();
+    return (data.results || []).map(function(item) {
+      return {
+        title: item.title || "",
+        description: item.description || "",
+        url: item.link || "",
+        image: item.image_url || "",
+        source: item.source_id || "NewsData",
+        date: item.pubDate || ""
+      };
+    });
+  } catch (e) {
+    console.error("NewsData error:", e);
+    return [];
+  }
+}
+
+// ---------- SOURCE 2: GNews.io ----------
+async function searchGNews(query) {
+  try {
+    var url = "https://gnews.io/api/v4/search"
+      + "?q=" + encodeURIComponent(query)
+      + "&lang=en"
+      + "&max=10"
+      + "&apikey=" + GNEWS_KEY;
+    var res = await fetch(url);
+    var data = await res.json();
+    return (data.articles || []).map(function(item) {
+      return {
+        title: item.title || "",
+        description: item.description || "",
+        url: item.url || "",
+        image: item.image || "",
+        source: (item.source && item.source.name) || "GNews",
+        date: item.publishedAt || ""
+      };
+    });
+  } catch (e) {
+    console.error("GNews error:", e);
+    return [];
+  }
+}
+
+// ---------- SOURCE 3: Google News RSS (FREE UNLIMITED) ----------
+async function searchGoogleNews(query) {
+  try {
+    var rssUrl = "https://news.google.com/rss/search?q="
+      + encodeURIComponent(query)
+      + "&hl=en-IN&gl=IN&ceid=IN:en";
+    var proxyUrl = "https://api.rss2json.com/v1/api.json?rss_url="
+      + encodeURIComponent(rssUrl);
+    var res = await fetch(proxyUrl);
+    var data = await res.json();
+    return (data.items || []).map(function(item) {
+      return {
+        title: item.title || "",
+        description: (item.description || "").replace(/<[^>]*>/g, "").substring(0, 200),
+        url: item.link || "",
+        image: item.thumbnail || "",
+        source: "Google News",
+        date: item.pubDate || ""
+      };
+    });
+  } catch (e) {
+    console.error("Google News error:", e);
+    return [];
+  }
+}
+
+// ---------- SOURCE 4: Reddit (FREE NO KEY NEEDED) ----------
+async function searchReddit(query) {
+  try {
+    var url = "https://www.reddit.com/search.json"
+      + "?q=" + encodeURIComponent(query)
+      + "&sort=new"
+      + "&limit=10"
+      + "&t=month";
+    var res = await fetch(url);
+    var data = await res.json();
+    var posts = (data.data && data.data.children) || [];
+    return posts.map(function(child) {
+      var p = child.data || {};
+      return {
+        title: p.title || "",
+        description: (p.selftext || "").substring(0, 200),
+        url: p.url_overridden_by_dest || ("https://reddit.com" + (p.permalink || "")),
+        image: (p.thumbnail && p.thumbnail.startsWith("http")) ? p.thumbnail : "",
+        source: "Reddit · r/" + (p.subreddit || ""),
+        date: p.created_utc ? new Date(p.created_utc * 1000).toISOString() : ""
+      };
+    });
+  } catch (e) {
+    console.error("Reddit error:", e);
+    return [];
+  }
+}
+
+// ============================================================
+// ✅ MASTER: Merge + Deduplicate + Sort All Sources
+// ============================================================
+
+async function searchNews(query) {
+
+  // Fire all 4 sources at once (parallel)
+  var results = await Promise.all([
+    searchNewsData(query),
+    searchGNews(query),
+    searchGoogleNews(query),
+    searchReddit(query)
+  ]);
+
+  // Flatten all results
+  var all = [];
+  for (var i = 0; i < results.length; i++) {
+    all = all.concat(results[i]);
+  }
+
+  // Deduplicate by title (first 50 chars)
+  var seen = {};
+  var unique = [];
+  for (var j = 0; j < all.length; j++) {
+    var item = all[j];
+    if (!item.title) continue;
+    var key = item.title.toLowerCase().substring(0, 50).trim();
+    if (!seen[key]) {
+      seen[key] = true;
+      unique.push(item);
+    }
+  }
+
+  // Sort newest first
+  unique.sort(function(a, b) {
+    var da = a.date ? new Date(a.date).getTime() : 0;
+    var db = b.date ? new Date(b.date).getTime() : 0;
+    return db - da;
+  });
+
+  // Return in same format dashboard expects
+  return { articles: unique };
+}
+
+// ============================================================
+// END OF API LAYER
+// ============================================================
 var DATA_BASE = "https://verilay-88625.bubbleapps.io/api/1.1/obj";
+
+// NEWS API KEYS
 var NEWS_API_KEY = "pub_592aba825f6745448b3744626b1d16d6";
+var GNEWS_KEY    = "aafbad8acd6c6d4afc216e9705652a61";
 
 // ============================================================
 // HELPERS
@@ -185,69 +375,3 @@ async function getFollowing() {
 async function followUser(targetUserId) {
   var res = await fetch(API_BASE + "/follow_user", {
     method: "POST",
-    headers: authHeaders(),
-    body: JSON.stringify({ user_id: targetUserId })
-  });
-  return handleResponse(res);
-}
-
-async function unfollowUser(followId) {
-  var res = await fetch(DATA_BASE + "/Follow/" + followId, {
-    method: "DELETE",
-    headers: authHeaders()
-  });
-  return handleResponse(res);
-}
-
-// ============================================================
-// SEARCH USERS (Bubble type: User)
-// ============================================================
-
-async function searchUsers(query) {
-  var constraints = JSON.stringify([
-    { key: "full_name", constraint_type: "text contains", value: query }
-  ]);
-  var url = DATA_BASE + "/User"
-    + "?constraints=" + encodeURIComponent(constraints)
-    + "&limit=20";
-  var res = await fetch(url, {
-    method: "GET",
-    headers: authHeaders()
-  });
-  return handleResponse(res);
-}
-
-// ============================================================
-// NEWS (NewsData.io)
-// ============================================================
-
-async function searchNews(query) {
-  var url = "https://newsdata.io/api/1/news"
-    + "?apikey=" + NEWS_API_KEY
-    + "&q=" + encodeURIComponent(query)
-    + "&language=en";
-  try {
-    var res = await fetch(url);
-    var data = await res.json();
-    var articles = [];
-    if (data.results && data.results.length > 0) {
-      for (var i = 0; i < data.results.length; i++) {
-        var item = data.results[i];
-        articles.push({
-          title: item.title || "",
-          description: item.description || "",
-          url: item.link || "",
-          image: item.image_url || ""
-        });
-      }
-    }
-    return { articles: articles };
-  } catch (err) {
-    console.error("News API error:", err);
-    return { articles: [] };
-  }
-}
-
-// ============================================================
-// END OF API LAYER
-// ============================================================
