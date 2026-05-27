@@ -1,111 +1,263 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Explore - Verilay</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #fafafa; padding-bottom: 70px; }
-    .topbar { background: #1d3557; color: white; padding: 15px 20px; font-size: 20px; font-weight: bold; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-    .topbar a { color: white; text-decoration: none; font-size: 13px; }
-    .content { max-width: 600px; margin: 0 auto; padding: 15px; }
-    .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
-    .search-box input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-    .search-box button { padding: 12px 20px; background: #1d3557; color: white; border: none; border-radius: 8px; cursor: pointer; }
-    .user-card { background: white; padding: 18px; margin-bottom: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .user-info h3 { font-size: 15px; color: #1d3557; }
-    .user-info p { font-size: 12px; color: #666; margin-top: 3px; }
-    .follow-btn { padding: 8px 20px; background: #1d3557; color: white; border: none; border-radius: 20px; cursor: pointer; font-size: 13px; }
-    .follow-btn.followed { background: #ccc; color: #333; }
-    .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; align-items: center; height: 60px; border-top: 1px solid #eee; z-index: 100; }
-    .bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
-    .bottomnav a.active { color: #1d3557; font-weight: bold; }
-    .bottomnav a span { font-size: 22px; display: block; }
-    .empty { text-align: center; color: #999; padding: 40px; }
-    .error { color: red; text-align: center; padding: 10px; }
-    .info { color: green; text-align: center; padding: 5px; font-size: 13px; }
-  </style>
+<meta charset="UTF-8">
+<title>Explore - Verilay</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  background: #f5f5f5;
+  padding-bottom: 70px;
+  color: #1a1a1a;
+}
+
+.topbar {
+  background: #1d3557; color: white;
+  padding: 15px 20px; font-size: 20px; font-weight: bold;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.topbar a {
+  color: white; border: 1px solid rgba(255,255,255,0.4);
+  padding: 6px 14px; border-radius: 6px;
+  font-size: 12px; text-decoration: none;
+}
+
+.container { max-width: 600px; margin: auto; padding: 14px; }
+
+/* SEARCH */
+.search-row {
+  display: flex; gap: 8px; margin-bottom: 14px;
+}
+.search-row input {
+  flex: 1; padding: 12px 14px; border: 1px solid #ddd;
+  border-radius: 10px; font-size: 14px; outline: none;
+}
+.search-row input:focus { border-color: #1d3557; }
+.search-btn {
+  padding: 12px 20px; border: none; border-radius: 10px;
+  background: #1d3557; color: white; font-weight: bold;
+  font-size: 14px; cursor: pointer;
+}
+
+/* USER CARD */
+.user-card {
+  background: white; padding: 14px; margin-bottom: 10px;
+  border-radius: 12px; border: 1px solid rgba(0,0,0,0.06);
+  display: flex; align-items: center; gap: 12px;
+}
+.user-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #e8ecf0; color: #1d3557; font-size: 18px; font-weight: bold;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0;
+}
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.user-info { flex: 1; }
+.user-name { font-weight: 700; color: #1d3557; font-size: 15px; }
+.user-username { font-size: 12px; color: #999; margin-top: 2px; }
+.user-bio { font-size: 12px; color: #666; margin-top: 3px; line-height: 1.3; }
+
+/* FOLLOW BUTTON */
+.follow-btn {
+  padding: 8px 18px; border-radius: 8px; font-size: 13px;
+  font-weight: 700; cursor: pointer; border: none;
+  white-space: nowrap; flex-shrink: 0;
+}
+.follow-btn.follow {
+  background: #1d3557; color: white;
+}
+.follow-btn.following {
+  background: white; color: #1d3557;
+  border: 1.5px solid #1d3557;
+}
+
+.you-label {
+  font-size: 12px; color: #999; font-style: italic;
+}
+
+.muted { color: #999; font-size: 13px; text-align: center; padding: 20px; }
+.error { color: #c0392b; font-size: 12px; margin-top: 8px; }
+
+/* BOTTOM NAV */
+.bottomnav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: #fff4e6; display: flex; justify-content: space-around;
+  align-items: center; height: 60px; border-top: 1px solid #eee;
+}
+.bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
+.bottomnav a.active { color: #1d3557; font-weight: bold; }
+.bottomnav a span { font-size: 22px; display: block; }
+</style>
 </head>
+
 <body>
 
 <div class="topbar">
   Explore
-  <a href="feed.html">&#8592; Back to Feed</a>
+  <a href="feed.html">← Feed</a>
 </div>
 
-<div class="content">
-  <div class="search-box">
-    <input id="searchInput" placeholder="Search by name or username...">
-    <button onclick="doSearch()">Search</button>
+<div class="container">
+  <div class="search-row">
+    <input id="searchInput" placeholder="Search by name or username..." />
+    <button class="search-btn" onclick="runSearch()">Search</button>
   </div>
-  <div id="error" class="error"></div>
-  <div id="info" class="info"></div>
-  <div id="results"></div>
+  <div id="searchError" class="error"></div>
+  <div id="results"><div class="muted">Search for users to follow</div></div>
 </div>
 
 <div class="bottomnav">
-  <a href="feed.html"><span>&#127968;</span> Feed</a>
-  <a href="dashboard.html"><span>&#128100;</span> Profile</a>
+  <a href="feed.html"><span>🏠</span>Feed</a>
+  <a href="dashboard.html"><span>👤</span>Profile</a>
 </div>
+
 <script src="js/api.js"></script>
 <script>
-if (!localStorage.getItem("token")) { window.location.href = "login.html"; }
-var myId = localStorage.getItem("user_id");
+
+if (!localStorage.getItem("token")) window.location.href = "login.html";
+
+const myUserId = getUserId();
+let followingIds = [];
 
 function escapeHtml(str) {
-  return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
-async function doSearch() {
-  document.getElementById("error").innerText = "";
-  document.getElementById("info").innerText = "";
-  var query = document.getElementById("searchInput").value.trim().toLowerCase();
+/* ========== LOAD FOLLOWING LIST ========== */
+async function loadFollowing(){
   try {
-    var res = await searchUsers(query);
-    var list = [];
-    if (res.response && res.response.users) list = res.response.users;
-    else if (Array.isArray(res.response)) list = res.response;
-
-    if (query) {
-      list = list.filter(function(u) {
-        var name = (u.full_name || "").toLowerCase();
-        var uname = (u.username || "").toLowerCase();
-        return name.indexOf(query) !== -1 || uname.indexOf(query) !== -1;
-      });
-    }
-    list = list.filter(function(u) { return u._id !== myId; });
-
-    var results = document.getElementById("results");
-    results.innerHTML = "";
-    if (list.length === 0) { results.innerHTML = "<div class='empty'>No users found</div>"; return; }
-
-    for (var i = 0; i < list.length; i++) {
-      var u = list[i];
-      var card = "<div class='user-card'>"
-        + "<div class='user-info'>"
-        + "  <h3>" + escapeHtml(u.full_name || "Unknown") + "</h3>"
-        + "  <p>@" + escapeHtml(u.username || "") + "</p>"
-        + "  <p>" + escapeHtml(u.bio || "") + "</p>"
-        + "</div>"
-        + "<button class='follow-btn' id='follow-" + u._id + "' onclick=\"doFollow('" + u._id + "')\">"
-        + "  Follow"
-        + "</button>"
-        + "</div>";
-      results.innerHTML += card;
-    }
-  } catch (err) { document.getElementById("error").innerText = "Error: " + err.message; }
+    const res = await getFollowing();
+    const list = (res.response && res.response.results) ? res.response.results : [];
+    followingIds = list.map(x => x.following);
+  } catch(e){ followingIds = []; }
 }
 
-async function doFollow(userId) {
+/* ========== SEARCH BY NAME ========== */
+async function searchByName(query){
+  const constraints = JSON.stringify([
+    { key: "full_name", constraint_type: "text contains", value: query }
+  ]);
+  const url = DATA_BASE + "/User?constraints=" + encodeURIComponent(constraints) + "&limit=20";
+  const res = await fetch(url, { method: "GET", headers: authHeaders() });
+  const data = await res.json();
+  return (data.response && data.response.results) ? data.response.results : [];
+}
+
+/* ========== SEARCH BY USERNAME ========== */
+async function searchByUsername(query){
+  const q = query.replace(/^@/, "");
+  const constraints = JSON.stringify([
+    { key: "username", constraint_type: "text contains", value: q }
+  ]);
+  const url = DATA_BASE + "/User?constraints=" + encodeURIComponent(constraints) + "&limit=20";
+  const res = await fetch(url, { method: "GET", headers: authHeaders() });
+  const data = await res.json();
+  return (data.response && data.response.results) ? data.response.results : [];
+}
+
+/* ========== RUN SEARCH ========== */
+async function runSearch(){
+  const q = document.getElementById("searchInput").value.trim();
+  document.getElementById("searchError").innerText = "";
+
+  if (q.length < 2) {
+    document.getElementById("results").innerHTML =
+      "<div class='muted'>Type at least 2 characters</div>";
+    return;
+  }
+
+  document.getElementById("results").innerHTML = "<div class='muted'>Searching...</div>";
+
   try {
-    await followUser(userId);
-    var btn = document.getElementById("follow-" + userId);
-    if (btn) { btn.innerText = "Following ✅"; btn.className = "follow-btn followed"; btn.disabled = true; }
-    document.getElementById("info").innerText = "Followed successfully ✅";
-  } catch (err) { document.getElementById("error").innerText = "Follow failed: " + err.message; }
+    // Search both name and username
+    const [byName, byUsername] = await Promise.all([
+      searchByName(q),
+      searchByUsername(q)
+    ]);
+
+    // Merge unique by _id
+    const map = {};
+    [...byName, ...byUsername].forEach(u => { if (u && u._id) map[u._id] = u; });
+    const users = Object.values(map);
+
+    if (users.length === 0) {
+      document.getElementById("results").innerHTML =
+        "<div class='user-card'><div class='muted' style='width:100%;'>User not available. Try a different name.</div></div>";
+      return;
+    }
+
+    let html = "";
+
+    users.forEach(u => {
+      const isMe = (String(u._id) === String(myUserId));
+      const isFollowing = followingIds.includes(u._id);
+
+      // Avatar
+      let avatarHtml = "";
+      if (u.profile_picture_url) {
+        avatarHtml = "<div class='user-avatar'><img src='" + escapeHtml(u.profile_picture_url) + "'></div>";
+      } else {
+        avatarHtml = "<div class='user-avatar'>" + escapeHtml((u.full_name || "?").charAt(0)) + "</div>";
+      }
+
+      html += "<div class='user-card'>";
+      html += avatarHtml;
+
+      html += "<div class='user-info'>";
+      html += "<div class='user-name'>" + escapeHtml(u.full_name || "User") + "</div>";
+      if (u.username) html += "<div class='user-username'>@" + escapeHtml(u.username) + "</div>";
+      if (u.bio) html += "<div class='user-bio'>" + escapeHtml(u.bio) + "</div>";
+      html += "</div>";
+
+      if (isMe) {
+        html += "<span class='you-label'>You</span>";
+      } else {
+        html += "<button class='follow-btn " + (isFollowing ? "following" : "follow") + "'"
+          + " onclick=\"toggleFollow('" + u._id + "')\">"
+          + (isFollowing ? "Following" : "Follow")
+          + "</button>";
+      }
+
+      html += "</div>";
+    });
+
+    document.getElementById("results").innerHTML = html;
+
+  } catch(e){
+    document.getElementById("searchError").innerText = "Search error: " + (e.message || e);
+  }
 }
 
-doSearch();
+/* ========== FOLLOW / UNFOLLOW ========== */
+async function toggleFollow(targetId){
+  try {
+    if (followingIds.includes(targetId)){
+      // Unfollow
+      const res = await getFollowing();
+      const list = (res.response && res.response.results) ? res.response.results : [];
+      const row = list.find(x => String(x.following) === String(targetId));
+      if (row && row._id) await unfollowUser(row._id);
+    } else {
+      // Follow
+      await followUser(targetId);
+    }
+    await loadFollowing();
+    await runSearch(); // refresh UI
+  } catch(e){
+    alert("Error: " + (e.message || e));
+  }
+}
+
+// Enter key triggers search
+document.getElementById("searchInput").addEventListener("keydown", function(e){
+  if (e.key === "Enter") runSearch();
+});
+
+loadFollowing();
+
 </script>
 </body>
 </html>
