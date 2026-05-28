@@ -27,16 +27,11 @@ body {
 
 .container { padding: 10px 14px; max-width: 600px; margin: auto; }
 
-/* CARD */
 .card {
-  background: white;
-  padding: 16px;
-  margin-bottom: 10px;
-  border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.06);
+  background: white; padding: 16px; margin-bottom: 10px;
+  border-radius: 12px; border: 1px solid rgba(0,0,0,0.06);
 }
 
-/* HEADER */
 .header-row {
   display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
 }
@@ -50,89 +45,62 @@ body {
 .header-text { flex: 1; }
 .name { font-weight: 700; color: #1d3557; font-size: 14px; }
 
-/* OWNER REACTION — subtle text */
 .owner-reaction { font-size: 12px; font-weight: 600; margin-top: 2px; }
 .r-accepted { color: #3a7d5c; }
 .r-modified { color: #c47a1a; }
 .r-denied { color: #b84040; }
 .r-pending { color: #bbb; }
 
-/* STATEMENT */
-.stmt {
-  font-size: 15px; line-height: 1.5; color: #2a2a2a; margin-bottom: 10px;
-}
+.stmt { font-size: 15px; line-height: 1.5; color: #2a2a2a; margin-bottom: 10px; }
 
-/* PREVIEW */
 .link-preview {
   border: 1px solid #eee; border-radius: 10px;
   overflow: hidden; margin-bottom: 8px;
 }
-.link-preview img {
-  width: 100%; height: 180px; object-fit: cover; display: block;
-}
+.link-preview img { width: 100%; height: 180px; object-fit: cover; display: block; }
 .link-preview .source {
   padding: 10px 12px; font-size: 12px; color: #1d3557;
   text-decoration: none; display: block; background: #fafafa;
 }
 
-/* DATE */
 .date { font-size: 11px; color: #bbb; }
 
-/* ✅ COMMUNITY REACTIONS — ELEGANT */
+/* ✅ VOUCH + COUNTER BUTTONS */
 .community-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #f0f0f0;
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0;
 }
 
 .react-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid #e0e0e0;
-  background: white;
-  color: #555;
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  cursor: pointer; border: 1px solid #e0e0e0; background: white; color: #555;
   transition: all 0.2s ease;
 }
+.react-btn:hover { background: #f8f8f8; }
 
-.react-btn:hover {
-  background: #f8f8f8;
-}
-
-.react-btn.active-support {
+.react-btn.active-vouch {
   background: #eaf5ee;
   border-color: #3a7d5c;
   color: #3a7d5c;
 }
 
-.react-btn.active-disagree {
-  background: #fdf0f0;
-  border-color: #b84040;
-  color: #b84040;
+.react-btn.active-counter {
+  background: #fff5e6;
+  border-color: #c47a1a;
+  color: #c47a1a;
 }
 
 .react-count {
-  font-size: 11px;
-  color: #999;
+  font-size: 11px; color: #bbb; margin-left: 2px;
 }
 
 .muted { color: #999; font-size: 14px; text-align: center; padding: 40px 20px; }
 
-/* BOTTOM NAV */
 .bottomnav {
   position: fixed; bottom: 0; left: 0; right: 0;
-  background: #fff4e6;
-  display: flex; justify-content: space-around;
-  align-items: center; height: 60px;
-  border-top: 1px solid #eee;
+  background: #fff4e6; display: flex; justify-content: space-around;
+  align-items: center; height: 60px; border-top: 1px solid #eee;
 }
 .bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
 .bottomnav a.active { color: #1d3557; font-weight: bold; }
@@ -159,36 +127,59 @@ body {
 
 let userCache = {};
 
-// ✅ Community reactions stored in localStorage (MVP)
-function getReactions() {
-  try { return JSON.parse(localStorage.getItem("verilay_reactions") || "{}"); } catch(e){ return {}; }
+// Owner reactions (from profile tab)
+function getStoredReactions() {
+  try { return JSON.parse(localStorage.getItem("verilay_stmt_reactions") || "{}"); } catch(e) { return {}; }
 }
-function saveReactions(obj) {
-  localStorage.setItem("verilay_reactions", JSON.stringify(obj));
+function getStoredReaction(stmtId) {
+  return getStoredReactions()[stmtId] || "";
+}
+
+// Community reactions (Vouch / Counter)
+function getCommunity() {
+  try { return JSON.parse(localStorage.getItem("verilay_community") || "{}"); } catch(e) { return {}; }
+}
+function saveCommunity(obj) {
+  localStorage.setItem("verilay_community", JSON.stringify(obj));
+}
+
+// Counts
+function getCounts() {
+  try { return JSON.parse(localStorage.getItem("verilay_counts") || "{}"); } catch(e) { return {}; }
+}
+function saveCounts(obj) {
+  localStorage.setItem("verilay_counts", JSON.stringify(obj));
 }
 
 function escapeHtml(str) {
   return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
+function timeAgo(dateStr) {
+  if (!dateStr) return "";
+  try {
+    var diff = Date.now() - new Date(dateStr).getTime();
+    var mins = Math.floor(diff / 60000);
+    if (mins < 1) return "Just now";
+    if (mins < 60) return mins + "m ago";
+    var hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + "h ago";
+    var days = Math.floor(hrs / 24);
+    if (days < 7) return days + "d ago";
+    return new Date(dateStr).toLocaleDateString();
+  } catch(e) { return ""; }
+}
+
 async function getUserInfo(userId){
   if (!userId) return { name: "User", photo: "" };
   if (userCache[userId]) return userCache[userId];
   try {
-    const res = await fetch(
-      DATA_BASE + "/User/" + userId,
-      { method: "GET", headers: authHeaders() }
-    );
-    const data = await res.json();
-    const user = data.response || {};
-    userCache[userId] = {
-      name: user.full_name || "User",
-      photo: user.profile_picture_url || ""
-    };
+    var res = await fetch(DATA_BASE + "/User/" + userId, { method: "GET", headers: authHeaders() });
+    var data = await res.json();
+    var user = data.response || {};
+    userCache[userId] = { name: user.full_name || "User", photo: user.profile_picture_url || "" };
     return userCache[userId];
-  } catch(e){
-    return { name: "User", photo: "" };
-  }
+  } catch(e){ return { name: "User", photo: "" }; }
 }
 
 function getPreviewHTML(url){
@@ -201,21 +192,16 @@ function getPreviewHTML(url){
 }
 
 function getReaction(item) {
-  var r = (item.reaction_type || item.reaction || item.verdict || item.status || "").toLowerCase();
+  var r = (item.reaction_type || item.reaction || item.verdict || "").toLowerCase();
   if (r === "accepted" || r === "accept") return "accepted";
   if (r === "modified" || r === "modify") return "modified";
   if (r === "denied" || r === "deny") return "denied";
-  return "";
-}
-
-function getReactionFromText(text) {
-  var t = (text || "").trim().toUpperCase();
+  var id = item._id || item.id || "";
+  if (id) { var stored = getStoredReaction(id); if (stored) return stored; }
+  var t = (item.text || "").trim().toUpperCase();
   if (t.startsWith("ACCEPTED:")) return "accepted";
   if (t.startsWith("MODIFIED:")) return "modified";
   if (t.startsWith("DENIED:")) return "denied";
-  if (t.startsWith("ACCEPT:")) return "accepted";
-  if (t.startsWith("MODIFY:")) return "modified";
-  if (t.startsWith("DENY:")) return "denied";
   return "";
 }
 
@@ -230,88 +216,89 @@ function getOwnerReactionLabel(reaction) {
   return "<div class='owner-reaction r-pending'>Awaiting response</div>";
 }
 
-/* ✅ TOGGLE COMMUNITY REACTION */
-function toggleReaction(stmtId, type) {
-  const reactions = getReactions();
+// ✅ TOGGLE VOUCH / COUNTER
+function toggleCommunity(stmtId, type) {
+  var community = getCommunity();
+  var counts = getCounts();
 
-  if (!reactions[stmtId]) reactions[stmtId] = "";
+  if (!counts[stmtId]) counts[stmtId] = { vouch: 0, counter: 0 };
 
-  if (reactions[stmtId] === type) {
-    // Un-react
-    reactions[stmtId] = "";
+  var prev = community[stmtId] || "";
+
+  // Remove previous
+  if (prev === "vouch") counts[stmtId].vouch = Math.max(0, counts[stmtId].vouch - 1);
+  if (prev === "counter") counts[stmtId].counter = Math.max(0, counts[stmtId].counter - 1);
+
+  // Toggle
+  if (prev === type) {
+    community[stmtId] = "";
   } else {
-    // React
-    reactions[stmtId] = type;
+    community[stmtId] = type;
+    if (type === "vouch") counts[stmtId].vouch++;
+    if (type === "counter") counts[stmtId].counter++;
   }
 
-  saveReactions(reactions);
-  updateReactionUI(stmtId);
+  saveCommunity(community);
+  saveCounts(counts);
+  updateButtons(stmtId);
 }
 
-function updateReactionUI(stmtId) {
-  const reactions = getReactions();
-  const current = reactions[stmtId] || "";
+function updateButtons(stmtId) {
+  var community = getCommunity();
+  var counts = getCounts();
+  var current = community[stmtId] || "";
+  var c = counts[stmtId] || { vouch: 0, counter: 0 };
 
-  const supportBtn = document.getElementById("support-" + stmtId);
-  const disagreeBtn = document.getElementById("disagree-" + stmtId);
+  var vouchBtn = document.getElementById("vouch-" + stmtId);
+  var counterBtn = document.getElementById("counter-" + stmtId);
 
-  if (supportBtn) {
-    if (current === "support") {
-      supportBtn.className = "react-btn active-support";
-      supportBtn.innerHTML = "🤝 I Support";
-    } else {
-      supportBtn.className = "react-btn";
-      supportBtn.innerHTML = "🤝 I Support";
-    }
+  if (vouchBtn) {
+    vouchBtn.className = "react-btn" + (current === "vouch" ? " active-vouch" : "");
+    vouchBtn.innerHTML = "🤝 Vouch" + (c.vouch > 0 ? " <span class='react-count'>" + c.vouch + "</span>" : "");
   }
 
-  if (disagreeBtn) {
-    if (current === "disagree") {
-      disagreeBtn.className = "react-btn active-disagree";
-      disagreeBtn.innerHTML = "🤔 I Disagree";
-    } else {
-      disagreeBtn.className = "react-btn";
-      disagreeBtn.innerHTML = "🤔 I Disagree";
-    }
+  if (counterBtn) {
+    counterBtn.className = "react-btn" + (current === "counter" ? " active-counter" : "");
+    counterBtn.innerHTML = "✋ Counter" + (c.counter > 0 ? " <span class='react-count'>" + c.counter + "</span>" : "");
   }
 }
 
 async function loadFeed(){
   try {
-    const res = await getFeed();
-    const list = res.response.statements || res.response.results || [];
+    var res = await getFeed();
+    var list = res.response.statements || res.response.results || [];
 
     if (list.length === 0) {
-      document.getElementById("feed").innerHTML =
-        "<div class='muted'>No posts yet.</div>";
+      document.getElementById("feed").innerHTML = "<div class='muted'>No posts yet.</div>";
       return;
     }
 
-    const reactions = getReactions();
-    let html = "";
+    var community = getCommunity();
+    var counts = getCounts();
+    var html = "";
 
-    for (let item of list) {
-      const rawText = item.text || "";
-      const url = item.source_url || "";
-      const created = item.Created_Date || item.created_date || "";
-      const stmtId = item._id || item.id || "";
+    for (var i = 0; i < list.length; i++) {
+      var item = list[i];
+      var rawText = item.text || "";
+      var url = item.source_url || "";
+      var created = item.Created_Date || item.created_date || "";
+      var stmtId = item._id || item.id || "";
 
-      let reaction = getReaction(item);
-      if (!reaction) reaction = getReactionFromText(rawText);
-      const text = cleanText(rawText);
+      var reaction = getReaction(item);
+      var text = cleanText(rawText);
 
-      const ownerId = item["Created By"] || item.created_by || item.user_id || item.creator;
-      const ownerInfo = await getUserInfo(ownerId);
+      var ownerId = item["Created By"] || item.created_by || item.user_id || item.creator;
+      var ownerInfo = await getUserInfo(ownerId);
 
-      let avatarHtml = "";
+      var avatarHtml = "";
       if (ownerInfo.photo) {
         avatarHtml = "<div class='avatar'><img src='" + escapeHtml(ownerInfo.photo) + "'></div>";
       } else {
         avatarHtml = "<div class='avatar'>" + escapeHtml((ownerInfo.name || "?").charAt(0)) + "</div>";
       }
 
-      // Current user's community reaction
-      const myReaction = reactions[stmtId] || "";
+      var myReaction = community[stmtId] || "";
+      var c = counts[stmtId] || { vouch: 0, counter: 0 };
 
       html += "<div class='card'>";
 
@@ -330,22 +317,24 @@ async function loadFeed(){
       if (url) html += getPreviewHTML(url);
 
       // DATE
-      if (created) {
-        try { html += "<div class='date'>" + new Date(created).toLocaleDateString() + "</div>"; } catch(e){}
-      }
+      if (created) html += "<div class='date'>" + timeAgo(created) + "</div>";
 
-      // ✅ COMMUNITY REACTIONS
+      // ✅ VOUCH + COUNTER
       html += "<div class='community-row'>";
 
-      html += "<button class='react-btn" + (myReaction === "support" ? " active-support" : "") + "'"
-        + " id='support-" + escapeHtml(stmtId) + "'"
-        + " onclick=\"toggleReaction('" + escapeHtml(stmtId) + "','support')\">"
-        + "🤝 I Support</button>";
+      html += "<button class='react-btn" + (myReaction === "vouch" ? " active-vouch" : "") + "'"
+        + " id='vouch-" + stmtId + "'"
+        + " onclick=\"toggleCommunity('" + stmtId + "','vouch')\">"
+        + "🤝 Vouch"
+        + (c.vouch > 0 ? " <span class='react-count'>" + c.vouch + "</span>" : "")
+        + "</button>";
 
-      html += "<button class='react-btn" + (myReaction === "disagree" ? " active-disagree" : "") + "'"
-        + " id='disagree-" + escapeHtml(stmtId) + "'"
-        + " onclick=\"toggleReaction('" + escapeHtml(stmtId) + "','disagree')\">"
-        + "🤔 I Disagree</button>";
+      html += "<button class='react-btn" + (myReaction === "counter" ? " active-counter" : "") + "'"
+        + " id='counter-" + stmtId + "'"
+        + " onclick=\"toggleCommunity('" + stmtId + "','counter')\">"
+        + "✋ Counter"
+        + (c.counter > 0 ? " <span class='react-count'>" + c.counter + "</span>" : "")
+        + "</button>";
 
       html += "</div>";
 
@@ -355,8 +344,7 @@ async function loadFeed(){
     document.getElementById("feed").innerHTML = html;
 
   } catch(err) {
-    document.getElementById("feed").innerHTML =
-      "<div class='muted'>Error: " + escapeHtml(err.message) + "</div>";
+    document.getElementById("feed").innerHTML = "<div class='muted'>Error: " + escapeHtml(err.message) + "</div>";
   }
 }
 
