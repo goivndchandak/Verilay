@@ -6,7 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #fafafa; padding-bottom: 70px; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: #f5f5f5; padding-bottom: 70px; color: #1a1a1a;
+    }
 
     .topbar {
       background: #1d3557; color: white;
@@ -15,7 +18,7 @@
       display: flex; justify-content: space-between; align-items: center;
     }
     .topbar-btn {
-      background: none; border: 1px solid white; color: white;
+      background: none; border: 1px solid rgba(255,255,255,0.4); color: white;
       padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px;
     }
 
@@ -24,20 +27,15 @@
     .profile-header {
       background: white; padding: 25px; border-radius: 12px;
       text-align: center; margin-bottom: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.06);
     }
-
-    /* AVATAR */
     .avatar {
       width: 80px; height: 80px; border-radius: 50%;
       background: #1d3557; color: white; font-size: 32px;
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 10px; overflow: hidden;
     }
-    .avatar img {
-      width: 100%; height: 100%; object-fit: cover;
-    }
-
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
     .profile-header h2 { font-size: 20px; color: #1d3557; }
     .profile-header p { color: #666; font-size: 13px; margin-top: 4px; }
     .social-links { margin-top: 12px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
@@ -46,7 +44,7 @@
     .stats {
       display: flex; justify-content: space-around; background: white;
       padding: 15px; border-radius: 12px; margin-bottom: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.06);
     }
     .stat { text-align: center; }
     .stat-num { font-size: 22px; font-weight: bold; color: #1d3557; }
@@ -55,12 +53,13 @@
     .tabs {
       display: flex; background: white; border-radius: 12px;
       margin-bottom: 15px; overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.06);
     }
     .tab {
       flex: 1; padding: 12px; text-align: center; cursor: pointer;
       font-size: 13px; font-weight: bold; color: #999;
       border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
     }
     .tab.active { color: #1d3557; border-bottom-color: #1d3557; }
 
@@ -69,15 +68,18 @@
 
     .card {
       background: white; padding: 15px; margin-bottom: 12px;
-      border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border-radius: 12px; border: 1px solid rgba(0,0,0,0.06);
+      transition: all 0.2s ease;
     }
     .card p { font-size: 14px; line-height: 1.5; }
-    .card-date { font-size: 11px; color: #999; margin-top: 5px; }
-    .card-actions { margin-top: 8px; }
+    .card-date { font-size: 11px; color: #bbb; margin-top: 5px; }
+    .card-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
     .card-actions button {
-      padding: 6px 12px; border: none; border-radius: 15px;
-      cursor: pointer; font-size: 11px; margin-right: 5px; color: white;
+      padding: 7px 14px; border: 1px solid #e0e0e0; border-radius: 8px;
+      cursor: pointer; font-size: 12px; font-weight: 600;
+      background: white; color: #555; transition: all 0.2s ease;
     }
+    .card-actions button:hover { background: #f8f8f8; }
 
     .form-group { margin-bottom: 12px; }
     .form-group label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; }
@@ -106,13 +108,13 @@
 
     /* PREVIEW */
     .preview-box {
-      border: 1px solid #eee; border-radius: 12px;
-      overflow: hidden; margin-top: 10px; margin-bottom: 10px;
+      border: 1px solid #eee; border-radius: 10px;
+      overflow: hidden; margin-top: 10px;
     }
-    .preview-box img { width: 100%; height: 180px; object-fit: cover; }
+    .preview-box img { width: 100%; height: 160px; object-fit: cover; }
     .preview-box .pv-body { padding: 10px 12px; }
-    .preview-box .pv-title { font-size: 13px; font-weight: bold; color: #1d3557; margin-bottom: 4px; }
-    .preview-box .pv-desc { font-size: 12px; color: #666; line-height: 1.3; }
+    .preview-box .pv-title { font-size: 13px; font-weight: bold; color: #1d3557; }
+    .preview-box .pv-desc { font-size: 12px; color: #666; margin-top: 4px; }
     .preview-box a { font-size: 11px; color: #1d3557; display: block; margin-top: 6px; }
 
     .stmt-preview {
@@ -122,19 +124,40 @@
     .stmt-preview img { width: 100%; height: 160px; object-fit: cover; }
     .stmt-preview a { display: block; padding: 8px 10px; font-size: 11px; color: #1d3557; }
 
+    /* REACTION BADGE */
+    .reaction-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 14px; border-radius: 8px;
+      font-size: 12px; font-weight: 600; margin-top: 8px;
+    }
+    .badge-accepted { background: #eaf5ee; color: #3a7d5c; border: 1px solid #3a7d5c; }
+    .badge-modified { background: #fff5e6; color: #c47a1a; border: 1px solid #c47a1a; }
+    .badge-denied { background: #fdf0f0; color: #b84040; border: 1px solid #b84040; }
+
+    .gen-card-link {
+      display: inline-block; font-size: 12px; color: #1d3557;
+      padding: 6px 14px; border-radius: 8px;
+      text-decoration: none; font-weight: 600;
+      border: 1px solid #1d3557; margin-top: 8px; margin-left: 8px;
+      transition: all 0.2s ease;
+    }
+    .gen-card-link:hover { background: #1d3557; color: white; }
+
+    /* NEWS */
     .news-card {
       background: white; padding: 15px; margin-bottom: 12px;
-      border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border-radius: 12px; border: 1px solid rgba(0,0,0,0.06);
       border-left: 4px solid #ff9933;
     }
     .news-card h4 { font-size: 14px; color: #1d3557; margin-bottom: 5px; }
     .news-card p { font-size: 13px; color: #555; line-height: 1.4; margin-bottom: 8px; }
     .news-card img { width: 100%; border-radius: 8px; margin-bottom: 8px; }
     .news-card a { font-size: 12px; color: #1d3557; }
-    .news-actions { margin-top: 10px; }
+    .news-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
     .news-actions button {
-      padding: 6px 12px; border: none; border-radius: 15px;
-      cursor: pointer; font-size: 11px; margin-right: 5px; color: white;
+      padding: 7px 14px; border: 1px solid #e0e0e0; border-radius: 8px;
+      cursor: pointer; font-size: 12px; font-weight: 600;
+      background: white; color: #555;
     }
 
     .scan-btn {
@@ -167,7 +190,6 @@
       font-size: 20px; cursor: pointer; color: #999;
     }
 
-    /* PHOTO UPLOAD */
     .photo-section { text-align: center; margin-bottom: 15px; }
     .photo-avatar {
       width: 80px; height: 80px; border-radius: 50%;
@@ -179,20 +201,10 @@
     .photo-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .photo-hint { font-size: 11px; color: #999; }
 
-    /* REACTION BADGE */
-    .reaction-badge {
-      display: inline-block; padding: 4px 10px; border-radius: 999px;
-      font-size: 11px; font-weight: bold; color: white; margin-top: 6px;
-    }
-    .badge-accepted { background: #2d6a4f; }
-    .badge-modified { background: #f77f00; }
-    .badge-denied { background: #d62828; }
+    .error { color: #b84040; font-size: 12px; margin-top: 5px; }
+    .success { color: #3a7d5c; font-size: 12px; margin-top: 5px; }
 
-    .error { color: red; font-size: 12px; margin-top: 5px; }
-    .success { color: green; font-size: 12px; margin-top: 5px; }
-    .gen-card-btn { display: inline-block; font-size: 12px; color: white; background: #FF9933; padding: 5px 14px; border-radius: 20px; text-decoration: none; font-weight: bold; }
-    .marked-label { font-size: 13px; color: #1d3557; font-weight: bold; }
-    .result-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .result-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 
     .bottomnav {
       position: fixed; bottom: 0; left: 0; right: 0;
@@ -218,15 +230,12 @@
   <div class="settings-panel">
     <button class="close-btn" onclick="closeSettings()">✕</button>
     <h3>Edit Profile</h3>
-
-    <!-- PROFILE PHOTO -->
     <div class="photo-section">
       <div class="photo-avatar" id="settingsAvatar" onclick="document.getElementById('photoInput').click()">?</div>
       <div class="photo-hint">Tap to change photo</div>
       <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
     </div>
-
-    <div class="form-group"><label>Profile Picture URL (or upload above)</label><input id="editPhoto" placeholder="https://example.com/your-photo.jpg" onchange="previewPhotoUrl()"></div>
+    <div class="form-group"><label>Profile Picture URL</label><input id="editPhoto" placeholder="https://..." onchange="previewPhotoUrl()"></div>
     <div class="form-group"><label>Full Name</label><input id="editName" placeholder="Your name"></div>
     <div class="form-group"><label>Username</label><input id="editUsername" placeholder="username"></div>
     <div class="form-group"><label>Bio</label><textarea id="editBio" placeholder="Write about yourself..." rows="3"></textarea></div>
@@ -242,7 +251,6 @@
 
 <div class="content">
 
-  <!-- PROFILE HEADER -->
   <div class="profile-header">
     <div class="avatar" id="avatarMain">?</div>
     <h2 id="profileName">Loading...</h2>
@@ -251,13 +259,11 @@
     <div class="social-links" id="socialLinks"></div>
   </div>
 
-  <!-- STATS -->
   <div class="stats">
     <div class="stat"><div class="stat-num" id="statStatements">0</div><div class="stat-label">Truths</div></div>
     <div class="stat"><div class="stat-num" id="statScore">0</div><div class="stat-label">Verilay Score</div></div>
   </div>
 
-  <!-- 2 TABS -->
   <div class="tabs">
     <div class="tab active" id="tab-statements" onclick="showTab('statements')">Truth Log</div>
     <div class="tab" id="tab-news" onclick="showTab('news')">Media Scan</div>
@@ -279,11 +285,11 @@
         <div id="postMsg" class="success"></div>
         <div id="postErr" class="error"></div>
         <div id="postReactSection" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
-          <p style="font-size:13px; color:#666; margin-bottom:8px;"><strong>Now react to your statement:</strong></p>
+          <p style="font-size:13px; color:#666; margin-bottom:8px;"><strong>React to your statement:</strong></p>
           <div class="card-actions">
-            <button style="background:#2d6a4f;color:white;" onclick="reactToPost('accepted')">✅ Accept</button>
-            <button style="background:#f77f00;color:white;" onclick="reactToPost('modified')">✏️ Modify</button>
-            <button style="background:#d62828;color:white;" onclick="reactToPost('denied')">❌ Deny</button>
+            <button onclick="reactToPost('accepted')">Accepted ✓</button>
+            <button onclick="reactToPost('modified')">Modified ✎</button>
+            <button onclick="reactToPost('denied')">Denied ✗</button>
           </div>
           <div id="postReactResult"></div>
         </div>
@@ -306,7 +312,6 @@
 
 </div>
 
-<!-- BOTTOM NAV -->
 <div class="bottomnav">
   <a href="feed.html"><span>🏠</span> Feed</a>
   <a href="dashboard.html" class="active"><span>👤</span> Profile</a>
@@ -320,12 +325,34 @@ var profileData = {};
 var lastPostedId = "";
 var lastPostedText = "";
 var urlTimer = null;
-var fetchedPreviewTitle = "";
 window._stmtTexts = {};
 window._newsTexts = {};
 window._newsUrls = {};
 
 function escapeHtml(str) { return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+// ✅ REACTION STORAGE (shared with feed)
+function getStoredReactions() {
+  try { return JSON.parse(localStorage.getItem("verilay_stmt_reactions") || "{}"); } catch(e) { return {}; }
+}
+function storeReaction(stmtId, action) {
+  var r = getStoredReactions();
+  r[stmtId] = action;
+  localStorage.setItem("verilay_stmt_reactions", JSON.stringify(r));
+}
+function getStoredReaction(stmtId) {
+  return getStoredReactions()[stmtId] || "";
+}
+
+// Check Bubble field OR localStorage
+function getReactionForItem(item) {
+  var r = (item.reaction_type || item.reaction || item.verdict || "").toLowerCase();
+  if (r === "accepted" || r === "modified" || r === "denied") return r;
+  // Fallback: check localStorage
+  var id = item._id || item.id || "";
+  if (id) return getStoredReaction(id);
+  return "";
+}
 
 /* ========== SETTINGS ========== */
 function openSettings() { document.getElementById("settingsOverlay").classList.add("open"); }
@@ -344,41 +371,27 @@ function showTab(name) {
 
 function toggleNewPost() { document.getElementById("newPostArea").classList.toggle("open"); }
 
-/* ========== PROFILE PHOTO ========== */
+/* ========== PHOTO ========== */
 function setAvatarDisplay(el, photoUrl, initial) {
-  if (photoUrl) {
-    el.innerHTML = "<img src='" + escapeHtml(photoUrl) + "' alt='photo'>";
-  } else {
-    el.innerHTML = initial || "?";
-  }
+  if (photoUrl) { el.innerHTML = "<img src='" + escapeHtml(photoUrl) + "'>"; }
+  else { el.innerHTML = initial || "?"; }
 }
-
 function handlePhotoUpload(event) {
   var file = event.target.files[0];
   if (!file) return;
   var reader = new FileReader();
   reader.onload = function(e) {
-    var dataUrl = e.target.result;
-    // Show preview immediately
-    setAvatarDisplay(document.getElementById("settingsAvatar"), dataUrl, "?");
-    // Store in localStorage for quick display
-    localStorage.setItem("profile_photo", dataUrl);
-    // Also set the URL field
-    document.getElementById("editPhoto").value = dataUrl;
-    // Update main avatar
+    localStorage.setItem("profile_photo", e.target.result);
+    document.getElementById("editPhoto").value = e.target.result;
     updateAllAvatars();
   };
   reader.readAsDataURL(file);
 }
-
 function previewPhotoUrl() {
   var url = document.getElementById("editPhoto").value.trim();
-  if (url) {
-    setAvatarDisplay(document.getElementById("settingsAvatar"), url, "?");
-    localStorage.setItem("profile_photo", url);
-  }
+  if (url) localStorage.setItem("profile_photo", url);
+  updateAllAvatars();
 }
-
 function updateAllAvatars() {
   var photo = localStorage.getItem("profile_photo") || profileData.profile_picture_url || "";
   var initial = (profileData.full_name || "?").charAt(0).toUpperCase();
@@ -396,12 +409,7 @@ async function loadProfile() {
     document.getElementById("profileUsername").innerText = "@" + (user.username || "unknown");
     document.getElementById("profileBio").innerText = user.bio || "";
     document.getElementById("scanNameLabel").innerText = user.full_name || "your name";
-
-    // If Bubble has profile_picture_url, use it
-    if (user.profile_picture_url) {
-      localStorage.setItem("profile_photo", user.profile_picture_url);
-    }
-
+    if (user.profile_picture_url) localStorage.setItem("profile_photo", user.profile_picture_url);
     updateAllAvatars();
 
     var links = "";
@@ -425,10 +433,7 @@ async function saveProfile() {
   document.getElementById("settingsErr").innerText = "";
   try {
     var photoVal = document.getElementById("editPhoto").value.trim();
-
-    // Save photo to localStorage
     if (photoVal) localStorage.setItem("profile_photo", photoVal);
-
     var payload = {
       full_name: document.getElementById("editName").value,
       username: document.getElementById("editUsername").value,
@@ -437,12 +442,7 @@ async function saveProfile() {
       instagram_url: document.getElementById("editInstagram").value,
       twitter_url: document.getElementById("editTwitter").value
     };
-
-    // Try saving photo URL to Bubble (if field exists)
-    if (photoVal && !photoVal.startsWith("data:")) {
-      payload.profile_picture_url = photoVal;
-    }
-
+    if (photoVal && !photoVal.startsWith("data:")) payload.profile_picture_url = photoVal;
     await updateProfile(payload);
     document.getElementById("settingsMsg").innerText = "Profile saved!";
     updateAllAvatars();
@@ -458,8 +458,14 @@ function buildCardLink(text, verdict) {
     + "&verdict=" + encodeURIComponent(verdict || "accepted");
 }
 
-function makeResultHtml(label, cardUrl) {
-  return "<div class='result-row'><span class='marked-label'>Marked " + label + "</span><a class='gen-card-btn' href='" + cardUrl + "'>🎨 Generate Card</a></div>";
+function buildStmtPreviewHtml(url) {
+  if (!url) return "";
+  var safeUrl = url;
+  if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl;
+  return "<div class='stmt-preview'>"
+    + "<img src='https://image.thum.io/get/" + escapeHtml(safeUrl) + "'>"
+    + "<a href='" + escapeHtml(safeUrl) + "' target='_blank'>🔗 Source ↗</a>"
+    + "</div>";
 }
 
 function buildPreviewHtml(url, title, desc, img) {
@@ -468,7 +474,7 @@ function buildPreviewHtml(url, title, desc, img) {
   if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl;
   if (!img) img = "https://image.thum.io/get/" + safeUrl;
   return "<div class='preview-box'>"
-    + "<img src='" + escapeHtml(img) + "' alt='preview'>"
+    + "<img src='" + escapeHtml(img) + "'>"
     + "<div class='pv-body'>"
     + (title ? "<div class='pv-title'>" + escapeHtml(title) + "</div>" : "")
     + (desc ? "<div class='pv-desc'>" + escapeHtml(desc) + "</div>" : "")
@@ -476,31 +482,34 @@ function buildPreviewHtml(url, title, desc, img) {
     + "</div></div>";
 }
 
-function buildStmtPreviewHtml(url) {
-  if (!url) return "";
-  var safeUrl = url;
-  if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl;
-  return "<div class='stmt-preview'>"
-    + "<img src='https://image.thum.io/get/" + escapeHtml(safeUrl) + "' alt='preview'>"
-    + "<a href='" + escapeHtml(safeUrl) + "' target='_blank'>🔗 Source ↗</a>"
-    + "</div>";
-}
-
-function getReactionBadge(item) {
-  var r = (item.reaction_type || item.reaction || item.verdict || "").toLowerCase();
-  if (r === "accepted") return "<span class='reaction-badge badge-accepted'>✅ Accepted</span>";
-  if (r === "modified") return "<span class='reaction-badge badge-modified'>✏️ Modified</span>";
-  if (r === "denied") return "<span class='reaction-badge badge-denied'>❌ Denied</span>";
+function reactionBadgeHtml(reaction) {
+  if (reaction === "accepted") return "<span class='reaction-badge badge-accepted'>Accepted ✓</span>";
+  if (reaction === "modified") return "<span class='reaction-badge badge-modified'>Modified ✎</span>";
+  if (reaction === "denied") return "<span class='reaction-badge badge-denied'>Denied ✗</span>";
   return "";
 }
 
-/* ========== AUTO PREVIEW ON URL PASTE ========== */
+function timeAgo(dateStr) {
+  if (!dateStr) return "";
+  try {
+    var diff = Date.now() - new Date(dateStr).getTime();
+    var mins = Math.floor(diff / 60000);
+    if (mins < 1) return "Just now";
+    if (mins < 60) return mins + "m ago";
+    var hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + "h ago";
+    var days = Math.floor(hrs / 24);
+    if (days < 7) return days + "d ago";
+    return new Date(dateStr).toLocaleDateString();
+  } catch(e) { return ""; }
+}
+
+/* ========== AUTO PREVIEW ========== */
 function onUrlInput() {
   clearTimeout(urlTimer);
   var url = document.getElementById("sourceUrl").value.trim();
   if (!url || url.length < 10) {
     document.getElementById("postPreviewArea").innerHTML = "";
-    fetchedPreviewTitle = "";
     return;
   }
   urlTimer = setTimeout(function() { fetchPostPreview(url); }, 800);
@@ -509,8 +518,7 @@ function onUrlInput() {
 async function fetchPostPreview(url) {
   var area = document.getElementById("postPreviewArea");
   if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-  area.innerHTML = buildPreviewHtml(url, "Loading preview...", "", "");
-
+  area.innerHTML = buildPreviewHtml(url, "Loading...", "", "");
   var title = "", desc = "", ogImg = "";
   try {
     var res = await fetch("https://r.jina.ai/" + url);
@@ -524,8 +532,6 @@ async function fetchPostPreview(url) {
     if (ogTitle) title = ogTitle;
     if (ogDesc) desc = ogDesc;
   } catch (e) {}
-
-  fetchedPreviewTitle = title || "";
   var stmtBox = document.getElementById("newStatement");
   if (!stmtBox.value.trim() && title) stmtBox.value = title;
   area.innerHTML = buildPreviewHtml(url, title || "News Article", desc, ogImg);
@@ -553,33 +559,33 @@ async function loadMyStatements() {
       window._stmtTexts[id] = item.text || "";
 
       var previewHtml = item.source_url ? buildStmtPreviewHtml(item.source_url) : "";
-      var badge = getReactionBadge(item);
 
-      // Show react buttons ONLY if not yet reacted
-      var hasReaction = !!(item.reaction_type || item.reaction || item.verdict);
-      var reactBtns = "";
+      // ✅ CHECK REACTION (Bubble field OR localStorage)
+      var reaction = getReactionForItem(item);
+      var hasReaction = !!reaction;
 
-      if (!hasReaction) {
-        reactBtns = "<div class='card-actions' id='actions-" + id + "'>"
-          + "<button style='background:#2d6a4f;color:white;' onclick=\"reactToStatement('" + id + "','accepted')\">✅ Accept</button>"
-          + "<button style='background:#f77f00;color:white;' onclick=\"reactToStatement('" + id + "','modified')\">✏️ Modify</button>"
-          + "<button style='background:#d62828;color:white;' onclick=\"reactToStatement('" + id + "','denied')\">❌ Deny</button>"
-          + "</div>";
-      }
+      var actionHtml = "";
 
-      var cardLinkHtml = "";
       if (hasReaction) {
-        var r = (item.reaction_type || item.reaction || item.verdict || "").toLowerCase();
-        cardLinkHtml = "<div style='margin-top:8px;'><a class='gen-card-btn' href='" + buildCardLink(item.text || "", r) + "'>🎨 Generate Card</a></div>";
+        // ✅ SHOW BADGE + GENERATE CARD (no buttons)
+        actionHtml = "<div class='result-row'>"
+          + reactionBadgeHtml(reaction)
+          + "<a class='gen-card-link' href='" + buildCardLink(item.text || "", reaction) + "'>🎨 Generate Card</a>"
+          + "</div>";
+      } else {
+        // Show reaction buttons
+        actionHtml = "<div class='card-actions' id='actions-" + id + "'>"
+          + "<button onclick=\"reactToStatement('" + id + "','accepted')\">Accepted ✓</button>"
+          + "<button onclick=\"reactToStatement('" + id + "','modified')\">Modified ✎</button>"
+          + "<button onclick=\"reactToStatement('" + id + "','denied')\">Denied ✗</button>"
+          + "</div>";
       }
 
       container.innerHTML += "<div class='card'><p>" + escapeHtml(item.text || "") + "</p>"
         + previewHtml
-        + "<div class='card-date'>" + (item.Created_Date ? new Date(item.Created_Date).toLocaleDateString() : "") + "</div>"
-        + badge
-        + reactBtns
+        + "<div class='card-date'>" + timeAgo(item.Created_Date) + "</div>"
+        + actionHtml
         + "<div id='result-" + id + "'></div>"
-        + cardLinkHtml
         + "</div>";
     }
   } catch (err) { console.error(err); }
@@ -588,15 +594,25 @@ async function loadMyStatements() {
 async function reactToStatement(id, action) {
   try {
     await reactStatement(id, action);
+
+    // ✅ STORE REACTION (persists + shared with feed)
+    storeReaction(id, action);
+
+    // ✅ HIDE BUTTONS IMMEDIATELY
     var actionsEl = document.getElementById("actions-" + id);
     if (actionsEl) actionsEl.style.display = "none";
+
+    // ✅ SHOW BADGE + CARD LINK
     var resultEl = document.getElementById("result-" + id);
+    var text = (window._stmtTexts && window._stmtTexts[id]) || "";
     if (resultEl) {
-      var label = action.charAt(0).toUpperCase() + action.slice(1);
-      var text = (window._stmtTexts && window._stmtTexts[id]) || "";
-      resultEl.innerHTML = makeResultHtml(label, buildCardLink(text, action));
+      resultEl.innerHTML = "<div class='result-row'>"
+        + reactionBadgeHtml(action)
+        + "<a class='gen-card-link' href='" + buildCardLink(text, action) + "'>🎨 Generate Card</a>"
+        + "</div>";
     }
-    // Refresh to show badge
+
+    // Refresh after delay to ensure persistence
     setTimeout(function() { loadMyStatements(); }, 1500);
   } catch (err) { console.error(err); }
 }
@@ -626,12 +642,18 @@ async function reactToPost(action) {
   if (!lastPostedId) return;
   try {
     await reactStatement(lastPostedId, action);
-    var label = action.charAt(0).toUpperCase() + action.slice(1);
-    document.getElementById("postReactResult").innerHTML = makeResultHtml(label, buildCardLink(lastPostedText, action));
+
+    // ✅ STORE REACTION
+    storeReaction(lastPostedId, action);
+
+    document.getElementById("postReactResult").innerHTML = "<div class='result-row'>"
+      + reactionBadgeHtml(action)
+      + "<a class='gen-card-link' href='" + buildCardLink(lastPostedText, action) + "'>🎨 Generate Card</a>"
+      + "</div>";
+
     document.getElementById("newStatement").value = "";
     document.getElementById("sourceUrl").value = "";
     document.getElementById("postPreviewArea").innerHTML = "";
-    fetchedPreviewTitle = "";
     setTimeout(function() {
       document.getElementById("postReactSection").style.display = "none";
       document.getElementById("postMsg").innerText = "";
@@ -650,19 +672,14 @@ async function scanNews() {
   document.getElementById("newsInfo").innerText = "Scanning...";
   document.getElementById("newsResults").innerHTML = "";
   var query = (profileData.full_name || "").trim();
-  if (!query) {
-    document.getElementById("newsError").innerText = "Set your Full Name in Settings first.";
-    document.getElementById("newsInfo").innerText = "";
-    return;
-  }
+  if (!query) { document.getElementById("newsError").innerText = "Set your Full Name in Settings first."; document.getElementById("newsInfo").innerText = ""; return; }
   try {
     var res = await searchNews(query);
     var articles = res.articles || [];
     var container = document.getElementById("newsResults");
     if (articles.length === 0) {
-      container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No news found for \"" + escapeHtml(query) + "\".</p></div>";
-      document.getElementById("newsInfo").innerText = "";
-      return;
+      container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No news found.</p></div>";
+      document.getElementById("newsInfo").innerText = ""; return;
     }
     document.getElementById("newsInfo").innerText = articles.length + " articles found";
     for (var i = 0; i < articles.length; i++) {
@@ -671,21 +688,20 @@ async function scanNews() {
       var nid = "news-" + newsCounter;
       window._newsTexts[nid] = a.title || "";
       window._newsUrls[nid] = a.url || "";
-      var imgHtml = a.image ? "<img src='" + escapeHtml(a.image) + "' alt='news'>" : "";
+      var imgHtml = a.image ? "<img src='" + escapeHtml(a.image) + "'>" : "";
+      var srcLabel = a.source ? "<span style='font-size:11px;color:#999;'>via " + escapeHtml(a.source) + "</span>" : "";
       container.innerHTML += "<div class='news-card'>" + imgHtml
         + "<h4>" + escapeHtml(a.title || "") + "</h4>"
         + "<p>" + escapeHtml(a.description || "") + "</p>"
-        + "<a href='" + escapeHtml(a.url || "") + "' target='_blank'>Read full article ↗</a>"
+        + srcLabel
+        + "<br><a href='" + escapeHtml(a.url || "") + "' target='_blank'>Read full article ↗</a>"
         + "<div class='news-actions' id='nactions-" + nid + "'>"
-        + "  <button style='background:#2d6a4f;color:white;' onclick=\"reactToNews('" + nid + "','accepted')\">✅ Accept</button>"
-        + "  <button style='background:#f77f00;color:white;' onclick=\"reactToNews('" + nid + "','modified')\">✏️ Modify</button>"
-        + "  <button style='background:#d62828;color:white;' onclick=\"reactToNews('" + nid + "','denied')\">❌ Deny</button>"
+        + "  <button onclick=\"reactToNews('" + nid + "','accepted')\">Accepted ✓</button>"
+        + "  <button onclick=\"reactToNews('" + nid + "','modified')\">Modified ✎</button>"
+        + "  <button onclick=\"reactToNews('" + nid + "','denied')\">Denied ✗</button>"
         + "</div><div id='nresult-" + nid + "'></div></div>";
     }
-  } catch (err) {
-    document.getElementById("newsError").innerText = "News error: " + err.message;
-    document.getElementById("newsInfo").innerText = "";
-  }
+  } catch (err) { document.getElementById("newsError").innerText = "Error: " + err.message; document.getElementById("newsInfo").innerText = ""; }
 }
 
 async function reactToNews(nid, action) {
@@ -697,13 +713,18 @@ async function reactToNews(nid, action) {
     if (res.response) { stmtId = res.response.id || res.response._id || ""; }
     if (res.id) stmtId = res.id;
     if (res._id) stmtId = res._id;
-    if (stmtId) { await reactStatement(stmtId, action); }
+    if (stmtId) {
+      await reactStatement(stmtId, action);
+      storeReaction(stmtId, action); // ✅ STORE
+    }
     var actionsEl = document.getElementById("nactions-" + nid);
     if (actionsEl) actionsEl.style.display = "none";
     var resultEl = document.getElementById("nresult-" + nid);
     if (resultEl) {
-      var label = action.charAt(0).toUpperCase() + action.slice(1);
-      resultEl.innerHTML = makeResultHtml(label, buildCardLink(title, action));
+      resultEl.innerHTML = "<div class='result-row'>"
+        + reactionBadgeHtml(action)
+        + "<a class='gen-card-link' href='" + buildCardLink(title, action) + "'>🎨 Generate Card</a>"
+        + "</div>";
     }
     loadMyStatements();
   } catch (err) {
