@@ -287,9 +287,9 @@
         <div id="postReactSection" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
           <p style="font-size:13px; color:#666; margin-bottom:8px;"><strong>React to your statement:</strong></p>
           <div class="card-actions">
-            <button onclick="reactToPost('accepted')">Accepted ✓</button>
-            <button onclick="reactToPost('modified')">Modified ✎</button>
-            <button onclick="reactToPost('denied')">Denied ✗</button>
+            <button onclick="reactToPost('accepted')">Accept</button>
+<button onclick="reactToPost('modified')">Modify</button>
+<button onclick="reactToPost('denied')">Deny</button>
           </div>
           <div id="postReactResult"></div>
         </div>
@@ -575,10 +575,10 @@ async function loadMyStatements() {
       } else {
         // Show reaction buttons
         actionHtml = "<div class='card-actions' id='actions-" + id + "'>"
-          + "<button onclick=\"reactToStatement('" + id + "','accepted')\">Accepted ✓</button>"
-          + "<button onclick=\"reactToStatement('" + id + "','modified')\">Modified ✎</button>"
-          + "<button onclick=\"reactToStatement('" + id + "','denied')\">Denied ✗</button>"
-          + "</div>";
+  + "<button onclick=\"reactToStatement('" + id + "','accepted')\">Accept</button>"
+  + "<button onclick=\"reactToStatement('" + id + "','modified')\">Modify</button>"
+  + "<button onclick=\"reactToStatement('" + id + "','denied')\">Deny</button>"
+  + "</div>";
       }
 
       container.innerHTML += "<div class='card'><p>" + escapeHtml(item.text || "") + "</p>"
@@ -688,7 +688,13 @@ async function scanNews() {
       var nid = "news-" + newsCounter;
       window._newsTexts[nid] = a.title || "";
       window._newsUrls[nid] = a.url || "";
-      var imgHtml = a.image ? "<img src='" + escapeHtml(a.image) + "'>" : "";
+      var imgSrc = a.image || "";
+if (!imgSrc && a.url) {
+  var safeUrl = a.url;
+  if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl;
+  imgSrc = "https://image.thum.io/get/" + safeUrl;
+}
+var imgHtml = imgSrc ? "<img src='" + escapeHtml(imgSrc) + "'>" : "";
       var srcLabel = a.source ? "<span style='font-size:11px;color:#999;'>via " + escapeHtml(a.source) + "</span>" : "";
       container.innerHTML += "<div class='news-card'>" + imgHtml
         + "<h4>" + escapeHtml(a.title || "") + "</h4>"
@@ -696,9 +702,9 @@ async function scanNews() {
         + srcLabel
         + "<br><a href='" + escapeHtml(a.url || "") + "' target='_blank'>Read full article ↗</a>"
         + "<div class='news-actions' id='nactions-" + nid + "'>"
-        + "  <button onclick=\"reactToNews('" + nid + "','accepted')\">Accepted ✓</button>"
-        + "  <button onclick=\"reactToNews('" + nid + "','modified')\">Modified ✎</button>"
-        + "  <button onclick=\"reactToNews('" + nid + "','denied')\">Denied ✗</button>"
+        + "  <button onclick=\"reactToNews('" + nid + "','accepted')\">Accept</button>"
++ "  <button onclick=\"reactToNews('" + nid + "','modified')\">Modify</button>"
++ "  <button onclick=\"reactToNews('" + nid + "','denied')\">Deny</button>"
         + "</div><div id='nresult-" + nid + "'></div></div>";
     }
   } catch (err) { document.getElementById("newsError").innerText = "Error: " + err.message; document.getElementById("newsInfo").innerText = ""; }
