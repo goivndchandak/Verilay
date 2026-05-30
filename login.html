@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <title>Login - Verilay</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <style>
@@ -32,13 +30,8 @@ body {
 .step { display: none; }
 .step.active { display: block; }
 
-.step-title {
-  font-size: 16px; font-weight: 700; color: #1d3557;
-  margin-bottom: 6px;
-}
-.step-desc {
-  font-size: 13px; color: #888; margin-bottom: 20px; line-height: 1.4;
-}
+.step-title { font-size: 16px; font-weight: 700; color: #1d3557; margin-bottom: 6px; }
+.step-desc { font-size: 13px; color: #888; margin-bottom: 20px; line-height: 1.4; }
 
 /* FORM */
 .form-group { margin-bottom: 14px; text-align: left; }
@@ -49,6 +42,9 @@ body {
   box-sizing: border-box;
 }
 .form-group input:focus { border-color: #1d3557; }
+.form-group input[readonly] {
+  background: #f0f8f0; color: #2d6a4f; border: 1px solid #a8d5ba;
+}
 
 /* OTP INPUT */
 .otp-row {
@@ -58,6 +54,7 @@ body {
   width: 48px; height: 54px; text-align: center;
   font-size: 22px; font-weight: 700; color: #1d3557;
   border: 2px solid #ddd; border-radius: 10px; outline: none;
+  box-sizing: border-box;
 }
 .otp-box:focus { border-color: #1d3557; background: #f8f9ff; }
 
@@ -75,15 +72,12 @@ body {
   width: 100%; padding: 12px; background: white; color: #1d3557;
   border: 1px solid #ddd; border-radius: 10px; font-size: 14px;
   font-weight: 600; cursor: pointer; margin-top: 8px;
+  transition: all 0.2s ease;
 }
 .btn-secondary:hover { background: #f8f8f8; }
 
-.resend-row {
-  margin-top: 14px; font-size: 13px; color: #888;
-}
-.resend-row a {
-  color: #1d3557; text-decoration: none; font-weight: 600; cursor: pointer;
-}
+.resend-row { margin-top: 14px; font-size: 13px; color: #888; }
+.resend-row a { color: #1d3557; text-decoration: none; font-weight: 600; cursor: pointer; }
 .resend-row a.disabled { color: #ccc; pointer-events: none; }
 
 .toggle { margin-top: 16px; font-size: 13px; color: #888; }
@@ -99,26 +93,13 @@ body {
 
 .timer { font-size: 12px; color: #FF9933; font-weight: 600; margin-top: 8px; }
 
-.divider {
-  display: flex; align-items: center; gap: 12px;
-  margin: 20px 0; color: #bbb; font-size: 12px;
-}
-.divider::before, .divider::after {
-  content: ""; flex: 1; height: 1px; background: #eee;
-}
-
-/* LOCKED NAME FIELD */
-.locked-name {
+.verified-box {
   background: #f0f8f0; border: 1px solid #a8d5ba;
   padding: 12px; border-radius: 8px; text-align: center;
   margin-bottom: 14px;
 }
-.locked-name .name-text {
-  font-size: 16px; font-weight: 700; color: #2d6a4f;
-}
-.locked-name .verified-label {
-  font-size: 11px; color: #3a7d5c; margin-top: 4px;
-}
+.verified-box .vb-email { font-size: 14px; font-weight: 700; color: #2d6a4f; }
+.verified-box .vb-label { font-size: 11px; color: #3a7d5c; margin-top: 4px; }
 </style>
 </head>
 
@@ -128,38 +109,38 @@ body {
   <div class="logo"><span>✓</span>erilay</div>
   <div class="tagline">The layer of truth internet needs</div>
 
-  <!-- ========== STEP 1: EMAIL ========== -->
+  <!-- ========== STEP 1: ENTER EMAIL ========== -->
   <div class="step active" id="step1">
-    <div class="step-title" id="step1Title">Create your account</div>
-    <div class="step-desc" id="step1Desc">Enter your email to get started</div>
+    <div class="step-title">Create your account</div>
+    <div class="step-desc">Enter your email to get a verification code</div>
 
     <div class="form-group">
       <label>Email</label>
       <input type="email" id="emailInput" placeholder="you@example.com">
     </div>
 
-    <button class="btn-primary" onclick="sendOTP()" id="sendOtpBtn">Send Verification Code</button>
+    <button class="btn-primary" id="sendOtpBtn" onclick="sendOTP()">Send Verification Code</button>
 
     <div id="step1Msg" class="success"></div>
     <div id="step1Err" class="error"></div>
 
-    <div class="toggle" id="toggleRow">
-      Already have an account? <a onclick="showLoginDirect()">Log In directly</a>
+    <div class="toggle">
+      Already have an account? <a onclick="showStep(4)">Log In</a>
     </div>
   </div>
 
-  <!-- ========== STEP 2: OTP VERIFICATION ========== -->
+  <!-- ========== STEP 2: ENTER OTP ========== -->
   <div class="step" id="step2">
     <div class="step-title">Verify your email</div>
     <div class="step-desc">Enter the 6-digit code sent to <strong id="otpEmailLabel"></strong></div>
 
     <div class="otp-row">
-      <input class="otp-box" type="text" maxlength="1" id="otp1" oninput="otpNext(1)" onkeydown="otpBack(event,1)">
-      <input class="otp-box" type="text" maxlength="1" id="otp2" oninput="otpNext(2)" onkeydown="otpBack(event,2)">
-      <input class="otp-box" type="text" maxlength="1" id="otp3" oninput="otpNext(3)" onkeydown="otpBack(event,3)">
-      <input class="otp-box" type="text" maxlength="1" id="otp4" oninput="otpNext(4)" onkeydown="otpBack(event,4)">
-      <input class="otp-box" type="text" maxlength="1" id="otp5" oninput="otpNext(5)" onkeydown="otpBack(event,5)">
-      <input class="otp-box" type="text" maxlength="1" id="otp6" oninput="otpNext(6)" onkeydown="otpBack(event,6)">
+      <input class="otp-box" type="text" maxlength="1" id="otp1" oninput="otpNext(1)" onkeydown="otpBack(event,1)" inputmode="numeric">
+      <input class="otp-box" type="text" maxlength="1" id="otp2" oninput="otpNext(2)" onkeydown="otpBack(event,2)" inputmode="numeric">
+      <input class="otp-box" type="text" maxlength="1" id="otp3" oninput="otpNext(3)" onkeydown="otpBack(event,3)" inputmode="numeric">
+      <input class="otp-box" type="text" maxlength="1" id="otp4" oninput="otpNext(4)" onkeydown="otpBack(event,4)" inputmode="numeric">
+      <input class="otp-box" type="text" maxlength="1" id="otp5" oninput="otpNext(5)" onkeydown="otpBack(event,5)" inputmode="numeric">
+      <input class="otp-box" type="text" maxlength="1" id="otp6" oninput="otpNext(6)" onkeydown="otpBack(event,6)" inputmode="numeric">
     </div>
 
     <div class="timer" id="otpTimer">Code expires in 5:00</div>
@@ -176,18 +157,18 @@ body {
     <button class="btn-secondary" onclick="goBack(1)">← Change email</button>
   </div>
 
-  <!-- ========== STEP 3: SET NAME & PASSWORD ========== -->
+  <!-- ========== STEP 3: SET NAME + PASSWORD ========== -->
   <div class="step" id="step3">
     <div class="step-title">Set up your profile</div>
-    <div class="step-desc">Your email is verified ✓. Now set your name and password.</div>
+    <div class="step-desc">Your email is verified. Now create your account.</div>
 
-    <div class="locked-name" id="verifiedEmailBox">
-      <div class="name-text" id="verifiedEmailText"></div>
-      <div class="verified-label">✓ Email Verified</div>
+    <div class="verified-box">
+      <div class="vb-email" id="verifiedEmailText"></div>
+      <div class="vb-label">✓ Email Verified</div>
     </div>
 
     <div class="form-group">
-      <label>Full Name (cannot be changed later)</label>
+      <label>Full Name <span style="color:#b84040; font-size:11px;">(permanent — cannot be changed later)</span></label>
       <input type="text" id="fullNameInput" placeholder="Your real full name">
     </div>
 
@@ -198,7 +179,12 @@ body {
 
     <div class="form-group">
       <label>Password</label>
-      <input type="password" id="passwordInput" placeholder="Create a strong password">
+      <input type="password" id="passwordInput" placeholder="Min 6 characters">
+    </div>
+
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password" id="confirmPasswordInput" placeholder="Re-enter password">
     </div>
 
     <button class="btn-primary" onclick="createAccount()">Create Account</button>
@@ -210,7 +196,7 @@ body {
   <!-- ========== STEP 4: DIRECT LOGIN ========== -->
   <div class="step" id="step4">
     <div class="step-title">Welcome back</div>
-    <div class="step-desc">Log in to your account</div>
+    <div class="step-desc">Log in to your Verilay account</div>
 
     <div class="form-group">
       <label>Email</label>
@@ -233,39 +219,38 @@ body {
   </div>
 
   <div class="trust-note">
-    🔒 Email verified accounts maintain platform trust.<br>
-    Your full name is permanent and cannot be changed.
+    🔒 Email verification ensures authentic accounts.<br>
+    Full names are permanent to maintain platform trust.
   </div>
 </div>
 
 <script src="js/api.js"></script>
 <script>
 
-// ========================================================
-// ✅ EMAILJS CONFIG — REPLACE WITH YOUR VALUES
-// ========================================================
-var EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";       // From EmailJS Account
-var EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";       // From EmailJS Email Services
-var EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";     // From EmailJS Templates
+// ============================================================
+// ✅ EMAILJS CONFIG — REPLACE THESE 3 VALUES
+// ============================================================
+var EMAILJS_PUBLIC_KEY  = "YOUR_PUBLIC_KEY";
+var EMAILJS_SERVICE_ID  = "YOUR_SERVICE_ID";
+var EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
 
-// Initialize EmailJS
 emailjs.init(EMAILJS_PUBLIC_KEY);
 
-// ========================================================
+// ============================================================
 // STATE
-// ========================================================
+// ============================================================
 var generatedOTP = "";
 var otpEmail = "";
 var otpExpiry = 0;
 var timerInterval = null;
 
-// ========================================================
-// STEP NAVIGATION
-// ========================================================
+// ============================================================
+// NAVIGATION
+// ============================================================
 function showStep(n) {
   document.querySelectorAll(".step").forEach(function(s) { s.classList.remove("active"); });
   document.getElementById("step" + n).classList.add("active");
-  clearMessages();
+  clearAllMessages();
 }
 
 function goBack(n) {
@@ -273,11 +258,7 @@ function goBack(n) {
   showStep(n);
 }
 
-function showLoginDirect() {
-  showStep(4);
-}
-
-function clearMessages() {
+function clearAllMessages() {
   for (var i = 1; i <= 4; i++) {
     var m = document.getElementById("step" + i + "Msg");
     var e = document.getElementById("step" + i + "Err");
@@ -286,9 +267,9 @@ function clearMessages() {
   }
 }
 
-// ========================================================
+// ============================================================
 // ✅ STEP 1: SEND OTP
-// ========================================================
+// ============================================================
 function generateOTP() {
   var code = "";
   for (var i = 0; i < 6; i++) {
@@ -302,41 +283,37 @@ async function sendOTP() {
   document.getElementById("step1Err").innerText = "";
   document.getElementById("step1Msg").innerText = "";
 
-  if (!email || !email.includes("@")) {
-    document.getElementById("step1Err").innerText = "Enter a valid email";
+  if (!email || !email.includes("@") || !email.includes(".")) {
+    document.getElementById("step1Err").innerText = "Enter a valid email address";
     return;
   }
 
-  // Disable button
   var btn = document.getElementById("sendOtpBtn");
   btn.disabled = true;
   btn.innerText = "Sending...";
 
-  // Generate 6-digit OTP
   generatedOTP = generateOTP();
   otpEmail = email;
-  otpExpiry = Date.now() + (5 * 60 * 1000); // 5 minutes
+  otpExpiry = Date.now() + (5 * 60 * 1000);
 
   try {
-    // Send via EmailJS
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
       user_email: email,
       otp_code: generatedOTP,
       to_email: email
     });
 
-    document.getElementById("step1Msg").innerText = "Code sent!";
+    document.getElementById("step1Msg").innerText = "Verification code sent!";
     document.getElementById("otpEmailLabel").innerText = email;
 
-    // Move to Step 2
     setTimeout(function() {
       showStep(2);
       document.getElementById("otp1").focus();
       startTimer();
-    }, 500);
+    }, 600);
 
   } catch (err) {
-    document.getElementById("step1Err").innerText = "Failed to send code. Try again.";
+    document.getElementById("step1Err").innerText = "Failed to send code. Check email and try again.";
     console.error("EmailJS error:", err);
   }
 
@@ -344,17 +321,16 @@ async function sendOTP() {
   btn.innerText = "Send Verification Code";
 }
 
-// ========================================================
-// ✅ STEP 2: OTP INPUT + VERIFY
-// ========================================================
+// ============================================================
+// ✅ STEP 2: OTP VERIFICATION
+// ============================================================
 function otpNext(n) {
   var current = document.getElementById("otp" + n);
   if (current.value.length === 1 && n < 6) {
     document.getElementById("otp" + (n + 1)).focus();
   }
-  // Auto-verify when all 6 filled
   if (n === 6 && current.value.length === 1) {
-    verifyOTP();
+    setTimeout(function() { verifyOTP(); }, 200);
   }
 }
 
@@ -375,6 +351,13 @@ function getEnteredOTP() {
   return code;
 }
 
+function clearOTPBoxes() {
+  for (var i = 1; i <= 6; i++) {
+    document.getElementById("otp" + i).value = "";
+  }
+  document.getElementById("otp1").focus();
+}
+
 function verifyOTP() {
   document.getElementById("step2Err").innerText = "";
   document.getElementById("step2Msg").innerText = "";
@@ -386,38 +369,33 @@ function verifyOTP() {
     return;
   }
 
-  // Check expiry
   if (Date.now() > otpExpiry) {
     document.getElementById("step2Err").innerText = "Code expired. Please resend.";
     return;
   }
 
-  // Check OTP
   if (entered !== generatedOTP) {
-    document.getElementById("step2Err").innerText = "Wrong code. Try again.";
-    // Clear boxes
-    for (var i = 1; i <= 6; i++) { document.getElementById("otp" + i).value = ""; }
-    document.getElementById("otp1").focus();
+    document.getElementById("step2Err").innerText = "Incorrect code. Try again.";
+    clearOTPBoxes();
     return;
   }
 
-  // ✅ OTP VERIFIED
+  // ✅ VERIFIED
   clearInterval(timerInterval);
   document.getElementById("step2Msg").innerText = "Email verified! ✓";
 
-  // Store verification
   localStorage.setItem("email_verified", otpEmail);
   localStorage.setItem("email_verified_at", new Date().toISOString());
 
-  // Move to Step 3
   document.getElementById("verifiedEmailText").innerText = otpEmail;
+
   setTimeout(function() { showStep(3); }, 800);
 }
 
-// Timer
 function startTimer() {
   clearInterval(timerInterval);
   var timerEl = document.getElementById("otpTimer");
+  timerEl.style.color = "#FF9933";
 
   timerInterval = setInterval(function() {
     var remaining = Math.max(0, otpExpiry - Date.now());
@@ -433,17 +411,16 @@ function startTimer() {
   }, 1000);
 }
 
-// Resend
 async function resendOTP() {
-  // Clear old OTP boxes
-  for (var i = 1; i <= 6; i++) { document.getElementById("otp" + i).value = ""; }
+  clearOTPBoxes();
+  document.getElementById("step2Err").innerText = "";
 
   generatedOTP = generateOTP();
   otpExpiry = Date.now() + (5 * 60 * 1000);
 
-  var resendLink = document.getElementById("resendLink");
-  resendLink.className = "disabled";
-  resendLink.innerText = "Sending...";
+  var link = document.getElementById("resendLink");
+  link.className = "disabled";
+  link.innerText = "Sending...";
 
   try {
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
@@ -453,36 +430,54 @@ async function resendOTP() {
     });
 
     document.getElementById("step2Msg").innerText = "New code sent!";
-    document.getElementById("otpTimer").style.color = "#FF9933";
     startTimer();
-    document.getElementById("otp1").focus();
   } catch (err) {
     document.getElementById("step2Err").innerText = "Failed to resend. Try again.";
   }
 
   setTimeout(function() {
-    resendLink.className = "";
-    resendLink.innerText = "Resend Code";
-  }, 30000); // 30 second cooldown
+    link.className = "";
+    link.innerText = "Resend Code";
+  }, 30000);
 }
 
-// ========================================================
+// ============================================================
 // ✅ STEP 3: CREATE ACCOUNT
-// ========================================================
+// ============================================================
 async function createAccount() {
   document.getElementById("step3Err").innerText = "";
   document.getElementById("step3Msg").innerText = "";
 
   var fullName = document.getElementById("fullNameInput").value.trim();
   var username = document.getElementById("usernameInput").value.trim();
-  var password = document.getElementById("passwordInput").value.trim();
+  var password = document.getElementById("passwordInput").value;
+  var confirmPw = document.getElementById("confirmPasswordInput").value;
 
-  if (!fullName) { document.getElementById("step3Err").innerText = "Full name is required"; return; }
-  if (fullName.length < 3) { document.getElementById("step3Err").innerText = "Enter your real full name"; return; }
-  if (!username) { document.getElementById("step3Err").innerText = "Username is required"; return; }
-  if (!password || password.length < 6) { document.getElementById("step3Err").innerText = "Password must be at least 6 characters"; return; }
+  // Validations
+  if (!fullName || fullName.length < 2) {
+    document.getElementById("step3Err").innerText = "Enter your real full name";
+    return;
+  }
+  if (!username || username.length < 3) {
+    document.getElementById("step3Err").innerText = "Username must be at least 3 characters";
+    return;
+  }
+  if (/\s/.test(username)) {
+    document.getElementById("step3Err").innerText = "Username cannot contain spaces";
+    return;
+  }
+  if (!password || password.length < 6) {
+    document.getElementById("step3Err").innerText = "Password must be at least 6 characters";
+    return;
+  }
+  if (password !== confirmPw) {
+    document.getElementById("step3Err").innerText = "Passwords do not match";
+    return;
+  }
 
   try {
+    document.getElementById("step3Msg").innerText = "Creating account...";
+
     // Signup in Bubble
     await signup(otpEmail, password);
 
@@ -490,18 +485,17 @@ async function createAccount() {
     var data = await login(otpEmail, password);
 
     if (data.response && data.response.token) {
-      // ✅ SAVE VERIFIED NAME (LOCKED)
+      // ✅ SAVE VERIFIED NAME (PERMANENT)
       localStorage.setItem("verified_name", fullName);
       localStorage.setItem("name_locked", "true");
 
-      // Update profile with name + username
+      // Update profile
       await updateProfile({
         full_name: fullName,
-        username: username,
-        email_verified: true
+        username: username
       });
 
-      document.getElementById("step3Msg").innerText = "Account created! Redirecting...";
+      document.getElementById("step3Msg").innerText = "Account created! Welcome to Verilay ✓";
 
       setTimeout(function() {
         window.location.href = "feed.html";
@@ -510,46 +504,67 @@ async function createAccount() {
       document.getElementById("step3Err").innerText = "Account creation failed. Try again.";
     }
   } catch (err) {
-    // User might already exist
-    if (err.message && err.message.toLowerCase().includes("already")) {
-      document.getElementById("step3Err").innerText = "Email already registered. Try logging in.";
+    var msg = err.message || "";
+    if (msg.toLowerCase().includes("already")) {
+      document.getElementById("step3Err").innerText = "This email is already registered. Try logging in.";
     } else {
-      document.getElementById("step3Err").innerText = "Error: " + (err.message || "Try again");
+      document.getElementById("step3Err").innerText = "Error: " + msg;
     }
   }
 }
 
-// ========================================================
-// ✅ STEP 4: DIRECT LOGIN
-// ========================================================
+// ============================================================
+// ✅ STEP 4: DIRECT LOGIN (existing users)
+// ============================================================
 async function directLogin() {
   document.getElementById("step4Err").innerText = "";
   document.getElementById("step4Msg").innerText = "";
 
   var email = document.getElementById("loginEmail").value.trim();
-  var pw = document.getElementById("loginPassword").value.trim();
+  var pw = document.getElementById("loginPassword").value;
 
-  if (!email || !pw) { document.getElementById("step4Err").innerText = "Fill all fields"; return; }
+  if (!email || !pw) {
+    document.getElementById("step4Err").innerText = "Enter email and password";
+    return;
+  }
 
   try {
+    document.getElementById("step4Msg").innerText = "Logging in...";
+
     var data = await login(email, pw);
+
     if (data.response && data.response.token) {
-      document.getElementById("step4Msg").innerText = "Logged in! Redirecting...";
+      document.getElementById("step4Msg").innerText = "Welcome back! Redirecting...";
       setTimeout(function() { window.location.href = "feed.html"; }, 800);
     } else {
-      document.getElementById("step4Err").innerText = "Invalid credentials";
+      document.getElementById("step4Err").innerText = "Invalid email or password";
+      document.getElementById("step4Msg").innerText = "";
     }
   } catch (err) {
-    document.getElementById("step4Err").innerText = err.message || "Login failed";
+    document.getElementById("step4Err").innerText = err.message || "Login failed. Check your credentials.";
+    document.getElementById("step4Msg").innerText = "";
   }
 }
 
-// Enter key handlers
-document.getElementById("emailInput").addEventListener("keydown", function(e) { if (e.key === "Enter") sendOTP(); });
-document.getElementById("passwordInput").addEventListener("keydown", function(e) { if (e.key === "Enter") createAccount(); });
-document.getElementById("loginPassword").addEventListener("keydown", function(e) { if (e.key === "Enter") directLogin(); });
+// ============================================================
+// ENTER KEY HANDLERS
+// ============================================================
+document.getElementById("emailInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") sendOTP();
+});
+document.getElementById("passwordInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") createAccount();
+});
+document.getElementById("confirmPasswordInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") createAccount();
+});
+document.getElementById("loginPassword").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") directLogin();
+});
 
-// Check if already logged in
+// ============================================================
+// AUTO-REDIRECT IF ALREADY LOGGED IN
+// ============================================================
 if (localStorage.getItem("token")) {
   window.location.href = "feed.html";
 }
