@@ -8,7 +8,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-      background: #f5f5f5; padding-bottom: 70px; color: #1a1a1a;
+      background: #f5f5f5; padding-bottom: 85px; color: #1a1a1a;
     }
 
     .topbar {
@@ -38,8 +38,21 @@
     .avatar img { width: 100%; height: 100%; object-fit: cover; }
     .profile-header h2 { font-size: 20px; color: #1d3557; }
     .profile-header p { color: #666; font-size: 13px; margin-top: 4px; }
-    .social-links { margin-top: 12px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-    .social-links a { font-size: 12px; color: #1d3557; text-decoration: none; padding: 5px 12px; border: 1px solid #1d3557; border-radius: 20px; }
+
+    /* ✅ SOCIAL PROOF */
+    .social-proof { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+    .social-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; border-radius: 8px;
+      background: #f8f9fb; border: 1px solid #eef1f5;
+      font-size: 13px; color: #1d3557; text-decoration: none;
+    }
+    .social-row:hover { background: #f0f2f6; }
+    .social-row .s-icon { width: 18px; height: 18px; flex-shrink: 0; }
+    .social-row .s-handle { flex: 1; font-weight: 600; color: #1d3557; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .social-row .s-badge { font-size: 9px; font-weight: 700; color: #3a7d5c; background: #e8f5ee; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.5px; }
+    .social-row.not-linked { opacity: 0.4; border-style: dashed; }
+    .social-row.not-linked .s-handle { color: #aaa; font-weight: 400; }
 
     .stats {
       display: flex; justify-content: space-around; background: white;
@@ -58,187 +71,98 @@
     .tab {
       flex: 1; padding: 12px; text-align: center; cursor: pointer;
       font-size: 13px; font-weight: bold; color: #999;
-      border-bottom: 3px solid transparent;
-      transition: all 0.2s ease;
+      border-bottom: 3px solid transparent; transition: all 0.2s ease;
     }
     .tab.active { color: #1d3557; border-bottom-color: #1d3557; }
 
     .section { display: none; }
     .section.active { display: block; }
 
-    .card {
-      background: white; padding: 15px; margin-bottom: 12px;
-      border-radius: 12px; border: 1px solid rgba(0,0,0,0.06);
-    }
+    .card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); }
     .card p { font-size: 14px; line-height: 1.5; }
     .card-date { font-size: 11px; color: #bbb; margin-top: 5px; }
-
-    /* ✅ REACTION BUTTONS — LIGHT COLOURS */
     .card-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
 
-    .btn-accept {
-      padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
-      cursor: pointer; border: 1px solid #a8d5ba;
-      background: #e8f5ee; color: #2d6a4f;
-      transition: all 0.2s ease;
-    }
+    .btn-accept { padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #a8d5ba; background: #e8f5ee; color: #2d6a4f; transition: all 0.2s ease; }
     .btn-accept:hover { background: #d4edda; }
-
-    .btn-modify {
-      padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
-      cursor: pointer; border: 1px solid #e8d5a3;
-      background: #fff8e8; color: #9a7b2d;
-      transition: all 0.2s ease;
-    }
+    .btn-modify { padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #e8d5a3; background: #fff8e8; color: #9a7b2d; transition: all 0.2s ease; }
     .btn-modify:hover { background: #fff0cc; }
-
-    .btn-deny {
-      padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
-      cursor: pointer; border: 1px solid #e8b4b4;
-      background: #fdf0f0; color: #b84040;
-      transition: all 0.2s ease;
-    }
+    .btn-deny { padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #e8b4b4; background: #fdf0f0; color: #b84040; transition: all 0.2s ease; }
     .btn-deny:hover { background: #fce0e0; }
 
     .form-group { margin-bottom: 12px; }
     .form-group label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; }
-    .form-group input, .form-group textarea {
-      width: 100%; padding: 10px; border: 1px solid #ddd;
-      border-radius: 8px; font-size: 14px;
-    }
-    textarea {
-      width: 100%; padding: 10px; margin-bottom: 10px;
-      border: 1px solid #ddd; border-radius: 8px; font-size: 14px;
-    }
-
-    .btn {
-      padding: 12px 24px; background: #1d3557; color: white;
-      border: none; border-radius: 8px; cursor: pointer; font-size: 14px;
-      margin-top: 10px;
-    }
-
-    .new-post-toggle {
-      width: 100%; padding: 12px; background: #1d3557; color: white;
-      border: none; border-radius: 10px; cursor: pointer;
-      font-size: 14px; font-weight: bold; margin-bottom: 12px;
-    }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+    textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+    .btn { padding: 12px 24px; background: #1d3557; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; margin-top: 10px; }
+    .new-post-toggle { width: 100%; padding: 12px; background: #1d3557; color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold; margin-bottom: 12px; }
     .new-post-area { display: none; }
     .new-post-area.open { display: block; }
 
-    /* PREVIEW */
-    .preview-box {
-      border: 1px solid #eee; border-radius: 10px;
-      overflow: hidden; margin-top: 10px;
-    }
+    .preview-box { border: 1px solid #eee; border-radius: 10px; overflow: hidden; margin-top: 10px; }
     .preview-box img { width: 100%; height: 160px; object-fit: cover; }
     .preview-box .pv-body { padding: 10px 12px; }
     .preview-box .pv-title { font-size: 13px; font-weight: bold; color: #1d3557; }
     .preview-box .pv-desc { font-size: 12px; color: #666; margin-top: 4px; }
     .preview-box a { font-size: 11px; color: #1d3557; display: block; margin-top: 6px; }
 
-    .stmt-preview {
-      border: 1px solid #eee; border-radius: 10px;
-      overflow: hidden; margin-top: 8px;
-    }
+    .stmt-preview { border: 1px solid #eee; border-radius: 10px; overflow: hidden; margin-top: 8px; }
     .stmt-preview img { width: 100%; height: 160px; object-fit: cover; }
     .stmt-preview a { display: block; padding: 8px 10px; font-size: 11px; color: #1d3557; }
 
-    /* REACTION BADGE (after reacting) */
-    .reaction-badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 6px 14px; border-radius: 8px;
-      font-size: 12px; font-weight: 600; margin-top: 8px;
-    }
+    .reaction-badge { display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; margin-top: 8px; }
     .badge-accepted { background: #e8f5ee; color: #2d6a4f; border: 1px solid #a8d5ba; }
     .badge-modified { background: #fff8e8; color: #9a7b2d; border: 1px solid #e8d5a3; }
     .badge-denied { background: #fdf0f0; color: #b84040; border: 1px solid #e8b4b4; }
 
-    .gen-card-link {
-      display: inline-block; font-size: 12px; color: #1d3557;
-      padding: 6px 14px; border-radius: 8px;
-      text-decoration: none; font-weight: 600;
-      border: 1px solid #1d3557; margin-top: 8px; margin-left: 8px;
-      transition: all 0.2s ease;
-    }
+    .gen-card-link { display: inline-block; font-size: 12px; color: #1d3557; padding: 6px 14px; border-radius: 8px; text-decoration: none; font-weight: 600; border: 1px solid #1d3557; margin-top: 8px; margin-left: 8px; transition: all 0.2s ease; }
     .gen-card-link:hover { background: #1d3557; color: white; }
 
-    /* NEWS */
-    .news-card {
-      background: white; padding: 15px; margin-bottom: 12px;
-      border-radius: 12px; border: 1px solid rgba(0,0,0,0.06);
-      border-left: 4px solid #ff9933;
-    }
+    .news-card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); border-left: 4px solid #ff9933; }
     .news-card h4 { font-size: 14px; color: #1d3557; margin-bottom: 5px; }
     .news-card p { font-size: 13px; color: #555; line-height: 1.4; margin-bottom: 8px; }
     .news-card img { width: 100%; border-radius: 8px; margin-bottom: 8px; }
     .news-card a { font-size: 12px; color: #1d3557; }
     .news-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
 
-    .scan-btn {
-      width: 100%; padding: 14px; border: none; border-radius: 10px;
-      cursor: pointer; color: white; background: #ff9933;
-      font-size: 15px; font-weight: bold; margin-bottom: 12px;
-    }
+    .scan-btn { width: 100%; padding: 14px; border: none; border-radius: 10px; cursor: pointer; color: white; background: #ff9933; font-size: 15px; font-weight: bold; margin-bottom: 12px; }
     .scan-info { text-align: center; color: #888; font-size: 13px; margin-bottom: 12px; }
 
-    /* SETTINGS OVERLAY */
-    .settings-overlay {
-      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5); z-index: 200;
-      justify-content: center; align-items: flex-start; padding-top: 60px;
-    }
+    .settings-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: flex-start; padding-top: 60px; }
     .settings-overlay.open { display: flex; }
-    .settings-panel {
-      background: white; width: 90%; max-width: 500px;
-      border-radius: 14px; padding: 20px;
-      max-height: 80vh; overflow-y: auto;
-    }
+    .settings-panel { background: white; width: 90%; max-width: 500px; border-radius: 14px; padding: 20px; max-height: 80vh; overflow-y: auto; }
     .settings-panel h3 { color: #1d3557; margin-bottom: 15px; }
-    .logout-btn {
-      width: 100%; padding: 12px; background: #d62828; color: white;
-      border: none; border-radius: 8px; cursor: pointer;
-      font-size: 14px; font-weight: bold; margin-top: 15px;
-    }
-    .close-btn {
-      float: right; background: none; border: none;
-      font-size: 20px; cursor: pointer; color: #999;
-    }
-
+    .logout-btn { width: 100%; padding: 12px; background: #d62828; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; margin-top: 15px; }
+    .close-btn { float: right; background: none; border: none; font-size: 20px; cursor: pointer; color: #999; }
     .photo-section { text-align: center; margin-bottom: 15px; }
-    .photo-avatar {
-      width: 80px; height: 80px; border-radius: 50%;
-      background: #1d3557; color: white; font-size: 32px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 8px; overflow: hidden; cursor: pointer;
-      border: 3px solid #1d3557;
-    }
+    .photo-avatar { width: 80px; height: 80px; border-radius: 50%; background: #1d3557; color: white; font-size: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; overflow: hidden; cursor: pointer; border: 3px solid #1d3557; }
     .photo-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .photo-hint { font-size: 11px; color: #999; }
-
     .error { color: #b84040; font-size: 12px; margin-top: 5px; }
     .success { color: #3a7d5c; font-size: 12px; margin-top: 5px; }
     .result-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 
-    .bottomnav {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: #fff4e6; display: flex; justify-content: space-around;
-      align-items: center; height: 60px;
-      border-top: 1px solid #eee; z-index: 100;
-    }
-    .bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
-    .bottomnav a.active { color: #1d3557; font-weight: bold; }
-    .bottomnav a span { font-size: 22px; display: block; }
+    /* ✅ BOTTOM NAV — POP-UP ACTIVE */
+    .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; height: 72px; z-index: 100; display: flex; justify-content: center; align-items: flex-end; pointer-events: none; }
+    .nav-bar { width: 100%; max-width: 420px; background: #edf1f7; border-radius: 22px 22px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); display: flex; justify-content: space-around; align-items: center; height: 58px; padding: 0 40px; pointer-events: all; position: relative; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #9aa5b4; font-size: 10px; font-weight: 600; letter-spacing: 0.3px; gap: 2px; transition: all 0.3s ease; position: relative; padding: 6px 20px; }
+    .nav-item .nav-icon { width: 20px; height: 20px; transition: all 0.3s ease; }
+    .nav-item .nav-label { font-size: 10px; transition: all 0.3s ease; }
+    .nav-item.active { color: #1d3557; top: -18px; }
+    .nav-item.active .icon-circle { background: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(29,53,87,0.15); border: 2px solid #dce3ed; }
+    .nav-item.active .nav-icon { width: 22px; height: 22px; }
+    .nav-item.active .nav-label { margin-top: 4px; color: #1d3557; font-weight: 700; }
+    .nav-item:not(.active) .icon-circle { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+    .nav-item:not(.active):hover { color: #6b7a8d; }
   </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
   My Profile
   <button class="topbar-btn" onclick="openSettings()">⚙️ Settings</button>
 </div>
 
-<!-- SETTINGS OVERLAY -->
 <div class="settings-overlay" id="settingsOverlay">
   <div class="settings-panel">
     <button class="close-btn" onclick="closeSettings()">✕</button>
@@ -263,13 +187,12 @@
 </div>
 
 <div class="content">
-
   <div class="profile-header">
     <div class="avatar" id="avatarMain">?</div>
     <h2 id="profileName">Loading...</h2>
     <p id="profileUsername">@...</p>
     <p id="profileBio"></p>
-    <div class="social-links" id="socialLinks"></div>
+    <div class="social-proof" id="socialProof"></div>
   </div>
 
   <div class="stats">
@@ -282,17 +205,13 @@
     <div class="tab" id="tab-news" onclick="showTab('news')">Media Scan</div>
   </div>
 
-  <!-- TRUTH LOG -->
   <div class="section active" id="sec-statements">
     <button class="new-post-toggle" onclick="toggleNewPost()">+ New Statement</button>
     <div class="new-post-area" id="newPostArea">
       <div class="card">
         <h3 style="margin-bottom:15px; color:#1d3557;">Add New Statement</h3>
         <textarea id="newStatement" placeholder="Share your truth or react to news..." rows="4"></textarea>
-        <div class="form-group">
-          <label>News/Source Link (optional)</label>
-          <input id="sourceUrl" placeholder="https://example.com/article..." oninput="onUrlInput()">
-        </div>
+        <div class="form-group"><label>News/Source Link (optional)</label><input id="sourceUrl" placeholder="https://example.com/article..." oninput="onUrlInput()"></div>
         <div id="postPreviewArea"></div>
         <button class="btn" onclick="postStatement()">Post Statement</button>
         <div id="postMsg" class="success"></div>
@@ -311,7 +230,6 @@
     <div id="myStatements"></div>
   </div>
 
-  <!-- MEDIA SCAN -->
   <div class="section" id="sec-news">
     <div class="card">
       <h3 style="margin-bottom:10px; color:#1d3557;">📰 Media Scan</h3>
@@ -322,12 +240,30 @@
       <div id="newsResults"></div>
     </div>
   </div>
-
 </div>
 
+<!-- ✅ BOTTOM NAV — PROFILE ACTIVE -->
 <div class="bottomnav">
-  <a href="feed.html"><span>🏠</span> Feed</a>
-  <a href="dashboard.html" class="active"><span>👤</span> Profile</a>
+  <div class="nav-bar">
+    <a href="feed.html" class="nav-item">
+      <div class="icon-circle">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#9aa5b4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+          <path d="M9 21V12h6v9"/>
+        </svg>
+      </div>
+      <span class="nav-label">Feed</span>
+    </a>
+    <a href="dashboard.html" class="nav-item active">
+      <div class="icon-circle">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="#1d3557" stroke="none">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M20 21a8 8 0 10-16 0"/>
+        </svg>
+      </div>
+      <span class="nav-label">Profile</span>
+    </a>
+  </div>
 </div>
 
 <script src="js/api.js"></script>
@@ -344,95 +280,36 @@ window._newsUrls = {};
 
 function escapeHtml(str) { return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
-// ✅ REACTION STORAGE
-function getStoredReactions() {
-  try { return JSON.parse(localStorage.getItem("verilay_stmt_reactions") || "{}"); } catch(e) { return {}; }
-}
-function storeReaction(stmtId, action) {
-  var r = getStoredReactions();
-  r[stmtId] = action;
-  localStorage.setItem("verilay_stmt_reactions", JSON.stringify(r));
-}
-function getStoredReaction(stmtId) {
-  return getStoredReactions()[stmtId] || "";
-}
+function getStoredReactions() { try { return JSON.parse(localStorage.getItem("verilay_stmt_reactions") || "{}"); } catch(e) { return {}; } }
+function storeReaction(stmtId, action) { var r = getStoredReactions(); r[stmtId] = action; localStorage.setItem("verilay_stmt_reactions", JSON.stringify(r)); }
+function getStoredReaction(stmtId) { return getStoredReactions()[stmtId] || ""; }
 
-// ✅ CHECK ALL SOURCES FOR REACTION
 function getReactionForItem(item) {
-  // 1. Bubble field
   var r = (item.reaction_type || item.reaction || item.verdict || "").toLowerCase();
   if (r === "accepted" || r === "modified" || r === "denied") return r;
-  // 2. Text prefix
   var text = (item.text || "").trim().toUpperCase();
   if (text.startsWith("ACCEPTED:")) return "accepted";
   if (text.startsWith("MODIFIED:")) return "modified";
   if (text.startsWith("DENIED:")) return "denied";
-  // 3. localStorage
   var id = item._id || item.id || "";
   if (id) { var stored = getStoredReaction(id); if (stored) return stored; }
   return "";
 }
 
-function timeAgo(dateStr) {
-  if (!dateStr) return "";
-  try {
-    var diff = Date.now() - new Date(dateStr).getTime();
-    var mins = Math.floor(diff / 60000);
-    if (mins < 1) return "Just now";
-    if (mins < 60) return mins + "m ago";
-    var hrs = Math.floor(mins / 60);
-    if (hrs < 24) return hrs + "h ago";
-    var days = Math.floor(hrs / 24);
-    if (days < 7) return days + "d ago";
-    return new Date(dateStr).toLocaleDateString();
-  } catch(e) { return ""; }
-}
+function timeAgo(dateStr) { if (!dateStr) return ""; try { var diff = Date.now() - new Date(dateStr).getTime(); var mins = Math.floor(diff / 60000); if (mins < 1) return "Just now"; if (mins < 60) return mins + "m ago"; var hrs = Math.floor(mins / 60); if (hrs < 24) return hrs + "h ago"; var days = Math.floor(hrs / 24); if (days < 7) return days + "d ago"; return new Date(dateStr).toLocaleDateString(); } catch(e) { return ""; } }
 
-/* ========== SETTINGS ========== */
 function openSettings() { document.getElementById("settingsOverlay").classList.add("open"); }
 function closeSettings() { document.getElementById("settingsOverlay").classList.remove("open"); }
-document.addEventListener("click", function(e) {
-  if (e.target === document.getElementById("settingsOverlay")) closeSettings();
-});
+document.addEventListener("click", function(e) { if (e.target === document.getElementById("settingsOverlay")) closeSettings(); });
 
-/* ========== TABS ========== */
-function showTab(name) {
-  document.querySelectorAll(".section").forEach(function(s) { s.classList.remove("active"); });
-  document.querySelectorAll(".tab").forEach(function(t) { t.classList.remove("active"); });
-  document.getElementById("sec-" + name).classList.add("active");
-  document.getElementById("tab-" + name).classList.add("active");
-}
+function showTab(name) { document.querySelectorAll(".section").forEach(function(s) { s.classList.remove("active"); }); document.querySelectorAll(".tab").forEach(function(t) { t.classList.remove("active"); }); document.getElementById("sec-" + name).classList.add("active"); document.getElementById("tab-" + name).classList.add("active"); }
 function toggleNewPost() { document.getElementById("newPostArea").classList.toggle("open"); }
 
-/* ========== PHOTO ========== */
-function setAvatarDisplay(el, photoUrl, initial) {
-  if (photoUrl) { el.innerHTML = "<img src='" + escapeHtml(photoUrl) + "'>"; }
-  else { el.innerHTML = initial || "?"; }
-}
-function handlePhotoUpload(event) {
-  var file = event.target.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    localStorage.setItem("profile_photo", e.target.result);
-    document.getElementById("editPhoto").value = e.target.result;
-    updateAllAvatars();
-  };
-  reader.readAsDataURL(file);
-}
-function previewPhotoUrl() {
-  var url = document.getElementById("editPhoto").value.trim();
-  if (url) localStorage.setItem("profile_photo", url);
-  updateAllAvatars();
-}
-function updateAllAvatars() {
-  var photo = localStorage.getItem("profile_photo") || profileData.profile_picture_url || "";
-  var initial = (profileData.full_name || "?").charAt(0).toUpperCase();
-  setAvatarDisplay(document.getElementById("avatarMain"), photo, initial);
-  setAvatarDisplay(document.getElementById("settingsAvatar"), photo, initial);
-}
+function setAvatarDisplay(el, photoUrl, initial) { if (photoUrl) { el.innerHTML = "<img src='" + escapeHtml(photoUrl) + "'>"; } else { el.innerHTML = initial || "?"; } }
+function handlePhotoUpload(event) { var file = event.target.files[0]; if (!file) return; var reader = new FileReader(); reader.onload = function(e) { localStorage.setItem("profile_photo", e.target.result); document.getElementById("editPhoto").value = e.target.result; updateAllAvatars(); }; reader.readAsDataURL(file); }
+function previewPhotoUrl() { var url = document.getElementById("editPhoto").value.trim(); if (url) localStorage.setItem("profile_photo", url); updateAllAvatars(); }
+function updateAllAvatars() { var photo = localStorage.getItem("profile_photo") || profileData.profile_picture_url || ""; var initial = (profileData.full_name || "?").charAt(0).toUpperCase(); setAvatarDisplay(document.getElementById("avatarMain"), photo, initial); setAvatarDisplay(document.getElementById("settingsAvatar"), photo, initial); }
 
-/* ========== PROFILE ========== */
 async function loadProfile() {
   try {
     var res = await getProfile();
@@ -444,11 +321,59 @@ async function loadProfile() {
     document.getElementById("scanNameLabel").innerText = user.full_name || "your name";
     if (user.profile_picture_url) localStorage.setItem("profile_photo", user.profile_picture_url);
     updateAllAvatars();
-    var links = "";
-    if (user.linkedin_url) links += "<a href='" + escapeHtml(user.linkedin_url) + "' target='_blank'>LinkedIn</a>";
-    if (user.instagram_url) links += "<a href='" + escapeHtml(user.instagram_url) + "' target='_blank'>Instagram</a>";
-    if (user.twitter_url) links += "<a href='" + escapeHtml(user.twitter_url) + "' target='_blank'>Twitter</a>";
-    document.getElementById("socialLinks").innerHTML = links;
+
+    // ✅ SOCIAL PROOF SECTION
+    var proofHtml = "";
+
+    if (user.instagram_url) {
+      var igHandle = user.instagram_url.replace(/https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/$/, "");
+      proofHtml += "<a href='" + escapeHtml(user.instagram_url) + "' target='_blank' class='social-row'>"
+        + "<svg class='s-icon' viewBox='0 0 24 24' fill='none' stroke='#E4405F' stroke-width='2'><rect x='2' y='2' width='20' height='20' rx='5'/><circle cx='12' cy='12' r='5'/><circle cx='17.5' cy='6.5' r='1.5' fill='#E4405F' stroke='none'/></svg>"
+        + "<span class='s-handle'>@" + escapeHtml(igHandle) + "</span>"
+        + "<span class='s-badge'>LINKED</span></a>";
+    } else {
+      proofHtml += "<div class='social-row not-linked'>"
+        + "<svg class='s-icon' viewBox='0 0 24 24' fill='none' stroke='#ccc' stroke-width='2'><rect x='2' y='2' width='20' height='20' rx='5'/><circle cx='12' cy='12' r='5'/></svg>"
+        + "<span class='s-handle'>Instagram not linked</span></div>";
+    }
+
+    if (user.twitter_url) {
+      var twHandle = user.twitter_url.replace(/https?:\/\/(www\.)?(twitter|x)\.com\//i, "").replace(/\/$/, "");
+      proofHtml += "<a href='" + escapeHtml(user.twitter_url) + "' target='_blank' class='social-row'>"
+        + "<svg class='s-icon' viewBox='0 0 24 24' fill='#1a1a1a'><path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg>"
+        + "<span class='s-handle'>@" + escapeHtml(twHandle) + "</span>"
+        + "<span class='s-badge'>LINKED</span></a>";
+    } else {
+      proofHtml += "<div class='social-row not-linked'>"
+        + "<svg class='s-icon' viewBox='0 0 24 24' fill='#ccc'><path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg>"
+        + "<span class='s-handle'>X / Twitter not linked</span></div>";
+    }
+
+    if (user.linkedin_url) {
+      var liHandle = user.linkedin_url.replace(/https?:\/\/(www\.)?linkedin\.com\/in\//i, "").replace(/\/$/, "");
+      proofHtml += "<a href='" + escapeHtml(user.linkedin_url) + "' target='_blank' class='social-row'>"
+        + "<svg class='s-icon' viewBox='0 0 24 24' fill='#0077B5'><path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/></svg>"
+        + "<span class='s-handle'>" + escapeHtml(liHandle) + "</span>"
+        + "<span class='s-badge'>LINKED</span></a>";
+    } else {
+      proofHtml += "<div class='social-row not-linked'>"
+        + "<svg class='s-icon' viewBox='0 0 24 24' fill='#ccc'><path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/></svg>"
+        + "<span class='s-handle'>LinkedIn not linked</span></div>";
+    }
+
+    document.getElementById("socialProof").innerHTML = proofHtml;
+
+    // Name lock
+    var nameLocked = localStorage.getItem("name_locked");
+    if (nameLocked === "true" && user.full_name && user.full_name.trim() !== "") {
+      var nameInput = document.getElementById("editName");
+      nameInput.readOnly = true;
+      nameInput.style.background = "#f0f8f0";
+      nameInput.style.color = "#2d6a4f";
+      nameInput.style.border = "1px solid #a8d5ba";
+      nameInput.style.cursor = "not-allowed";
+    }
+
     document.getElementById("editPhoto").value = localStorage.getItem("profile_photo") || user.profile_picture_url || "";
     document.getElementById("editName").value = user.full_name || "";
     document.getElementById("editUsername").value = user.username || "";
@@ -465,293 +390,55 @@ async function saveProfile() {
   try {
     var photoVal = document.getElementById("editPhoto").value.trim();
     if (photoVal) localStorage.setItem("profile_photo", photoVal);
-    var payload = {
-      full_name: document.getElementById("editName").value,
-      username: document.getElementById("editUsername").value,
-      bio: document.getElementById("editBio").value,
-      linkedin_url: document.getElementById("editLinkedin").value,
-      instagram_url: document.getElementById("editInstagram").value,
-      twitter_url: document.getElementById("editTwitter").value
-    };
+    var payload = { full_name: document.getElementById("editName").value, username: document.getElementById("editUsername").value, bio: document.getElementById("editBio").value, linkedin_url: document.getElementById("editLinkedin").value, instagram_url: document.getElementById("editInstagram").value, twitter_url: document.getElementById("editTwitter").value };
     if (photoVal && !photoVal.startsWith("data:")) payload.profile_picture_url = photoVal;
     await updateProfile(payload);
     document.getElementById("settingsMsg").innerText = "Profile saved!";
-    updateAllAvatars();
-    loadProfile();
+    updateAllAvatars(); loadProfile();
   } catch (err) { document.getElementById("settingsErr").innerText = "Error: " + err.message; }
 }
 
-/* ========== HELPERS ========== */
-function buildCardLink(text, verdict) {
-  return "card.html?name=" + encodeURIComponent(profileData.full_name || "")
-    + "&username=" + encodeURIComponent(profileData.username || "")
-    + "&text=" + encodeURIComponent(text || "")
-    + "&verdict=" + encodeURIComponent(verdict || "accepted");
-}
+function buildCardLink(text, verdict) { return "card.html?name=" + encodeURIComponent(profileData.full_name || "") + "&username=" + encodeURIComponent(profileData.username || "") + "&text=" + encodeURIComponent(text || "") + "&verdict=" + encodeURIComponent(verdict || "accepted"); }
+function buildStmtPreviewHtml(url) { if (!url) return ""; var safeUrl = url; if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl; return "<div class='stmt-preview'><img src='https://image.thum.io/get/" + escapeHtml(safeUrl) + "'><a href='" + escapeHtml(safeUrl) + "' target='_blank'>🔗 Source ↗</a></div>"; }
+function buildPreviewHtml(url, title, desc, img) { if (!url) return ""; var safeUrl = url; if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl; if (!img) img = "https://image.thum.io/get/" + safeUrl; return "<div class='preview-box'><img src='" + escapeHtml(img) + "'><div class='pv-body'>" + (title ? "<div class='pv-title'>" + escapeHtml(title) + "</div>" : "") + (desc ? "<div class='pv-desc'>" + escapeHtml(desc) + "</div>" : "") + "<a href='" + escapeHtml(safeUrl) + "' target='_blank'>Read source ↗</a></div></div>"; }
+function reactionBadgeHtml(reaction) { if (reaction === "accepted") return "<span class='reaction-badge badge-accepted'>Accepted ✓</span>"; if (reaction === "modified") return "<span class='reaction-badge badge-modified'>Modified ✎</span>"; if (reaction === "denied") return "<span class='reaction-badge badge-denied'>Denied ✗</span>"; return ""; }
 
-function buildStmtPreviewHtml(url) {
-  if (!url) return "";
-  var safeUrl = url;
-  if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl;
-  return "<div class='stmt-preview'>"
-    + "<img src='https://image.thum.io/get/" + escapeHtml(safeUrl) + "'>"
-    + "<a href='" + escapeHtml(safeUrl) + "' target='_blank'>🔗 Source ↗</a>"
-    + "</div>";
-}
+function onUrlInput() { clearTimeout(urlTimer); var url = document.getElementById("sourceUrl").value.trim(); if (!url || url.length < 10) { document.getElementById("postPreviewArea").innerHTML = ""; return; } urlTimer = setTimeout(function() { fetchPostPreview(url); }, 800); }
+async function fetchPostPreview(url) { var area = document.getElementById("postPreviewArea"); if (!/^https?:\/\//i.test(url)) url = "https://" + url; area.innerHTML = buildPreviewHtml(url, "Loading...", "", ""); var title = "", desc = "", ogImg = ""; try { var res = await fetch("https://r.jina.ai/" + url); var html = await res.text(); function pick(regex) { var m = html.match(regex); return m && m[1] ? m[1].trim() : ""; } title = pick(/<title[^>]*>([^<]+)<\/title>/i); desc = pick(/meta\s+name="description"\s+content="([^"]+)"/i); ogImg = pick(/property="og:image"\s+content="([^"]+)"/i); var ogTitle = pick(/property="og:title"\s+content="([^"]+)"/i); var ogDesc = pick(/property="og:description"\s+content="([^"]+)"/i); if (ogTitle) title = ogTitle; if (ogDesc) desc = ogDesc; } catch (e) {} var stmtBox = document.getElementById("newStatement"); if (!stmtBox.value.trim() && title) stmtBox.value = title; area.innerHTML = buildPreviewHtml(url, title || "News Article", desc, ogImg); }
 
-function buildPreviewHtml(url, title, desc, img) {
-  if (!url) return "";
-  var safeUrl = url;
-  if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl;
-  if (!img) img = "https://image.thum.io/get/" + safeUrl;
-  return "<div class='preview-box'>"
-    + "<img src='" + escapeHtml(img) + "'>"
-    + "<div class='pv-body'>"
-    + (title ? "<div class='pv-title'>" + escapeHtml(title) + "</div>" : "")
-    + (desc ? "<div class='pv-desc'>" + escapeHtml(desc) + "</div>" : "")
-    + "<a href='" + escapeHtml(safeUrl) + "' target='_blank'>Read source ↗</a>"
-    + "</div></div>";
-}
-
-// ✅ BADGE (shown AFTER reacting)
-function reactionBadgeHtml(reaction) {
-  if (reaction === "accepted") return "<span class='reaction-badge badge-accepted'>Accepted ✓</span>";
-  if (reaction === "modified") return "<span class='reaction-badge badge-modified'>Modified ✎</span>";
-  if (reaction === "denied") return "<span class='reaction-badge badge-denied'>Denied ✗</span>";
-  return "";
-}
-
-/* ========== AUTO PREVIEW ========== */
-function onUrlInput() {
-  clearTimeout(urlTimer);
-  var url = document.getElementById("sourceUrl").value.trim();
-  if (!url || url.length < 10) {
-    document.getElementById("postPreviewArea").innerHTML = "";
-    return;
-  }
-  urlTimer = setTimeout(function() { fetchPostPreview(url); }, 800);
-}
-
-async function fetchPostPreview(url) {
-  var area = document.getElementById("postPreviewArea");
-  if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-  area.innerHTML = buildPreviewHtml(url, "Loading...", "", "");
-  var title = "", desc = "", ogImg = "";
-  try {
-    var res = await fetch("https://r.jina.ai/" + url);
-    var html = await res.text();
-    function pick(regex) { var m = html.match(regex); return m && m[1] ? m[1].trim() : ""; }
-    title = pick(/<title[^>]*>([^<]+)<\/title>/i);
-    desc = pick(/meta\s+name="description"\s+content="([^"]+)"/i);
-    ogImg = pick(/property="og:image"\s+content="([^"]+)"/i);
-    var ogTitle = pick(/property="og:title"\s+content="([^"]+)"/i);
-    var ogDesc = pick(/property="og:description"\s+content="([^"]+)"/i);
-    if (ogTitle) title = ogTitle;
-    if (ogDesc) desc = ogDesc;
-  } catch (e) {}
-  var stmtBox = document.getElementById("newStatement");
-  if (!stmtBox.value.trim() && title) stmtBox.value = title;
-  area.innerHTML = buildPreviewHtml(url, title || "News Article", desc, ogImg);
-}
-
-/* ========== TRUTH LOG ========== */
 async function loadMyStatements() {
   try {
-    var res = await getMyStatements();
-    var list = [];
+    var res = await getMyStatements(); var list = [];
     if (res.response && res.response.statements) list = res.response.statements;
     else if (Array.isArray(res.response)) list = res.response;
     document.getElementById("statStatements").innerText = list.length;
     document.getElementById("statScore").innerText = list.length * 10;
-    var container = document.getElementById("myStatements");
-    container.innerHTML = "";
-    if (list.length === 0) {
-      container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No truths yet. Post your first statement!</p></div>";
-      return;
-    }
+    var container = document.getElementById("myStatements"); container.innerHTML = "";
+    if (list.length === 0) { container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No truths yet. Post your first statement!</p></div>"; return; }
     window._stmtTexts = {};
     for (var i = 0; i < list.length; i++) {
-      var item = list[i];
-      var id = item._id;
-      window._stmtTexts[id] = item.text || "";
+      var item = list[i]; var id = item._id; window._stmtTexts[id] = item.text || "";
       var previewHtml = item.source_url ? buildStmtPreviewHtml(item.source_url) : "";
-
-      // ✅ CHECK REACTION
-      var reaction = getReactionForItem(item);
-      var hasReaction = !!reaction;
-      var actionHtml = "";
-
-      if (hasReaction) {
-        // ✅ SHOW BADGE (Accepted ✓) + Generate Card
-        actionHtml = "<div class='result-row'>"
-          + reactionBadgeHtml(reaction)
-          + "<a class='gen-card-link' href='" + buildCardLink(item.text || "", reaction) + "'>🎨 Generate Card</a>"
-          + "</div>";
-      } else {
-        // ✅ SHOW BUTTONS (Accept / Modify / Deny)
-        actionHtml = "<div class='card-actions' id='actions-" + id + "'>"
-          + "<button class='btn-accept' onclick=\"reactToStatement('" + id + "','accepted')\">Accept</button>"
-          + "<button class='btn-modify' onclick=\"reactToStatement('" + id + "','modified')\">Modify</button>"
-          + "<button class='btn-deny' onclick=\"reactToStatement('" + id + "','denied')\">Deny</button>"
-          + "</div>";
-      }
-
-      container.innerHTML += "<div class='card'><p>" + escapeHtml(item.text || "") + "</p>"
-        + previewHtml
-        + "<div class='card-date'>" + timeAgo(item.Created_Date) + "</div>"
-        + actionHtml
-        + "<div id='result-" + id + "'></div>"
-        + "</div>";
+      var reaction = getReactionForItem(item); var hasReaction = !!reaction; var actionHtml = "";
+      if (hasReaction) { actionHtml = "<div class='result-row'>" + reactionBadgeHtml(reaction) + "<a class='gen-card-link' href='" + buildCardLink(item.text || "", reaction) + "'>🎨 Generate Card</a></div>"; }
+      else { actionHtml = "<div class='card-actions' id='actions-" + id + "'><button class='btn-accept' onclick=\"reactToStatement('" + id + "','accepted')\">Accept</button><button class='btn-modify' onclick=\"reactToStatement('" + id + "','modified')\">Modify</button><button class='btn-deny' onclick=\"reactToStatement('" + id + "','denied')\">Deny</button></div>"; }
+      container.innerHTML += "<div class='card'><p>" + escapeHtml(item.text || "") + "</p>" + previewHtml + "<div class='card-date'>" + timeAgo(item.Created_Date) + "</div>" + actionHtml + "<div id='result-" + id + "'></div></div>";
     }
   } catch (err) { console.error(err); }
 }
 
-async function reactToStatement(id, action) {
-  try {
-    await reactStatement(id, action);
-    storeReaction(id, action);
-    var actionsEl = document.getElementById("actions-" + id);
-    if (actionsEl) actionsEl.style.display = "none";
-    var resultEl = document.getElementById("result-" + id);
-    var text = (window._stmtTexts && window._stmtTexts[id]) || "";
-    if (resultEl) {
-      resultEl.innerHTML = "<div class='result-row'>"
-        + reactionBadgeHtml(action)
-        + "<a class='gen-card-link' href='" + buildCardLink(text, action) + "'>🎨 Generate Card</a>"
-        + "</div>";
-    }
-    setTimeout(function() { loadMyStatements(); }, 1500);
-  } catch (err) { console.error(err); }
-}
+async function reactToStatement(id, action) { try { await reactStatement(id, action); storeReaction(id, action); var actionsEl = document.getElementById("actions-" + id); if (actionsEl) actionsEl.style.display = "none"; var resultEl = document.getElementById("result-" + id); var text = (window._stmtTexts && window._stmtTexts[id]) || ""; if (resultEl) { resultEl.innerHTML = "<div class='result-row'>" + reactionBadgeHtml(action) + "<a class='gen-card-link' href='" + buildCardLink(text, action) + "'>🎨 Generate Card</a></div>"; } setTimeout(function() { loadMyStatements(); }, 1500); } catch (err) { console.error(err); } }
 
-/* ========== POST STATEMENT ========== */
-async function postStatement() {
-  document.getElementById("postMsg").innerText = "";
-  document.getElementById("postErr").innerText = "";
-  document.getElementById("postReactSection").style.display = "none";
-  document.getElementById("postReactResult").innerHTML = "";
-  var text = document.getElementById("newStatement").value.trim();
-  var sourceUrl = document.getElementById("sourceUrl").value.trim();
-  if (!text) { document.getElementById("postErr").innerText = "Write something first"; return; }
-  try {
-    var res = await addStatement(text, sourceUrl);
-    lastPostedId = "";
-    if (res.response) { lastPostedId = res.response.id || res.response._id || ""; }
-    if (res.id) lastPostedId = res.id;
-    if (res._id) lastPostedId = res._id;
-    lastPostedText = text;
-    document.getElementById("postMsg").innerText = "Posted! Now react:";
-    document.getElementById("postReactSection").style.display = "block";
-  } catch (err) { document.getElementById("postErr").innerText = "Error: " + err.message; }
-}
+async function postStatement() { document.getElementById("postMsg").innerText = ""; document.getElementById("postErr").innerText = ""; document.getElementById("postReactSection").style.display = "none"; document.getElementById("postReactResult").innerHTML = ""; var text = document.getElementById("newStatement").value.trim(); var sourceUrl = document.getElementById("sourceUrl").value.trim(); if (!text) { document.getElementById("postErr").innerText = "Write something first"; return; } try { var res = await addStatement(text, sourceUrl); lastPostedId = ""; if (res.response) { lastPostedId = res.response.id || res.response._id || ""; } if (res.id) lastPostedId = res.id; if (res._id) lastPostedId = res._id; lastPostedText = text; document.getElementById("postMsg").innerText = "Posted! Now react:"; document.getElementById("postReactSection").style.display = "block"; } catch (err) { document.getElementById("postErr").innerText = "Error: " + err.message; } }
 
-async function reactToPost(action) {
-  if (!lastPostedId) return;
-  try {
-    await reactStatement(lastPostedId, action);
-    storeReaction(lastPostedId, action);
-    document.getElementById("postReactResult").innerHTML = "<div class='result-row'>"
-      + reactionBadgeHtml(action)
-      + "<a class='gen-card-link' href='" + buildCardLink(lastPostedText, action) + "'>🎨 Generate Card</a>"
-      + "</div>";
-    document.getElementById("newStatement").value = "";
-    document.getElementById("sourceUrl").value = "";
-    document.getElementById("postPreviewArea").innerHTML = "";
-    setTimeout(function() {
-      document.getElementById("postReactSection").style.display = "none";
-      document.getElementById("postMsg").innerText = "";
-      document.getElementById("postReactResult").innerHTML = "";
-      document.getElementById("newPostArea").classList.remove("open");
-      lastPostedId = ""; lastPostedText = "";
-      loadMyStatements();
-    }, 2000);
-  } catch (err) { document.getElementById("postReactResult").innerHTML = "<span class='error'>Error: " + err.message + "</span>"; }
-}
+async function reactToPost(action) { if (!lastPostedId) return; try { await reactStatement(lastPostedId, action); storeReaction(lastPostedId, action); document.getElementById("postReactResult").innerHTML = "<div class='result-row'>" + reactionBadgeHtml(action) + "<a class='gen-card-link' href='" + buildCardLink(lastPostedText, action) + "'>🎨 Generate Card</a></div>"; document.getElementById("newStatement").value = ""; document.getElementById("sourceUrl").value = ""; document.getElementById("postPreviewArea").innerHTML = ""; setTimeout(function() { document.getElementById("postReactSection").style.display = "none"; document.getElementById("postMsg").innerText = ""; document.getElementById("postReactResult").innerHTML = ""; document.getElementById("newPostArea").classList.remove("open"); lastPostedId = ""; lastPostedText = ""; loadMyStatements(); }, 2000); } catch (err) { document.getElementById("postReactResult").innerHTML = "<span class='error'>Error: " + err.message + "</span>"; } }
 
-/* ========== MEDIA SCAN ========== */
 var newsCounter = 0;
-async function scanNews() {
-  document.getElementById("newsError").innerText = "";
-  document.getElementById("newsInfo").innerText = "Scanning...";
-  document.getElementById("newsResults").innerHTML = "";
-  var query = (profileData.full_name || "").trim();
-  if (!query) { document.getElementById("newsError").innerText = "Set your Full Name in Settings first."; document.getElementById("newsInfo").innerText = ""; return; }
-  try {
-    var res = await searchNews(query);
-    var articles = res.articles || [];
-    var container = document.getElementById("newsResults");
-    if (articles.length === 0) {
-      container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No news found.</p></div>";
-      document.getElementById("newsInfo").innerText = ""; return;
-    }
-    document.getElementById("newsInfo").innerText = articles.length + " articles found";
-    for (var i = 0; i < articles.length; i++) {
-      var a = articles[i];
-      newsCounter++;
-      var nid = "news-" + newsCounter;
-      window._newsTexts[nid] = a.title || "";
-      window._newsUrls[nid] = a.url || "";
+async function scanNews() { document.getElementById("newsError").innerText = ""; document.getElementById("newsInfo").innerText = "Scanning..."; document.getElementById("newsResults").innerHTML = ""; var query = (profileData.full_name || "").trim(); if (!query) { document.getElementById("newsError").innerText = "Set your Full Name in Settings first."; document.getElementById("newsInfo").innerText = ""; return; } try { var res = await searchNews(query); var articles = res.articles || []; var container = document.getElementById("newsResults"); if (articles.length === 0) { container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No news found.</p></div>"; document.getElementById("newsInfo").innerText = ""; return; } document.getElementById("newsInfo").innerText = articles.length + " articles found"; for (var i = 0; i < articles.length; i++) { var a = articles[i]; newsCounter++; var nid = "news-" + newsCounter; window._newsTexts[nid] = a.title || ""; window._newsUrls[nid] = a.url || ""; var imgSrc = a.image || ""; if (!imgSrc && a.url) { var safeUrl = a.url; if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl; imgSrc = "https://image.thum.io/get/" + safeUrl; } var imgHtml = imgSrc ? "<img src='" + escapeHtml(imgSrc) + "'>" : ""; var srcLabel = a.source ? "<span style='font-size:11px;color:#999;'>via " + escapeHtml(a.source) + "</span>" : ""; container.innerHTML += "<div class='news-card'>" + imgHtml + "<h4>" + escapeHtml(a.title || "") + "</h4><p>" + escapeHtml(a.description || "") + "</p>" + srcLabel + "<br><a href='" + escapeHtml(a.url || "") + "' target='_blank'>Read full article ↗</a><div class='news-actions' id='nactions-" + nid + "'><button class='btn-accept' onclick=\"reactToNews('" + nid + "','accepted')\">Accept</button><button class='btn-modify' onclick=\"reactToNews('" + nid + "','modified')\">Modify</button><button class='btn-deny' onclick=\"reactToNews('" + nid + "','denied')\">Deny</button></div><div id='nresult-" + nid + "'></div></div>"; } } catch (err) { document.getElementById("newsError").innerText = "Error: " + err.message; document.getElementById("newsInfo").innerText = ""; } }
 
-      // ✅ IMAGE FALLBACK
-      var imgSrc = a.image || "";
-      if (!imgSrc && a.url) {
-        var safeUrl = a.url;
-        if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl;
-        imgSrc = "https://image.thum.io/get/" + safeUrl;
-      }
-      var imgHtml = imgSrc ? "<img src='" + escapeHtml(imgSrc) + "'>" : "";
+async function reactToNews(nid, action) { var title = (window._newsTexts && window._newsTexts[nid]) || ""; var url = (window._newsUrls && window._newsUrls[nid]) || ""; try { var res = await addStatement(action.toUpperCase() + ": " + title, url); var stmtId = ""; if (res.response) { stmtId = res.response.id || res.response._id || ""; } if (res.id) stmtId = res.id; if (res._id) stmtId = res._id; if (stmtId) { await reactStatement(stmtId, action); storeReaction(stmtId, action); } var actionsEl = document.getElementById("nactions-" + nid); if (actionsEl) actionsEl.style.display = "none"; var resultEl = document.getElementById("nresult-" + nid); if (resultEl) { resultEl.innerHTML = "<div class='result-row'>" + reactionBadgeHtml(action) + "<a class='gen-card-link' href='" + buildCardLink(title, action) + "'>🎨 Generate Card</a></div>"; } loadMyStatements(); } catch (err) { var el = document.getElementById("nresult-" + nid); if (el) el.innerHTML = "<span class='error'>Error: " + err.message + "</span>"; } }
 
-      var srcLabel = a.source ? "<span style='font-size:11px;color:#999;'>via " + escapeHtml(a.source) + "</span>" : "";
-
-      container.innerHTML += "<div class='news-card'>" + imgHtml
-        + "<h4>" + escapeHtml(a.title || "") + "</h4>"
-        + "<p>" + escapeHtml(a.description || "") + "</p>"
-        + srcLabel
-        + "<br><a href='" + escapeHtml(a.url || "") + "' target='_blank'>Read full article ↗</a>"
-        + "<div class='news-actions' id='nactions-" + nid + "'>"
-        + "  <button class='btn-accept' onclick=\"reactToNews('" + nid + "','accepted')\">Accept</button>"
-        + "  <button class='btn-modify' onclick=\"reactToNews('" + nid + "','modified')\">Modify</button>"
-        + "  <button class='btn-deny' onclick=\"reactToNews('" + nid + "','denied')\">Deny</button>"
-        + "</div><div id='nresult-" + nid + "'></div></div>";
-    }
-  } catch (err) { document.getElementById("newsError").innerText = "Error: " + err.message; document.getElementById("newsInfo").innerText = ""; }
-}
-
-async function reactToNews(nid, action) {
-  var title = (window._newsTexts && window._newsTexts[nid]) || "";
-  var url = (window._newsUrls && window._newsUrls[nid]) || "";
-  try {
-    var res = await addStatement(action.toUpperCase() + ": " + title, url);
-    var stmtId = "";
-    if (res.response) { stmtId = res.response.id || res.response._id || ""; }
-    if (res.id) stmtId = res.id;
-    if (res._id) stmtId = res._id;
-    if (stmtId) {
-      await reactStatement(stmtId, action);
-      storeReaction(stmtId, action);
-    }
-    var actionsEl = document.getElementById("nactions-" + nid);
-    if (actionsEl) actionsEl.style.display = "none";
-    var resultEl = document.getElementById("nresult-" + nid);
-    if (resultEl) {
-      resultEl.innerHTML = "<div class='result-row'>"
-        + reactionBadgeHtml(action)
-        + "<a class='gen-card-link' href='" + buildCardLink(title, action) + "'>🎨 Generate Card</a>"
-        + "</div>";
-    }
-    loadMyStatements();
-  } catch (err) {
-    var el = document.getElementById("nresult-" + nid);
-    if (el) el.innerHTML = "<span class='error'>Error: " + err.message + "</span>";
-  }
-}
-
-function logout() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user_id");
-  localStorage.removeItem("profile_photo");
-  window.location.href = "login.html";
-}
+function logout() { localStorage.removeItem("token"); localStorage.removeItem("user_id"); localStorage.removeItem("profile_photo"); window.location.href = "login.html"; }
 
 loadProfile();
 loadMyStatements();
