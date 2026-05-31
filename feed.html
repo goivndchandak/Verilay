@@ -23,16 +23,18 @@ body {
   display: flex; align-items: center; gap: 10px;
   position: sticky; top: 0; z-index: 100;
 }
-.topbar-logo { height: 28px; width: auto; flex-shrink: 0; object-fit: contain; }
-.search-bar {
-  flex: 1; display: flex; align-items: center;
-  background: rgba(255,255,255,0.12);
-  border-radius: 10px; padding: 7px 12px; gap: 8px;
-  cursor: pointer; transition: background 0.2s;
-}
-.search-bar:hover { background: rgba(255,255,255,0.18); }
-.search-bar svg { width: 16px; height: 16px; color: #8a95a5; flex-shrink: 0; }
-.search-bar span { font-size: 13px; color: #8a95a5; }
+<!-- ✅ TOP BAR — LOGO LEFT (bigger) + SEARCH CENTER (shorter) + NOTIF RIGHT -->
+<div class="topbar">
+  <img src="logo-white.png" alt="Verilay" class="topbar-logo" onerror="this.outerHTML='<span style=\'font-size:18px;font-weight:800;\'><span style=color:#FF9933>✓</span><span style=color:white>erilay</span></span>'">
+  <div class="search-bar" onclick="window.location.href='explore.html'">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+    <span>Search...</span>
+  </div>
+  <button class="notif-btn" onclick="toggleNotif()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+    <span class="notif-dot"></span>
+  </button>
+</div>
 .notif-btn {
   background: none; border: none; cursor: pointer;
   padding: 6px; border-radius: 8px; position: relative;
