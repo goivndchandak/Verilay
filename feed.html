@@ -3,88 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <title>Feed - Verilay</title>
-<meta name="viewport" content="width=device-width, initial-scale=: 85px; color: #1a1a1a; }<meta name="viewport" content="width=device-width, initial-scale=1">
-
-/* ✅ TOPBAR — BIGGER LOGO, SHORTER SEARCH */
-.topbar { background: #1d3557; padding: 10px 14px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; }
-.topbar-left { flex-shrink: 0; margin-right: 12px; }
-.topbar-left img { height: 36px; width: auto; display: block; }
-.topbar-center { flex: 1; max-width: 180px; }
-.search-bar { display: flex; align-items: center; background: rgba(255,255,255,0.12); border-radius: 10px; padding: 7px 12px; gap: 8px; cursor: pointer; }
-.search-bar:hover { background: rgba(255,255,255,0.18); }
-.search-bar svg { width: 14px; height: 14px; color: #8a95a5; flex-shrink: 0; }
-.search-bar span { font-size: 12px; color: #8a95a5; }
-.topbar-right { flex-shrink: 0; margin-left: auto; }
-.notif-btn { background: none; border: none; cursor: pointer; padding: 6px; border-radius: 8px; position: relative; display: flex; align-items: center; justify-content: center; }
-.notif-btn:hover { background: rgba(255,255,255,0.1); }
-.notif-btn svg { width: 22px; height: 22px; }
-.notif-dot { position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; background: #FF9933; border-radius: 50%; border: 1.5px solid #1d3557; }
-
-.container { padding: 10px 14px; max-width: 600px; margin: auto; }
-.card { background: white; padding: 16px; margin-bottom: 10px; border-radius: 14px; border: 1px solid #e8ecf0; }
-.header-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
-.avatar { width: 40px; height: 40px; border-radius: 50%; background: #fff5e6; color: #e68a2e; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; border: 2px solid #ffe0b2; }
-.avatar img { width: 100%; height: 100%; object-fit: cover; }
-.header-text { flex: 1; }
-.name { font-weight: 700; color: #1a1a1a; font-size: 15px; }
-.owner-reaction { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 600; margin-top: 2px; }
-.r-accepted { color: #3a7d5c; } .r-modified { color: #c47a1a; } .r-denied { color: #b84040; } .r-pending { color: #bbb; }
-.r-accepted::before { content: "✓ "; } .r-modified::before { content: "✎ "; } .r-denied::before { content: "✗ "; }
-.header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.time-stamp { font-size: 12px; color: #b0b8c4; font-weight: 500; }
-.menu-wrap { position: relative; }
-.menu-btn { background: none; border: none; cursor: pointer; color: #b0b8c4; font-size: 18px; padding: 4px 6px; line-height: 1; border-radius: 6px; }
-.menu-btn:hover { background: #f0f2f5; color: #6b7a8d; }
-.menu-dropdown { display: none; position: absolute; top: 28px; right: 0; z-index: 50; background: white; border: 1px solid #e8ecf0; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.1); min-width: 150px; }
-.menu-dropdown.open { display: block; }
-.menu-option { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 13px; font-weight: 500; color: #1a1a1a; cursor: pointer; border: none; background: none; width: 100%; text-align: left; }
-.menu-option:hover { background: #f5f7fa; }
-.menu-option svg { width: 16px; height: 16px; color: #9aa5b4; }
-.menu-divider { height: 1px; background: #f0f2f5; }
-.stmt { font-size: 15px; line-height: 1.65; color: #2a2a2a; margin-bottom: 12px; }
-.link-preview { border: 1px solid #e8ecf0; border-radius: 12px; overflow: hidden; margin-bottom: 12px; display: flex; align-items: stretch; background: #fafbfc; text-decoration: none; }
-.link-preview .lp-image { width: 80px; min-height: 70px; flex-shrink: 0; background: #e8ecf0; overflow: hidden; }
-.link-preview .lp-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.link-preview .lp-body { padding: 10px 12px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
-.link-preview .lp-title { font-size: 13px; font-weight: 600; color: #1a1a1a; line-height: 1.3; margin-bottom: 4px; }
-.link-preview .lp-source { font-size: 11px; color: #9aa5b4; }
-.card-date { font-size: 12px; color: #b0b8c4; margin-bottom: 10px; font-weight: 500; }
-.community-row { display: flex; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid #f0f2f5; }
-.react-btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 16px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1.5px solid #d0d4da; background: white; color: #6b7a8d; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; top: 0; user-select: none; }
-.react-btn:hover { background: #f8f9fb; border-color: #b0b8c4; color: #4a5568; }
-.react-btn .react-emoji { font-size: 13px; line-height: 1; filter: grayscale(100%); transition: all 0.3s ease; }
-.react-btn .react-text { font-size: 11px; font-weight: 600; }
-.react-btn .react-count { font-size: 11px; font-weight: 700; margin-left: 1px; }
-.react-btn.active-vouch { background: white; border: 1.5px solid #2d6a4f; color: #2d6a4f; top: -5px; box-shadow: 0 3px 10px rgba(45,106,79,0.1); transform: scale(1.03); }
-.react-btn.active-vouch .react-emoji { filter: grayscale(0%); }
-.react-btn.active-counter { background: white; border: 1.5px solid #555; color: #333; top: -5px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); transform: scale(1.03); }
-.react-btn.active-counter .react-emoji { filter: grayscale(0%); }
-.bottomnav { position: fixed; bottom: 0; left: 0; right: 0; height: 72px; z-index: 100; display: flex; justify-content: center; align-items: flex-end; pointer-events: none; }
-.nav-bar { width: 100%; max-width: 420px; background: #edf1f7; border-radius: 22px 22px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); display: flex; justify-content: space-around; align-items: center; height: 58px; padding: 0 40px; pointer-events: all; }
-.nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #9aa5b4; font-size: 10px; font-weight: 600; gap: 2px; transition: all 0.3s ease; position: relative; padding: 6px 20px; }
-.nav-item .nav-icon { width: 20px; height: 20px; }
-.nav-item .nav-label { font-size: 10px; }
-.nav-item.active { color: #1d3557; top: -18px; }
-.nav-item.active .icon-circle { background: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(29,53,87,0.15); border: 2px solid #dce3ed; }
-.nav-item.active .nav-icon { width: 22px; height: 22px; }
-.nav-item.active .nav-label { margin-top: 4px; color: #1d3557; font-weight: 700; }
-.nav-item:not(.active) .icon-circle { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
-.muted { color: #999; font-size: 14px; text-align: center; padding: 40px 20px; }
-.notif-panel { display: none; position: fixed; top: 56px; left: 10px; right: 10px; max-width: 400px; background: white; border-radius: 14px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); z-index: 200; padding: 16px; max-height: 60vh; overflow-y: auto; }
-.notif-panel.open { display: block; }
-.notif-panel h3 { font-size: 15px; color: #1d3557; margin-bottom: 12px; }
-.notif-item { padding: 10px 0; border-bottom: 1px solid #f0f2f5; font-size: 13px; color: #555; line-height: 1.4; }
-.notif-item:last-child { border-bottom: none; }
-.notif-time { font-size: 11px; color: #b0b8c4; margin-top: 4px; }
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#f5f5f5;padding-bottom:85px;color:#1a1a1a;}
+.topbar{background:#1d3557;padding:10px 14px;display:flex;align-items:center;position:sticky;top:0;z-index:100;}
+.topbar-left{flex-shrink:0;margin-right:12px;height:36px;}
+.topbar-center{flex:1;max-width:180px;}
+.search-bar{display:flex;align-items:center;background:rgba(255,255,255,0.12);border-radius:10px;padding:7px 12px;gap:8px;cursor:pointer;}
+.search-bar:hover{background:rgba(255,255,255,0.18);}
+.search-bar svg{width:14px;height:14px;color:#8a95a5;flex-shrink:0;}
+.search-bar span{font-size:12px;color:#8a95a5;}
+.topbar-right{flex-shrink:0;margin-left:auto;}
+.notif-btn{background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;position:relative;display:flex;align-items:center;justify-content:center;}
+.notif-btn:hover{background:rgba(255,255,255,0.1);}
+.notif-btn svg{width:22px;height:22px;}
+.notif-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;background:#FF9933;border-radius:50%;border:1.5px solid #1d3557;}
+.container{padding:10px 14px;max-width:600px;margin:auto;}
+.card{background:white;padding:16px;margin-bottom:10px;border-radius:14px;border:1px solid #e8ecf0;}
+.header-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;}
+.avatar{width:40px;height:40px;border-radius:50%;background:#fff5e6;color:#e68a2e;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;border:2px solid #ffe0b2;}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+.header-text{flex:1;}
+.name{font-weight:700;color:#1a1a1a;font-size:15px;}
+.owner-reaction{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:600;margin-top:2px;}
+.r-accepted{color:#3a7d5c;}.r-modified{color:#c47a1a;}.r-denied{color:#b84040;}.r-pending{color:#bbb;}
+.r-accepted::before{content:"✓ ";}.r-modified::before{content:"✎ ";}.r-denied::before{content:"✗ ";}
+.header-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.time-stamp{font-size:12px;color:#b0b8c4;font-weight:500;}
+.menu-wrap{position:relative;}
+.menu-btn{background:none;border:none;cursor:pointer;color:#b0b8c4;font-size:18px;padding:4px 6px;line-height:1;border-radius:6px;}
+.menu-btn:hover{background:#f0f2f5;color:#6b7a8d;}
+.menu-dropdown{display:none;position:absolute;top:28px;right:0;z-index:50;background:white;border:1px solid #e8ecf0;border-radius:10px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.1);min-width:150px;}
+.menu-dropdown.open{display:block;}
+.menu-option{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:13px;font-weight:500;color:#1a1a1a;cursor:pointer;border:none;background:none;width:100%;text-align:left;}
+.menu-option:hover{background:#f5f7fa;}
+.menu-option svg{width:16px;height:16px;color:#9aa5b4;}
+.menu-divider{height:1px;background:#f0f2f5;}
+.stmt{font-size:15px;line-height:1.65;color:#2a2a2a;margin-bottom:12px;}
+.link-preview{border:1px solid #e8ecf0;border-radius:12px;overflow:hidden;margin-bottom:12px;display:flex;align-items:stretch;background:#fafbfc;text-decoration:none;}
+.link-preview .lp-image{width:80px;min-height:70px;flex-shrink:0;background:#e8ecf0;overflow:hidden;}
+.link-preview .lp-image img{width:100%;height:100%;object-fit:cover;display:block;}
+.link-preview .lp-body{padding:10px 12px;flex:1;display:flex;flex-direction:column;justify-content:center;}
+.link-preview .lp-title{font-size:13px;font-weight:600;color:#1a1a1a;line-height:1.3;margin-bottom:4px;}
+.link-preview .lp-source{font-size:11px;color:#9aa5b4;}
+.card-date{font-size:12px;color:#b0b8c4;margin-bottom:10px;font-weight:500;}
+.community-row{display:flex;align-items:center;gap:8px;padding-top:10px;border-top:1px solid #f0f2f5;}
+.react-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:16px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid #d0d4da;background:white;color:#6b7a8d;transition:all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);position:relative;top:0;user-select:none;}
+.react-btn:hover{background:#f8f9fb;border-color:#b0b8c4;color:#4a5568;}
+.react-btn .react-emoji{font-size:13px;line-height:1;filter:grayscale(100%);transition:all 0.3s ease;}
+.react-btn .react-text{font-size:11px;font-weight:600;}
+.react-btn .react-count{font-size:11px;font-weight:700;margin-left:1px;}
+.react-btn.active-vouch{background:white;border:1.5px solid #2d6a4f;color:#2d6a4f;top:-5px;box-shadow:0 3px 10px rgba(45,106,79,0.1);transform:scale(1.03);}
+.react-btn.active-vouch .react-emoji{filter:grayscale(0%);}
+.react-btn.active-counter{background:white;border:1.5px solid #555;color:#333;top:-5px;box-shadow:0 3px 10px rgba(0,0,0,0.08);transform:scale(1.03);}
+.react-btn.active-counter .react-emoji{filter:grayscale(0%);}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;height:72px;z-index:100;display:flex;justify-content:center;align-items:flex-end;pointer-events:none;}
+.nav-bar{width:100%;max-width:420px;background:#edf1f7;border-radius:22px 22px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,0.06);display:flex;justify-content:space-around;align-items:center;height:58px;padding:0 40px;pointer-events:all;}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#9aa5b4;font-size:10px;font-weight:600;gap:2px;transition:all 0.3s ease;position:relative;padding:6px 20px;}
+.nav-item .nav-icon{width:20px;height:20px;}
+.nav-item .nav-label{font-size:10px;}
+.nav-item.active{color:#1d3557;top:-18px;}
+.nav-item.active .icon-circle{background:white;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(29,53,87,0.15);border:2px solid #dce3ed;}
+.nav-item.active .nav-icon{width:22px;height:22px;}
+.nav-item.active .nav-label{margin-top:4px;color:#1d3557;font-weight:700;}
+.nav-item:not(.active) .icon-circle{width:40px;height:40px;display:flex;align-items:center;justify-content:center;}
+.muted{color:#999;font-size:14px;text-align:center;padding:40px 20px;}
+.notif-panel{display:none;position:fixed;top:56px;left:10px;right:10px;max-width:400px;background:white;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.15);z-index:200;padding:16px;max-height:60vh;overflow-y:auto;}
+.notif-panel.open{display:block;}
+.notif-panel h3{font-size:15px;color:#1d3557;margin-bottom:12px;}
+.notif-item{padding:10px 0;border-bottom:1px solid #f0f2f5;font-size:13px;color:#555;line-height:1.4;}
+.notif-item:last-child{border-bottom:none;}
+.notif-time{font-size:11px;color:#b0b8c4;margin-top:4px;}
 </style>
 </head>
 <body>
 
-<!-- ✅ TOPBAR -->
 <div class="topbar">
-  <div class="topbar-left">
-    <img src="logo.png" alt="Verilay">
-  </div>
+  <div class="topbar-left" id="logoContainer"></div>
   <div class="topbar-center">
     <div class="search-bar" onclick="window.location.href='explore.html'">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
@@ -100,32 +95,32 @@
 </div>
 
 <div class="notif-panel" id="notifPanel">
-  <h3>🔔 Notifications</h3>
+  <h3>Notifications</h3>
   <div class="notif-item"><strong>Welcome to Verilay!</strong> Post your first truth.<div class="notif-time">Just now</div></div>
   <div class="notif-item">Link social accounts for verified status.<div class="notif-time">1m ago</div></div>
 </div>
 
 <div class="container" id="feed"><div class="muted">Loading feed...</div></div>
 
-<!-- ✅ BOTTOM NAV -->
-<div class="bottomnav">
-  <div class="nav-bar">
-    <a href="feed.html" class="nav-item active">
-      <div class="icon-circle"><svg class="nav-icon" viewBox="0 0 24 24" fill="#1d3557" stroke="none"><path d="M12 3L4 9v11a1 1 0 001 1h4v-6h6v6h4a1 1 0 001-1V9l-8-6z"/></svg></div>
-      <span class="nav-label">Feed</span>
-    </a>
-    <a href="dashboard.html" class="nav-item">
-      <div class="icon-circle"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#9aa5b4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg></div>
-      <span class="nav-label">Profile</span>
-    </a>
-  </div>
-</div>
+<div class="bottomnav"><div class="nav-bar">
+  <a href="feed.html" class="nav-item active"><div class="icon-circle"><svg class="nav-icon" viewBox="0 0 24 24" fill="#1d3557" stroke="none"><path d="M12 3L4 9v11a1 1 0 001 1h4v-6h6v6h4a1 1 0 001-1V9l-8-6z"/></svg></div><span class="nav-label">Feed</span></a>
+  <a href="dashboard.html" class="nav-item"><div class="icon-circle"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#9aa5b4" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg></div><span class="nav-label">Profile</span></a>
+</div></div>
 
 <script src="js/api.js"></script>
 <script>
+// ✅ LOGO VIA JAVASCRIPT — avoids HTML tag issues
+(function(){
+  var logo = document.createElement("img");
+  logo.src = "logo.png";
+  logo.alt = "Verilay";
+  logo.style.cssText = "height:36px;width:auto;display:block;";
+  document.getElementById("logoContainer").appendChild(logo);
+})();
+
 let userCache={};
-var VOUCH_ICON="<span class='react-emoji'>🤝</span>";
-var COUNTER_ICON="<span class='react-emoji'>✋</span>";
+var VOUCH_ICON="<span class='react-emoji'>\uD83E\uDD1D</span>";
+var COUNTER_ICON="<span class='react-emoji'>\u270B</span>";
 function getStoredReactions(){try{return JSON.parse(localStorage.getItem("verilay_stmt_reactions")||"{}")}catch(e){return{}}}
 function getStoredReaction(id){return getStoredReactions()[id]||""}
 function getCommunity(){try{return JSON.parse(localStorage.getItem("verilay_community")||"{}")}catch(e){return{}}}
@@ -135,7 +130,7 @@ function saveCounts(o){localStorage.setItem("verilay_counts",JSON.stringify(o))}
 function escapeHtml(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 function timeAgo(d){if(!d)return"";try{var diff=Date.now()-new Date(d).getTime();var m=Math.floor(diff/60000);if(m<1)return"Just now";if(m<60)return m+"m ago";var h=Math.floor(m/60);if(h<24)return h+"h ago";var dy=Math.floor(h/24);if(dy<7)return dy+"d ago";return new Date(d).toLocaleDateString()}catch(e){return""}}
 async function getUserInfo(uid){if(!uid)return{name:"User",photo:""};if(userCache[uid])return userCache[uid];try{var r=await fetch(DATA_BASE+"/User/"+uid,{method:"GET",headers:authHeaders()});var d=await r.json();var u=d.response||{};userCache[uid]={name:u.full_name||"User",photo:u.profile_picture_url||""};return userCache[uid]}catch(e){return{name:"User",photo:""}}}
-function getPreviewHTML(url,title){if(!url)return"";if(!/^https?:\/\//i.test(url))url="https://"+url;var domain="";try{domain=new URL(url).hostname.replace("www.","")}catch(e){domain=url}var pt=title||"News Article";if(pt.length>60)pt=pt.substring(0,60)+"...";return"<a href='"+escapeHtml(url)+"' target='_blank' style='text-decoration:none;'><div class='link-preview'><div class='lp-image'><img src='https://image.thum.io/get/width/160/"+escapeHtml(url)+"'></div><div class='lp-body'><div class='lp-title'>"+escapeHtml(pt)+"</div><div class='lp-source'>"+escapeHtml(domain)+"</div></div></div></a>"}
+function getPreviewHTML(url,title){if(!url)return"";if(!/^https?:\/\//i.test(url))url="https://"+url;var domain="";try{domain=new URL(url).hostname.replace("www.","")}catch(e){domain=url}var pt=title||"News";if(pt.length>60)pt=pt.substring(0,60)+"...";return"<a href='"+escapeHtml(url)+"' target='_blank' style='text-decoration:none;'><div class='link-preview'><div class='lp-image'><img src='https://image.thum.io/get/width/160/"+escapeHtml(url)+"'></div><div class='lp-body'><div class='lp-title'>"+escapeHtml(pt)+"</div><div class='lp-source'>"+escapeHtml(domain)+"</div></div></div></a>"}
 function getReaction(item){var r=(item.reaction_type||item.reaction||item.verdict||"").toLowerCase();if(r==="accepted"||r==="accept")return"accepted";if(r==="modified"||r==="modify")return"modified";if(r==="denied"||r==="deny")return"denied";var id=item._id||item.id||"";if(id){var s=getStoredReaction(id);if(s)return s}var t=(item.text||"").trim().toUpperCase();if(t.startsWith("ACCEPTED:"))return"accepted";if(t.startsWith("MODIFIED:"))return"modified";if(t.startsWith("DENIED:"))return"denied";return""}
 function cleanText(t){return(t||"").replace(/^(ACCEPTED|MODIFIED|DENIED|ACCEPT|MODIFY|DENY):\s*/i,"").trim()}
 function getOwnerReactionLabel(r){if(r==="accepted")return"<div class='owner-reaction r-accepted'>Accepted</div>";if(r==="modified")return"<div class='owner-reaction r-modified'>Modified</div>";if(r==="denied")return"<div class='owner-reaction r-denied'>Denied</div>";return"<div class='owner-reaction r-pending'>Awaiting response</div>"}
@@ -143,7 +138,7 @@ function toggleNotif(){document.getElementById("notifPanel").classList.toggle("o
 document.addEventListener("click",function(e){if(!e.target.closest('.notif-btn')&&!e.target.closest('.notif-panel'))document.getElementById("notifPanel").classList.remove("open");if(!e.target.closest('.menu-wrap'))document.querySelectorAll('.menu-dropdown.open').forEach(function(m){m.classList.remove('open')})});
 function toggleMenu(id){document.querySelectorAll('.menu-dropdown.open').forEach(function(m){if(m.id!=='menu-'+id)m.classList.remove('open')});var menu=document.getElementById('menu-'+id);if(menu)menu.classList.toggle('open')}
 function viewProfile(uid){document.querySelectorAll('.menu-dropdown.open').forEach(function(m){m.classList.remove('open')});alert("Profile view coming soon!")}
-function followUser(uid,name){document.querySelectorAll('.menu-dropdown.open').forEach(function(m){m.classList.remove('open')});var f={};try{f=JSON.parse(localStorage.getItem("verilay_follows")||"{}")}catch(e){}if(f[uid]){delete f[uid];alert("Unfollowed "+name)}else{f[uid]=true;alert("Following "+name+" ✓")}localStorage.setItem("verilay_follows",JSON.stringify(f))}
+function followUser(uid,name){document.querySelectorAll('.menu-dropdown.open').forEach(function(m){m.classList.remove('open')});var f={};try{f=JSON.parse(localStorage.getItem("verilay_follows")||"{}")}catch(e){}if(f[uid]){delete f[uid];alert("Unfollowed "+name)}else{f[uid]=true;alert("Following "+name)}localStorage.setItem("verilay_follows",JSON.stringify(f))}
 function isFollowing(uid){try{return!!JSON.parse(localStorage.getItem("verilay_follows")||"{}")[uid]}catch(e){return false}}
 function toggleCommunity(id,type){var c=getCommunity();var ct=getCounts();if(!ct[id])ct[id]={vouch:0,counter:0};var p=c[id]||"";if(p==="vouch")ct[id].vouch=Math.max(0,ct[id].vouch-1);if(p==="counter")ct[id].counter=Math.max(0,ct[id].counter-1);if(p===type){c[id]=""}else{c[id]=type;if(type==="vouch")ct[id].vouch++;if(type==="counter")ct[id].counter++}saveCommunity(c);saveCounts(ct);updateButtons(id)}
 function updateButtons(id){var c=getCommunity();var ct=getCounts();var cur=c[id]||"";var cn=ct[id]||{vouch:0,counter:0};var v=document.getElementById("vouch-"+id);var co=document.getElementById("counter-"+id);if(v){v.className="react-btn"+(cur==="vouch"?" active-vouch":"");v.innerHTML=VOUCH_ICON+"<span class='react-text'>Vouch</span>"+(cn.vouch>0?"<span class='react-count'>"+cn.vouch+"</span>":"")}if(co){co.className="react-btn"+(cur==="counter"?" active-counter":"");co.innerHTML=COUNTER_ICON+"<span class='react-text'>Counter</span>"+(cn.counter>0?"<span class='react-count'>"+cn.counter+"</span>":"")}}
@@ -165,7 +160,7 @@ async function loadFeed(){
       html+="<div class='card'>";
       html+="<div class='header-row'>"+avatarHtml+"<div class='header-text'><div class='name'>"+escapeHtml(ownerInfo.name)+"</div>"+getOwnerReactionLabel(reaction)+"</div>";
       html+="<div class='header-right'>";if(timeText)html+="<span class='time-stamp'>"+timeText+"</span>";
-      html+="<div class='menu-wrap'><button class='menu-btn' onclick=\"event.stopPropagation();toggleMenu('"+stmtId+"')\">&#x22EF;</button>";
+      html+="<div class='menu-wrap'><button class='menu-btn' onclick=\"event.stopPropagation();toggleMenu('"+stmtId+"')\">\u22EF</button>";
       html+="<div class='menu-dropdown' id='menu-"+stmtId+"'>";
       html+="<button class='menu-option' onclick=\"viewProfile('"+(ownerId||"")+"')\"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='10'/><circle cx='12' cy='10' r='3'/><path d='M6.168 18.849A4 4 0 0110 16h4a4 4 0 013.834 2.855'/></svg>View Profile</button>";
       html+="<div class='menu-divider'></div>";
@@ -186,4 +181,3 @@ loadFeed();
 </script>
 </body>
 </html>
-<style>
