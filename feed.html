@@ -10,7 +10,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
   background: #f5f5f5;
-  padding-bottom: 70px;
+  padding-bottom: 85px;
   color: #1a1a1a;
 }
 
@@ -65,7 +65,7 @@ body {
 
 .date { font-size: 11px; color: #bbb; }
 
-/* ✅ VOUCH + COUNTER BUTTONS */
+/* VOUCH + COUNTER */
 .community-row {
   display: flex; align-items: center; gap: 8px;
   margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0;
@@ -78,33 +78,67 @@ body {
   transition: all 0.2s ease;
 }
 .react-btn:hover { background: #f8f8f8; }
-
-.react-btn.active-vouch {
-  background: #eaf5ee;
-  border-color: #3a7d5c;
-  color: #3a7d5c;
-}
-
-.react-btn.active-counter {
-  background: #fff5e6;
-  border-color: #c47a1a;
-  color: #c47a1a;
-}
-
-.react-count {
-  font-size: 11px; color: #bbb; margin-left: 2px;
-}
+.react-btn.active-vouch { background: #eaf5ee; border-color: #3a7d5c; color: #3a7d5c; }
+.react-btn.active-counter { background: #fff5e6; border-color: #c47a1a; color: #c47a1a; }
+.react-count { font-size: 11px; color: #bbb; margin-left: 2px; }
 
 .muted { color: #999; font-size: 14px; text-align: center; padding: 40px 20px; }
 
+/* ============================================================
+   ✅ BOTTOM NAV — POP-UP ACTIVE
+   ============================================================ */
 .bottomnav {
   position: fixed; bottom: 0; left: 0; right: 0;
-  background: #fff4e6; display: flex; justify-content: space-around;
-  align-items: center; height: 60px; border-top: 1px solid #eee;
+  height: 72px; z-index: 100;
+  display: flex; justify-content: center; align-items: flex-end;
+  pointer-events: none;
 }
-.bottomnav a { text-decoration: none; text-align: center; color: #999; font-size: 11px; }
-.bottomnav a.active { color: #1d3557; font-weight: bold; }
-.bottomnav a span { font-size: 22px; display: block; }
+.nav-bar {
+  width: 100%; max-width: 420px;
+  background: #edf1f7;
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  display: flex; justify-content: space-around;
+  align-items: center; height: 58px;
+  padding: 0 40px;
+  pointer-events: all;
+  position: relative;
+}
+.nav-item {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-decoration: none; color: #9aa5b4;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.3px; gap: 2px;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 6px 20px;
+}
+.nav-item .nav-icon { width: 20px; height: 20px; transition: all 0.3s ease; }
+.nav-item .nav-label { font-size: 10px; transition: all 0.3s ease; }
+
+/* ✅ ACTIVE — POPPED UP WITH CIRCLE */
+.nav-item.active {
+  color: #1d3557;
+  top: -18px;
+}
+.nav-item.active .icon-circle {
+  background: white;
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(29,53,87,0.15);
+  border: 2px solid #dce3ed;
+}
+.nav-item.active .nav-icon { width: 22px; height: 22px; }
+.nav-item.active .nav-label { margin-top: 4px; color: #1d3557; font-weight: 700; }
+
+/* INACTIVE */
+.nav-item:not(.active) .icon-circle {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-item:not(.active):hover { color: #6b7a8d; }
 </style>
 </head>
 
@@ -117,9 +151,27 @@ body {
 
 <div class="container" id="feed"><div class="muted">Loading feed...</div></div>
 
+<!-- ✅ BOTTOM NAV — FEED ACTIVE -->
 <div class="bottomnav">
-  <a href="feed.html" class="active"><span>🏠</span>Feed</a>
-  <a href="dashboard.html"><span>👤</span>Profile</a>
+  <div class="nav-bar">
+    <a href="feed.html" class="nav-item active">
+      <div class="icon-circle">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="#1d3557" stroke="none">
+          <path d="M12 3L4 9v11a1 1 0 001 1h4v-6h6v6h4a1 1 0 001-1V9l-8-6z"/>
+        </svg>
+      </div>
+      <span class="nav-label">Feed</span>
+    </a>
+    <a href="dashboard.html" class="nav-item">
+      <div class="icon-circle">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#9aa5b4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M20 21a8 8 0 10-16 0"/>
+        </svg>
+      </div>
+      <span class="nav-label">Profile</span>
+    </a>
+  </div>
 </div>
 
 <script src="js/api.js"></script>
@@ -127,29 +179,20 @@ body {
 
 let userCache = {};
 
-// Owner reactions (from profile tab)
 function getStoredReactions() {
   try { return JSON.parse(localStorage.getItem("verilay_stmt_reactions") || "{}"); } catch(e) { return {}; }
 }
-function getStoredReaction(stmtId) {
-  return getStoredReactions()[stmtId] || "";
-}
+function getStoredReaction(stmtId) { return getStoredReactions()[stmtId] || ""; }
 
-// Community reactions (Vouch / Counter)
 function getCommunity() {
   try { return JSON.parse(localStorage.getItem("verilay_community") || "{}"); } catch(e) { return {}; }
 }
-function saveCommunity(obj) {
-  localStorage.setItem("verilay_community", JSON.stringify(obj));
-}
+function saveCommunity(obj) { localStorage.setItem("verilay_community", JSON.stringify(obj)); }
 
-// Counts
 function getCounts() {
   try { return JSON.parse(localStorage.getItem("verilay_counts") || "{}"); } catch(e) { return {}; }
 }
-function saveCounts(obj) {
-  localStorage.setItem("verilay_counts", JSON.stringify(obj));
-}
+function saveCounts(obj) { localStorage.setItem("verilay_counts", JSON.stringify(obj)); }
 
 function escapeHtml(str) {
   return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
@@ -216,28 +259,15 @@ function getOwnerReactionLabel(reaction) {
   return "<div class='owner-reaction r-pending'>Awaiting response</div>";
 }
 
-// ✅ TOGGLE VOUCH / COUNTER
 function toggleCommunity(stmtId, type) {
   var community = getCommunity();
   var counts = getCounts();
-
   if (!counts[stmtId]) counts[stmtId] = { vouch: 0, counter: 0 };
-
   var prev = community[stmtId] || "";
-
-  // Remove previous
   if (prev === "vouch") counts[stmtId].vouch = Math.max(0, counts[stmtId].vouch - 1);
   if (prev === "counter") counts[stmtId].counter = Math.max(0, counts[stmtId].counter - 1);
-
-  // Toggle
-  if (prev === type) {
-    community[stmtId] = "";
-  } else {
-    community[stmtId] = type;
-    if (type === "vouch") counts[stmtId].vouch++;
-    if (type === "counter") counts[stmtId].counter++;
-  }
-
+  if (prev === type) { community[stmtId] = ""; }
+  else { community[stmtId] = type; if (type === "vouch") counts[stmtId].vouch++; if (type === "counter") counts[stmtId].counter++; }
   saveCommunity(community);
   saveCounts(counts);
   updateButtons(stmtId);
@@ -248,15 +278,12 @@ function updateButtons(stmtId) {
   var counts = getCounts();
   var current = community[stmtId] || "";
   var c = counts[stmtId] || { vouch: 0, counter: 0 };
-
   var vouchBtn = document.getElementById("vouch-" + stmtId);
   var counterBtn = document.getElementById("counter-" + stmtId);
-
   if (vouchBtn) {
     vouchBtn.className = "react-btn" + (current === "vouch" ? " active-vouch" : "");
     vouchBtn.innerHTML = "🤝 Vouch" + (c.vouch > 0 ? " <span class='react-count'>" + c.vouch + "</span>" : "");
   }
-
   if (counterBtn) {
     counterBtn.className = "react-btn" + (current === "counter" ? " active-counter" : "");
     counterBtn.innerHTML = "✋ Counter" + (c.counter > 0 ? " <span class='react-count'>" + c.counter + "</span>" : "");
@@ -267,82 +294,39 @@ async function loadFeed(){
   try {
     var res = await getFeed();
     var list = res.response.statements || res.response.results || [];
-
-    if (list.length === 0) {
-      document.getElementById("feed").innerHTML = "<div class='muted'>No posts yet.</div>";
-      return;
-    }
-
+    if (list.length === 0) { document.getElementById("feed").innerHTML = "<div class='muted'>No posts yet.</div>"; return; }
     var community = getCommunity();
     var counts = getCounts();
     var html = "";
-
     for (var i = 0; i < list.length; i++) {
       var item = list[i];
       var rawText = item.text || "";
       var url = item.source_url || "";
       var created = item.Created_Date || item.created_date || "";
       var stmtId = item._id || item.id || "";
-
       var reaction = getReaction(item);
       var text = cleanText(rawText);
-
       var ownerId = item["Created By"] || item.created_by || item.user_id || item.creator;
       var ownerInfo = await getUserInfo(ownerId);
-
       var avatarHtml = "";
-      if (ownerInfo.photo) {
-        avatarHtml = "<div class='avatar'><img src='" + escapeHtml(ownerInfo.photo) + "'></div>";
-      } else {
-        avatarHtml = "<div class='avatar'>" + escapeHtml((ownerInfo.name || "?").charAt(0)) + "</div>";
-      }
-
+      if (ownerInfo.photo) { avatarHtml = "<div class='avatar'><img src='" + escapeHtml(ownerInfo.photo) + "'></div>"; }
+      else { avatarHtml = "<div class='avatar'>" + escapeHtml((ownerInfo.name || "?").charAt(0)) + "</div>"; }
       var myReaction = community[stmtId] || "";
       var c = counts[stmtId] || { vouch: 0, counter: 0 };
-
       html += "<div class='card'>";
-
-      // HEADER
-      html += "<div class='header-row'>";
-      html += avatarHtml;
-      html += "<div class='header-text'>";
+      html += "<div class='header-row'>" + avatarHtml + "<div class='header-text'>";
       html += "<div class='name'>" + escapeHtml(ownerInfo.name) + "</div>";
       html += getOwnerReactionLabel(reaction);
       html += "</div></div>";
-
-      // TEXT
       html += "<div class='stmt'>" + escapeHtml(text) + "</div>";
-
-      // PREVIEW
       if (url) html += getPreviewHTML(url);
-
-      // DATE
       if (created) html += "<div class='date'>" + timeAgo(created) + "</div>";
-
-      // ✅ VOUCH + COUNTER
       html += "<div class='community-row'>";
-
-      html += "<button class='react-btn" + (myReaction === "vouch" ? " active-vouch" : "") + "'"
-        + " id='vouch-" + stmtId + "'"
-        + " onclick=\"toggleCommunity('" + stmtId + "','vouch')\">"
-        + "🤝 Vouch"
-        + (c.vouch > 0 ? " <span class='react-count'>" + c.vouch + "</span>" : "")
-        + "</button>";
-
-      html += "<button class='react-btn" + (myReaction === "counter" ? " active-counter" : "") + "'"
-        + " id='counter-" + stmtId + "'"
-        + " onclick=\"toggleCommunity('" + stmtId + "','counter')\">"
-        + "✋ Counter"
-        + (c.counter > 0 ? " <span class='react-count'>" + c.counter + "</span>" : "")
-        + "</button>";
-
-      html += "</div>";
-
-      html += "</div>";
+      html += "<button class='react-btn" + (myReaction === "vouch" ? " active-vouch" : "") + "' id='vouch-" + stmtId + "' onclick=\"toggleCommunity('" + stmtId + "','vouch')\">🤝 Vouch" + (c.vouch > 0 ? " <span class='react-count'>" + c.vouch + "</span>" : "") + "</button>";
+      html += "<button class='react-btn" + (myReaction === "counter" ? " active-counter" : "") + "' id='counter-" + stmtId + "' onclick=\"toggleCommunity('" + stmtId + "','counter')\">✋ Counter" + (c.counter > 0 ? " <span class='react-count'>" + c.counter + "</span>" : "") + "</button>";
+      html += "</div></div>";
     }
-
     document.getElementById("feed").innerHTML = html;
-
   } catch(err) {
     document.getElementById("feed").innerHTML = "<div class='muted'>Error: " + escapeHtml(err.message) + "</div>";
   }
