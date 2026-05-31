@@ -14,6 +14,7 @@ body {
   color: #1a1a1a;
 }
 
+/* TOPBAR */
 .topbar {
   background: #1d3557; color: white;
   padding: 15px 20px; font-size: 20px; font-weight: bold;
@@ -27,62 +28,172 @@ body {
 
 .container { padding: 10px 14px; max-width: 600px; margin: auto; }
 
+/* ============================================================
+   ✅ FEED CARD — CLEAN, ELEGANT
+   ============================================================ */
 .card {
-  background: white; padding: 16px; margin-bottom: 10px;
-  border-radius: 12px; border: 1px solid rgba(0,0,0,0.06);
+  background: white; padding: 18px;
+  margin-bottom: 12px; border-radius: 14px;
+  border: 1px solid #e8ecf0;
 }
 
+/* HEADER ROW */
 .header-row {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 12px;
 }
+
 .avatar {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: #e8ecf0; color: #1d3557; font-size: 15px; font-weight: bold;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: #e8f0e8; color: #2d6a4f; font-size: 16px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden; flex-shrink: 0;
+  border: 2px solid #c8dcc8;
 }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
-.header-text { flex: 1; }
-.name { font-weight: 700; color: #1d3557; font-size: 14px; }
 
-.owner-reaction { font-size: 12px; font-weight: 600; margin-top: 2px; }
+.header-text { flex: 1; }
+.name { font-weight: 700; color: #1a1a1a; font-size: 15px; }
+
+/* OWNER REACTION BADGE */
+.owner-reaction {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 12px; font-weight: 600; margin-top: 2px;
+}
 .r-accepted { color: #3a7d5c; }
 .r-modified { color: #c47a1a; }
 .r-denied { color: #b84040; }
 .r-pending { color: #bbb; }
 
-.stmt { font-size: 15px; line-height: 1.5; color: #2a2a2a; margin-bottom: 10px; }
+.r-accepted::before { content: "✓ "; }
+.r-modified::before { content: "✎ "; }
+.r-denied::before { content: "✗ "; }
 
-.link-preview {
-  border: 1px solid #eee; border-radius: 10px;
-  overflow: hidden; margin-bottom: 8px;
-}
-.link-preview img { width: 100%; height: 180px; object-fit: cover; display: block; }
-.link-preview .source {
-  padding: 10px 12px; font-size: 12px; color: #1d3557;
-  text-decoration: none; display: block; background: #fafafa;
-}
-
-.date { font-size: 11px; color: #bbb; }
-
-/* VOUCH + COUNTER */
-.community-row {
+/* HEADER RIGHT — TIME + MENU */
+.header-right {
   display: flex; align-items: center; gap: 8px;
-  margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+
+.time-stamp {
+  font-size: 12px; color: #b0b8c4; font-weight: 500;
+}
+
+.menu-btn {
+  background: none; border: none; cursor: pointer;
+  color: #b0b8c4; font-size: 18px; padding: 2px 4px;
+  line-height: 1; letter-spacing: 1px;
+}
+.menu-btn:hover { color: #6b7a8d; }
+
+/* STATEMENT TEXT */
+.stmt {
+  font-size: 15px; line-height: 1.65; color: #2a2a2a;
+  margin-bottom: 12px;
+}
+
+/* LINK PREVIEW */
+.link-preview {
+  border: 1px solid #e8ecf0; border-radius: 12px;
+  overflow: hidden; margin-bottom: 12px;
+  display: flex; align-items: stretch;
+  background: #fafbfc;
+}
+.link-preview .lp-image {
+  width: 80px; min-height: 70px; flex-shrink: 0;
+  background: #e8ecf0; overflow: hidden;
+}
+.link-preview .lp-image img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.link-preview .lp-body {
+  padding: 10px 12px; flex: 1; display: flex;
+  flex-direction: column; justify-content: center;
+}
+.link-preview .lp-title {
+  font-size: 13px; font-weight: 600; color: #1a1a1a;
+  line-height: 1.3; margin-bottom: 4px;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.link-preview .lp-source {
+  font-size: 11px; color: #9aa5b4;
+}
+
+/* BOTTOM DATE */
+.card-date {
+  font-size: 12px; color: #b0b8c4; margin-bottom: 10px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   ✅ VOUCH & COUNTER — PILL BUTTONS WITH POP-UP
+   ============================================================ */
+.community-row {
+  display: flex; align-items: center;
+  gap: 12px; padding-top: 10px;
+  border-top: 1px solid #f0f2f5;
+  position: relative;
+  min-height: 44px;
 }
 
 .react-btn {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;
-  cursor: pointer; border: 1px solid #e0e0e0; background: white; color: #555;
-  transition: all 0.2s ease;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 18px; border-radius: 22px;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; border: 1.5px solid #e0e4ea;
+  background: #f5f7fa; color: #8a95a5;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative; top: 0;
+  user-select: none;
 }
-.react-btn:hover { background: #f8f8f8; }
-.react-btn.active-vouch { background: #eaf5ee; border-color: #3a7d5c; color: #3a7d5c; }
-.react-btn.active-counter { background: #fff5e6; border-color: #c47a1a; color: #c47a1a; }
-.react-count { font-size: 11px; color: #bbb; margin-left: 2px; }
 
-.muted { color: #999; font-size: 14px; text-align: center; padding: 40px 20px; }
+.react-btn:hover {
+  background: #eef1f5; border-color: #d0d7e0;
+  color: #6b7a8d;
+}
+
+.react-btn .react-icon-svg {
+  width: 16px; height: 16px;
+  transition: all 0.3s ease;
+}
+
+.react-btn .react-text {
+  font-size: 13px; font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.react-btn .react-count {
+  font-size: 13px; font-weight: 700;
+  margin-left: 2px;
+  transition: all 0.3s ease;
+}
+
+/* ✅ VOUCH ACTIVE — POPPED UP */
+.react-btn.active-vouch {
+  background: white;
+  border: 2px solid #a8d5ba;
+  color: #2d6a4f;
+  top: -6px;
+  box-shadow: 0 4px 14px rgba(45,106,79,0.12);
+  transform: scale(1.05);
+}
+.react-btn.active-vouch .react-icon-svg { color: #2d6a4f; }
+.react-btn.active-vouch .react-text { color: #2d6a4f; }
+.react-btn.active-vouch .react-count { color: #2d6a4f; }
+
+/* ✅ COUNTER ACTIVE — POPPED UP */
+.react-btn.active-counter {
+  background: white;
+  border: 2px solid #e0d5c0;
+  color: #8a7340;
+  top: -6px;
+  box-shadow: 0 4px 14px rgba(154,123,45,0.12);
+  transform: scale(1.05);
+}
+.react-btn.active-counter .react-icon-svg { color: #8a7340; }
+.react-btn.active-counter .react-text { color: #8a7340; }
+.react-btn.active-counter .react-count { color: #8a7340; }
 
 /* ============================================================
    ✅ BOTTOM NAV — POP-UP ACTIVE
@@ -111,34 +222,24 @@ body {
   font-size: 10px; font-weight: 600;
   letter-spacing: 0.3px; gap: 2px;
   transition: all 0.3s ease;
-  position: relative;
-  padding: 6px 20px;
+  position: relative; padding: 6px 20px;
 }
 .nav-item .nav-icon { width: 20px; height: 20px; transition: all 0.3s ease; }
 .nav-item .nav-label { font-size: 10px; transition: all 0.3s ease; }
-
-/* ✅ ACTIVE — POPPED UP WITH CIRCLE */
-.nav-item.active {
-  color: #1d3557;
-  top: -18px;
-}
+.nav-item.active { color: #1d3557; top: -18px; }
 .nav-item.active .icon-circle {
-  background: white;
-  width: 50px; height: 50px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 16px rgba(29,53,87,0.15);
-  border: 2px solid #dce3ed;
+  background: white; width: 50px; height: 50px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(29,53,87,0.15); border: 2px solid #dce3ed;
 }
 .nav-item.active .nav-icon { width: 22px; height: 22px; }
 .nav-item.active .nav-label { margin-top: 4px; color: #1d3557; font-weight: 700; }
-
-/* INACTIVE */
 .nav-item:not(.active) .icon-circle {
-  width: 40px; height: 40px;
-  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
 }
 .nav-item:not(.active):hover { color: #6b7a8d; }
+
+.muted { color: #999; font-size: 14px; text-align: center; padding: 40px 20px; }
 </style>
 </head>
 
@@ -225,13 +326,26 @@ async function getUserInfo(userId){
   } catch(e){ return { name: "User", photo: "" }; }
 }
 
-function getPreviewHTML(url){
+// ✅ SVG ICONS
+var VOUCH_SVG = "<svg class='react-icon-svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2L3 7v6c0 5.25 3.75 10.15 9 11.25 5.25-1.1 9-6 9-11.25V7L12 2z'/></svg>";
+
+var COUNTER_SVG = "<svg class='react-icon-svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round'><path d='M1 4v6h6'/><path d='M3.51 15a9 9 0 105.64-11.36L1 10'/></svg>";
+
+function getPreviewHTML(url, title){
   if (!url) return "";
   if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-  return "<div class='link-preview'>"
-    + "<img src='https://image.thum.io/get/" + escapeHtml(url) + "'>"
-    + "<a class='source' href='" + escapeHtml(url) + "' target='_blank'>View source ↗</a>"
-    + "</div>";
+  var domain = "";
+  try { domain = new URL(url).hostname.replace("www.", ""); } catch(e) { domain = url; }
+  var previewTitle = title || "News Article";
+  if (previewTitle.length > 60) previewTitle = previewTitle.substring(0, 60) + "...";
+
+  return "<a href='" + escapeHtml(url) + "' target='_blank' style='text-decoration:none;'>"
+    + "<div class='link-preview'>"
+    + "<div class='lp-image'><img src='https://image.thum.io/get/width/160/" + escapeHtml(url) + "'></div>"
+    + "<div class='lp-body'>"
+    + "<div class='lp-title'>" + escapeHtml(previewTitle) + "</div>"
+    + "<div class='lp-source'>" + escapeHtml(domain) + "</div>"
+    + "</div></div></a>";
 }
 
 function getReaction(item) {
@@ -253,12 +367,13 @@ function cleanText(text) {
 }
 
 function getOwnerReactionLabel(reaction) {
-  if (reaction === "accepted") return "<div class='owner-reaction r-accepted'>Accepted ✓</div>";
-  if (reaction === "modified") return "<div class='owner-reaction r-modified'>Modified ✎</div>";
-  if (reaction === "denied") return "<div class='owner-reaction r-denied'>Denied ✗</div>";
+  if (reaction === "accepted") return "<div class='owner-reaction r-accepted'>Accepted</div>";
+  if (reaction === "modified") return "<div class='owner-reaction r-modified'>Modified</div>";
+  if (reaction === "denied") return "<div class='owner-reaction r-denied'>Denied</div>";
   return "<div class='owner-reaction r-pending'>Awaiting response</div>";
 }
 
+// ✅ TOGGLE VOUCH / COUNTER
 function toggleCommunity(stmtId, type) {
   var community = getCommunity();
   var counts = getCounts();
@@ -267,7 +382,11 @@ function toggleCommunity(stmtId, type) {
   if (prev === "vouch") counts[stmtId].vouch = Math.max(0, counts[stmtId].vouch - 1);
   if (prev === "counter") counts[stmtId].counter = Math.max(0, counts[stmtId].counter - 1);
   if (prev === type) { community[stmtId] = ""; }
-  else { community[stmtId] = type; if (type === "vouch") counts[stmtId].vouch++; if (type === "counter") counts[stmtId].counter++; }
+  else {
+    community[stmtId] = type;
+    if (type === "vouch") counts[stmtId].vouch++;
+    if (type === "counter") counts[stmtId].counter++;
+  }
   saveCommunity(community);
   saveCounts(counts);
   updateButtons(stmtId);
@@ -278,15 +397,22 @@ function updateButtons(stmtId) {
   var counts = getCounts();
   var current = community[stmtId] || "";
   var c = counts[stmtId] || { vouch: 0, counter: 0 };
+
   var vouchBtn = document.getElementById("vouch-" + stmtId);
   var counterBtn = document.getElementById("counter-" + stmtId);
+
   if (vouchBtn) {
     vouchBtn.className = "react-btn" + (current === "vouch" ? " active-vouch" : "");
-    vouchBtn.innerHTML = "🤝 Vouch" + (c.vouch > 0 ? " <span class='react-count'>" + c.vouch + "</span>" : "");
+    vouchBtn.innerHTML = VOUCH_SVG
+      + "<span class='react-text'>Vouch</span>"
+      + (c.vouch > 0 ? "<span class='react-count'>" + c.vouch + "</span>" : "");
   }
+
   if (counterBtn) {
     counterBtn.className = "react-btn" + (current === "counter" ? " active-counter" : "");
-    counterBtn.innerHTML = "✋ Counter" + (c.counter > 0 ? " <span class='react-count'>" + c.counter + "</span>" : "");
+    counterBtn.innerHTML = COUNTER_SVG
+      + "<span class='react-text'>Counter</span>"
+      + (c.counter > 0 ? "<span class='react-count'>" + c.counter + "</span>" : "");
   }
 }
 
@@ -294,39 +420,97 @@ async function loadFeed(){
   try {
     var res = await getFeed();
     var list = res.response.statements || res.response.results || [];
-    if (list.length === 0) { document.getElementById("feed").innerHTML = "<div class='muted'>No posts yet.</div>"; return; }
+
+    if (list.length === 0) {
+      document.getElementById("feed").innerHTML = "<div class='muted'>No posts yet.</div>";
+      return;
+    }
+
     var community = getCommunity();
     var counts = getCounts();
     var html = "";
+
     for (var i = 0; i < list.length; i++) {
       var item = list[i];
       var rawText = item.text || "";
       var url = item.source_url || "";
       var created = item.Created_Date || item.created_date || "";
       var stmtId = item._id || item.id || "";
+
       var reaction = getReaction(item);
       var text = cleanText(rawText);
+
       var ownerId = item["Created By"] || item.created_by || item.user_id || item.creator;
       var ownerInfo = await getUserInfo(ownerId);
+
+      // ✅ AVATAR
+      var initial = (ownerInfo.name || "?").charAt(0).toUpperCase();
       var avatarHtml = "";
-      if (ownerInfo.photo) { avatarHtml = "<div class='avatar'><img src='" + escapeHtml(ownerInfo.photo) + "'></div>"; }
-      else { avatarHtml = "<div class='avatar'>" + escapeHtml((ownerInfo.name || "?").charAt(0)) + "</div>"; }
+      if (ownerInfo.photo) {
+        avatarHtml = "<div class='avatar'><img src='" + escapeHtml(ownerInfo.photo) + "'></div>";
+      } else {
+        avatarHtml = "<div class='avatar'>" + escapeHtml(initial) + "</div>";
+      }
+
       var myReaction = community[stmtId] || "";
       var c = counts[stmtId] || { vouch: 0, counter: 0 };
+
+      // ✅ TIME
+      var timeText = timeAgo(created);
+
       html += "<div class='card'>";
-      html += "<div class='header-row'>" + avatarHtml + "<div class='header-text'>";
+
+      // ✅ HEADER — Name + Reaction + Time + Menu
+      html += "<div class='header-row'>";
+      html += avatarHtml;
+      html += "<div class='header-text'>";
       html += "<div class='name'>" + escapeHtml(ownerInfo.name) + "</div>";
       html += getOwnerReactionLabel(reaction);
-      html += "</div></div>";
+      html += "</div>";
+      html += "<div class='header-right'>";
+      if (timeText) html += "<span class='time-stamp'>" + timeText + "</span>";
+      html += "<button class='menu-btn' title='Options'>⋯</button>";
+      html += "</div>";
+      html += "</div>";
+
+      // ✅ STATEMENT TEXT
       html += "<div class='stmt'>" + escapeHtml(text) + "</div>";
-      if (url) html += getPreviewHTML(url);
-      if (created) html += "<div class='date'>" + timeAgo(created) + "</div>";
+
+      // ✅ LINK PREVIEW (side-by-side style)
+      if (url) {
+        var previewTitle = text.length > 60 ? text.substring(0, 60) + "..." : text;
+        html += getPreviewHTML(url, previewTitle);
+      }
+
+      // ✅ DATE (below preview)
+      if (created) html += "<div class='card-date'>" + timeText + "</div>";
+
+      // ✅ VOUCH + COUNTER (pill buttons)
       html += "<div class='community-row'>";
-      html += "<button class='react-btn" + (myReaction === "vouch" ? " active-vouch" : "") + "' id='vouch-" + stmtId + "' onclick=\"toggleCommunity('" + stmtId + "','vouch')\">🤝 Vouch" + (c.vouch > 0 ? " <span class='react-count'>" + c.vouch + "</span>" : "") + "</button>";
-      html += "<button class='react-btn" + (myReaction === "counter" ? " active-counter" : "") + "' id='counter-" + stmtId + "' onclick=\"toggleCommunity('" + stmtId + "','counter')\">✋ Counter" + (c.counter > 0 ? " <span class='react-count'>" + c.counter + "</span>" : "") + "</button>";
-      html += "</div></div>";
+
+      html += "<button class='react-btn" + (myReaction === "vouch" ? " active-vouch" : "") + "'"
+        + " id='vouch-" + stmtId + "'"
+        + " onclick=\"toggleCommunity('" + stmtId + "','vouch')\">"
+        + VOUCH_SVG
+        + "<span class='react-text'>Vouch</span>"
+        + (c.vouch > 0 ? "<span class='react-count'>" + c.vouch + "</span>" : "")
+        + "</button>";
+
+      html += "<button class='react-btn" + (myReaction === "counter" ? " active-counter" : "") + "'"
+        + " id='counter-" + stmtId + "'"
+        + " onclick=\"toggleCommunity('" + stmtId + "','counter')\">"
+        + COUNTER_SVG
+        + "<span class='react-text'>Counter</span>"
+        + (c.counter > 0 ? "<span class='react-count'>" + c.counter + "</span>" : "")
+        + "</button>";
+
+      html += "</div>";
+
+      html += "</div>";
     }
+
     document.getElementById("feed").innerHTML = html;
+
   } catch(err) {
     document.getElementById("feed").innerHTML = "<div class='muted'>Error: " + escapeHtml(err.message) + "</div>";
   }
