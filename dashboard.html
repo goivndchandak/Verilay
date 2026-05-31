@@ -1,209 +1,148 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Profile - Verilay</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-      background: #f5f5f5; padding-bottom: 85px; color: #1a1a1a;
-    }
+<meta charset="UTF-8">
+<title>Profile - Verilay BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background: #f5f5f5; padding-bottom: 85px; color: #1a1a1a; }<title>Profile - Verilay</title>
 
-    /* ✅ TOPBAR — LOGO + SETTINGS ICON */
-    .topbar {
-      background: #1d3557; color: white;
-      padding: 12px 16px;
-      position: sticky; top: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .topbar-logo { height: 30px; width: auto; object-fit: contain; }
-    .settings-btn {
-      background: none; border: none; cursor: pointer;
-      padding: 6px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .settings-btn:hover { background: rgba(255,255,255,0.1); }
-    .settings-btn svg { width: 22px; height: 22px; }
+/* ✅ TOPBAR */
+.topbar { background: #1d3557; padding: 12px 16px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; }
+.topbar-left { flex-shrink: 0; }
+.topbar-left img { height: 30px; width: auto; display: block; }
+.topbar-spacer { flex: 1; }
+.settings-btn { background: none; border: none; cursor: pointer; padding: 6px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.settings-btn:hover { background: rgba(255,255,255,0.1); }
+.settings-btn svg { width: 22px; height: 22px; }
 
-    .content { max-width: 600px; margin: 0 auto; padding: 15px; }
+.content { max-width: 600px; margin: 0 auto; padding: 15px; }
 
-    /* PROFILE HEADER */
-    .profile-header {
-      background: white; padding: 20px; border-radius: 12px;
-      margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.06);
-    }
-    .profile-top { display: flex; align-items: flex-start; gap: 15px; }
-    .profile-left { flex: 1; text-align: center; }
-    .avatar {
-      width: 80px; height: 80px; border-radius: 50%;
-      background: #fff5e6; color: #e68a2e; font-size: 32px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 8px; overflow: hidden; border: 2px solid #ffe0b2;
-    }
-    .avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .profile-left h2 { font-size: 18px; color: #1d3557; }
-    .profile-left .username { color: #888; font-size: 13px; margin-top: 2px; }
-    .profile-left .bio { color: #666; font-size: 12px; margin-top: 6px; line-height: 1.4; }
+/* PROFILE HEADER */
+.profile-header { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.06); }
+.profile-left { text-align: center; }
+.avatar { width: 80px; height: 80px; border-radius: 50%; background: #fff5e6; color: #e68a2e; font-size: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; overflow: hidden; border: 2px solid #ffe0b2; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-left h2 { font-size: 18px; color: #1d3557; }
+.profile-left .username { color: #888; font-size: 13px; margin-top: 2px; }
+.profile-left .bio { color: #666; font-size: 12px; margin-top: 6px; line-height: 1.4; }
 
-    /* ✅ SOCIAL ICONS — SIDE BY SIDE */
-    .social-row-inline {
-      display: flex; gap: 10px; justify-content: center;
-      margin-top: 14px; flex-wrap: wrap;
-    }
-    .social-chip {
-      display: flex; align-items: center; gap: 5px;
-      padding: 5px 10px; border-radius: 8px;
-      background: #f8f9fb; border: 1px solid #eef1f5;
-      font-size: 11px; color: #555; text-decoration: none;
-      transition: background 0.2s;
-    }
-    .social-chip:hover { background: #eef1f5; }
-    .social-chip svg { width: 16px; height: 16px; flex-shrink: 0; }
-    .social-chip .sc-name { font-weight: 600; color: #1d3557; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .social-chip.not-linked { opacity: 0.3; border-style: dashed; }
+/* SOCIAL — SIDE BY SIDE */
+.social-row-inline { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+.social-chip { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 8px; background: #f8f9fb; border: 1px solid #eef1f5; font-size: 11px; color: #555; text-decoration: none; transition: background 0.2s; }
+.social-chip:hover { background: #eef1f5; }
+.social-chip svg { width: 16px; height: 16px; flex-shrink: 0; }
+.social-chip .sc-name { font-weight: 600; color: #1d3557; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.social-chip.not-linked { opacity: 0.3; border-style: dashed; }
 
-    /* STATS */
-    .stats {
-      display: flex; justify-content: space-around; background: white;
-      padding: 15px; border-radius: 12px; margin-bottom: 15px;
-      border: 1px solid rgba(0,0,0,0.06);
-    }
-    .stat { text-align: center; }
-    .stat-num { font-size: 22px; font-weight: bold; color: #1d3557; }
-    .stat-label { font-size: 11px; color: #999; }
+/* STATS */
+.stats { display: flex; justify-content: space-around; background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.06); }
+.stat { text-align: center; }
+.stat-num { font-size: 22px; font-weight: bold; color: #1d3557; }
+.stat-label { font-size: 11px; color: #999; }
 
-    /* TABS */
-    .tabs {
-      display: flex; background: white; border-radius: 12px;
-      margin-bottom: 15px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06);
-    }
-    .tab {
-      flex: 1; padding: 12px; text-align: center; cursor: pointer;
-      font-size: 13px; font-weight: bold; color: #999;
-      border-bottom: 3px solid transparent; transition: all 0.2s ease;
-    }
-    .tab.active { color: #1d3557; border-bottom-color: #1d3557; }
+/* TABS */
+.tabs { display: flex; background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); }
+.tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-size: 13px; font-weight: bold; color: #999; border-bottom: 3px solid transparent; transition: all 0.2s ease; }
+.tab.active { color: #1d3557; border-bottom-color: #1d3557; }
+.section { display: none; }
+.section.active { display: block; }
 
-    .section { display: none; }
-    .section.active { display: block; }
+/* CARDS */
+.card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); }
+.card p { font-size: 14px; line-height: 1.5; }
+.card-date { font-size: 11px; color: #bbb; margin-top: 5px; }
+.card-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-accept { padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #a8d5ba; background: #e8f5ee; color: #2d6a4f; }
+.btn-modify { padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #e8d5a3; background: #fff8e8; color: #9a7b2d; }
+.btn-deny { padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #e8b4b4; background: #fdf0f0; color: #b84040; }
+.form-group { margin-bottom: 12px; }
+.form-group label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; }
+.form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+.btn { padding: 12px 24px; background: #1d3557; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; margin-top: 10px; }
+.new-post-toggle { width: 100%; padding: 12px; background: #1d3557; color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold; margin-bottom: 12px; }
+.new-post-area { display: none; }
+.new-post-area.open { display: block; }
+.preview-box { border: 1px solid #eee; border-radius: 10px; overflow: hidden; margin-top: 10px; }
+.preview-box img { width: 100%; height: 160px; object-fit: cover; }
+.preview-box .pv-body { padding: 10px 12px; }
+.preview-box .pv-title { font-size: 13px; font-weight: bold; color: #1d3557; }
+.preview-box .pv-desc { font-size: 12px; color: #666; margin-top: 4px; }
+.preview-box a { font-size: 11px; color: #1d3557; display: block; margin-top: 6px; }
+.stmt-preview { border: 1px solid #eee; border-radius: 10px; overflow: hidden; margin-top: 8px; }
+.stmt-preview img { width: 100%; height: 160px; object-fit: cover; }
+.stmt-preview a { display: block; padding: 8px 10px; font-size: 11px; color: #1d3557; }
+.reaction-badge { display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; margin-top: 8px; }
+.badge-accepted { background: #e8f5ee; color: #2d6a4f; border: 1px solid #a8d5ba; }
+.badge-modified { background: #fff8e8; color: #9a7b2d; border: 1px solid #e8d5a3; }
+.badge-denied { background: #fdf0f0; color: #b84040; border: 1px solid #e8b4b4; }
+.gen-card-link { display: inline-block; font-size: 12px; color: #1d3557; padding: 6px 14px; border-radius: 8px; text-decoration: none; font-weight: 600; border: 1px solid #1d3557; margin-top: 8px; margin-left: 8px; }
+.gen-card-link:hover { background: #1d3557; color: white; }
+.news-card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); border-left: 4px solid #ff9933; }
+.news-card h4 { font-size: 14px; color: #1d3557; margin-bottom: 5px; }
+.news-card p { font-size: 13px; color: #555; line-height: 1.4; margin-bottom: 8px; }
+.news-card img { width: 100%; border-radius: 8px; margin-bottom: 8px; }
+.news-card a { font-size: 12px; color: #1d3557; }
+.news-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+.scan-btn { width: 100%; padding: 14px; border: none; border-radius: 10px; cursor: pointer; color: white; background: #ff9933; font-size: 15px; font-weight: bold; margin-bottom: 12px; }
+.scan-info { text-align: center; color: #888; font-size: 13px; margin-bottom: 12px; }
+.result-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 
-    /* CARDS */
-    .card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); }
-    .card p { font-size: 14px; line-height: 1.5; }
-    .card-date { font-size: 11px; color: #bbb; margin-top: 5px; }
-    .card-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+/* SETTINGS */
+.settings-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: flex-start; padding-top: 60px; }
+.settings-overlay.open { display: flex; }
+.settings-panel { background: white; width: 90%; max-width: 500px; border-radius: 14px; padding: 20px; max-height: 80vh; overflow-y: auto; }
+.settings-panel h3 { color: #1d3557; margin-bottom: 15px; }
+.close-btn { float: right; background: none; border: none; font-size: 20px; cursor: pointer; color: #999; }
+.logout-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 16px; background: #f5f5f5; color: #888; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; margin-top: 15px; }
+.logout-btn:hover { background: #eee; color: #555; }
+.logout-btn svg { width: 14px; height: 14px; }
+.photo-section { text-align: center; margin-bottom: 15px; }
+.photo-avatar { width: 80px; height: 80px; border-radius: 50%; background: #fff5e6; color: #e68a2e; font-size: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; overflow: hidden; cursor: pointer; border: 3px solid #ffe0b2; }
+.photo-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.photo-hint { font-size: 11px; color: #999; }
+.error { color: #b84040; font-size: 12px; margin-top: 5px; }
+.success { color: #3a7d5c; font-size: 12px; margin-top: 5px; }
 
-    .btn-accept { padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #a8d5ba; background: #e8f5ee; color: #2d6a4f; }
-    .btn-accept:hover { background: #d4edda; }
-    .btn-modify { padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #e8d5a3; background: #fff8e8; color: #9a7b2d; }
-    .btn-modify:hover { background: #fff0cc; }
-    .btn-deny { padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #e8b4b4; background: #fdf0f0; color: #b84040; }
-    .btn-deny:hover { background: #fce0e0; }
+/* ✅ REACTION POPUP */
+.react-popup-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 300; justify-content: center; align-items: center; padding: 20px; }
+.react-popup-overlay.open { display: flex; }
+.react-popup { background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 400px; text-align: center; }
+.react-popup h3 { color: #1d3557; font-size: 16px; margin-bottom: 6px; }
+.react-popup .rp-subtitle { color: #888; font-size: 12px; margin-bottom: 16px; }
+.react-popup .rp-badge { display: inline-block; padding: 4px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-bottom: 14px; }
+.rp-badge-accepted { background: #e8f5ee; color: #2d6a4f; }
+.rp-badge-modified { background: #fff8e8; color: #9a7b2d; }
+.rp-badge-denied { background: #fdf0f0; color: #b84040; }
+.react-popup textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; resize: none; margin-bottom: 12px; box-sizing: border-box; }
+.react-popup textarea:focus { border-color: #1d3557; outline: none; }
+.rp-btns { display: flex; gap: 8px; }
+.rp-btn-submit { flex: 1; padding: 12px; background: #1d3557; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.rp-btn-cancel { flex: 1; padding: 12px; background: #f5f5f5; color: #888; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; cursor: pointer; }
 
-    .form-group { margin-bottom: 12px; }
-    .form-group label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; }
-    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-    textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-    .btn { padding: 12px 24px; background: #1d3557; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; margin-top: 10px; }
-    .new-post-toggle { width: 100%; padding: 12px; background: #1d3557; color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold; margin-bottom: 12px; }
-    .new-post-area { display: none; }
-    .new-post-area.open { display: block; }
-
-    .preview-box { border: 1px solid #eee; border-radius: 10px; overflow: hidden; margin-top: 10px; }
-    .preview-box img { width: 100%; height: 160px; object-fit: cover; }
-    .preview-box .pv-body { padding: 10px 12px; }
-    .preview-box .pv-title { font-size: 13px; font-weight: bold; color: #1d3557; }
-    .preview-box .pv-desc { font-size: 12px; color: #666; margin-top: 4px; }
-    .preview-box a { font-size: 11px; color: #1d3557; display: block; margin-top: 6px; }
-    .stmt-preview { border: 1px solid #eee; border-radius: 10px; overflow: hidden; margin-top: 8px; }
-    .stmt-preview img { width: 100%; height: 160px; object-fit: cover; }
-    .stmt-preview a { display: block; padding: 8px 10px; font-size: 11px; color: #1d3557; }
-
-    .reaction-badge { display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; margin-top: 8px; }
-    .badge-accepted { background: #e8f5ee; color: #2d6a4f; border: 1px solid #a8d5ba; }
-    .badge-modified { background: #fff8e8; color: #9a7b2d; border: 1px solid #e8d5a3; }
-    .badge-denied { background: #fdf0f0; color: #b84040; border: 1px solid #e8b4b4; }
-    .gen-card-link { display: inline-block; font-size: 12px; color: #1d3557; padding: 6px 14px; border-radius: 8px; text-decoration: none; font-weight: 600; border: 1px solid #1d3557; margin-top: 8px; margin-left: 8px; }
-    .gen-card-link:hover { background: #1d3557; color: white; }
-
-    .news-card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); border-left: 4px solid #ff9933; }
-    .news-card h4 { font-size: 14px; color: #1d3557; margin-bottom: 5px; }
-    .news-card p { font-size: 13px; color: #555; line-height: 1.4; margin-bottom: 8px; }
-    .news-card img { width: 100%; border-radius: 8px; margin-bottom: 8px; }
-    .news-card a { font-size: 12px; color: #1d3557; }
-    .news-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
-    .scan-btn { width: 100%; padding: 14px; border: none; border-radius: 10px; cursor: pointer; color: white; background: #ff9933; font-size: 15px; font-weight: bold; margin-bottom: 12px; }
-    .scan-info { text-align: center; color: #888; font-size: 13px; margin-bottom: 12px; }
-
-    /* ✅ SETTINGS OVERLAY */
-    .settings-overlay {
-      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5); z-index: 200;
-      justify-content: center; align-items: flex-start; padding-top: 60px;
-    }
-    .settings-overlay.open { display: flex; }
-    .settings-panel {
-      background: white; width: 90%; max-width: 500px;
-      border-radius: 14px; padding: 20px;
-      max-height: 80vh; overflow-y: auto;
-    }
-    .settings-panel h3 { color: #1d3557; margin-bottom: 15px; }
-    .close-btn { float: right; background: none; border: none; font-size: 20px; cursor: pointer; color: #999; }
-
-    /* ✅ LOGOUT — SMALL, SUBTLE */
-    .logout-btn {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 8px 16px; background: #f5f5f5; color: #888;
-      border: 1px solid #ddd; border-radius: 8px; cursor: pointer;
-      font-size: 12px; font-weight: 500; margin-top: 15px;
-      transition: all 0.2s ease;
-    }
-    .logout-btn:hover { background: #eee; color: #555; }
-    .logout-btn svg { width: 14px; height: 14px; }
-
-    .photo-section { text-align: center; margin-bottom: 15px; }
-    .photo-avatar {
-      width: 80px; height: 80px; border-radius: 50%;
-      background: #fff5e6; color: #e68a2e; font-size: 32px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 8px; overflow: hidden; cursor: pointer;
-      border: 3px solid #ffe0b2;
-    }
-    .photo-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .photo-hint { font-size: 11px; color: #999; }
-    .error { color: #b84040; font-size: 12px; margin-top: 5px; }
-    .success { color: #3a7d5c; font-size: 12px; margin-top: 5px; }
-    .result-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-
-    /* ✅ BOTTOM NAV */
-    .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; height: 72px; z-index: 100; display: flex; justify-content: center; align-items: flex-end; pointer-events: none; }
-    .nav-bar { width: 100%; max-width: 420px; background: #edf1f7; border-radius: 22px 22px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); display: flex; justify-content: space-around; align-items: center; height: 58px; padding: 0 40px; pointer-events: all; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #9aa5b4; font-size: 10px; font-weight: 600; letter-spacing: 0.3px; gap: 2px; transition: all 0.3s ease; position: relative; padding: 6px 20px; }
-    .nav-item .nav-icon { width: 20px; height: 20px; }
-    .nav-item .nav-label { font-size: 10px; }
-    .nav-item.active { color: #1d3557; top: -18px; }
-    .nav-item.active .icon-circle { background: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(29,53,87,0.15); border: 2px solid #dce3ed; }
-    .nav-item.active .nav-icon { width: 22px; height: 22px; }
-    .nav-item.active .nav-label { margin-top: 4px; color: #1d3557; font-weight: 700; }
-    .nav-item:not(.active) .icon-circle { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
-  </style>
+/* BOTTOM NAV */
+.bottomnav { position: fixed; bottom: 0; left: 0; right: 0; height: 72px; z-index: 100; display: flex; justify-content: center; align-items: flex-end; pointer-events: none; }
+.nav-bar { width: 100%; max-width: 420px; background: #edf1f7; border-radius: 22px 22px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); display: flex; justify-content: space-around; align-items: center; height: 58px; padding: 0 40px; pointer-events: all; }
+.nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #9aa5b4; font-size: 10px; font-weight: 600; gap: 2px; transition: all 0.3s ease; position: relative; padding: 6px 20px; }
+.nav-item .nav-icon { width: 20px; height: 20px; }
+.nav-item .nav-label { font-size: 10px; }
+.nav-item.active { color: #1d3557; top: -18px; }
+.nav-item.active .icon-circle { background: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(29,53,87,0.15); border: 2px solid #dce3ed; }
+.nav-item.active .nav-icon { width: 22px; height: 22px; }
+.nav-item.active .nav-label { margin-top: 4px; color: #1d3557; font-weight: 700; }
+.nav-item:not(.active) .icon-circle { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+</style>
 </head>
 <body>
 
-<!-- ✅ TOP BAR — VERILAY LOGO + SETTINGS ICON -->
+<!-- ✅ TOPBAR — LOGO + SETTINGS -->
 <div class="topbar">
-  <img src="logo-white.png" alt="Verilay" class="topbar-logo" onerror="this.outerHTML='<span style=\'font-size:18px;font-weight:800;\'><span style=color:#FF9933>✓</span><span style=color:white>erilay</span></span>'">
+  <div class="topbar-left"><img src="logo.png" alt="Verilay"></div>
+  <div class="topbar-spacer"></div>
   <button class="settings-btn" onclick="openSettings()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
   </button>
 </div>
 
-<!-- ✅ SETTINGS OVERLAY -->
+<!-- SETTINGS -->
 <div class="settings-overlay" id="settingsOverlay">
   <div class="settings-panel">
     <button class="close-btn" onclick="closeSettings()">✕</button>
@@ -223,15 +162,26 @@
     <button class="btn" onclick="saveProfile()">Save Profile</button>
     <div id="settingsMsg" class="success"></div>
     <div id="settingsErr" class="error"></div>
-    <button class="logout-btn" onclick="logout()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      Logout
-    </button>
+    <button class="logout-btn" onclick="logout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</button>
+  </div>
+</div>
+
+<!-- ✅ REACTION POPUP -->
+<div class="react-popup-overlay" id="reactPopup">
+  <div class="react-popup">
+    <h3>Add your statement</h3>
+    <div class="rp-subtitle">What do you want to say about this?</div>
+    <div id="rpBadge" class="rp-badge"></div>
+    <textarea id="rpStatement" rows="3" placeholder="Type your statement..."></textarea>
+    <div class="rp-btns">
+      <button class="rp-btn-cancel" onclick="closeReactPopup()">Cancel</button>
+      <button class="rp-btn-submit" onclick="submitReactPopup()">Submit</button>
+    </div>
+    <div id="rpErr" class="error" style="margin-top:8px;"></div>
   </div>
 </div>
 
 <div class="content">
-  <!-- ✅ PROFILE HEADER WITH SOCIAL SIDE BY SIDE -->
   <div class="profile-header">
     <div class="profile-left">
       <div class="avatar" id="avatarMain">?</div>
@@ -241,30 +191,27 @@
       <div class="social-row-inline" id="socialInline"></div>
     </div>
   </div>
-
   <div class="stats">
     <div class="stat"><div class="stat-num" id="statStatements">0</div><div class="stat-label">Truths</div></div>
     <div class="stat"><div class="stat-num" id="statScore">0</div><div class="stat-label">Verilay Score</div></div>
   </div>
-
   <div class="tabs">
     <div class="tab active" id="tab-statements" onclick="showTab('statements')">Truth Log</div>
     <div class="tab" id="tab-news" onclick="showTab('news')">Media Scan</div>
   </div>
-
   <div class="section active" id="sec-statements">
     <button class="new-post-toggle" onclick="toggleNewPost()">+ New Statement</button>
     <div class="new-post-area" id="newPostArea">
       <div class="card">
-        <h3 style="margin-bottom:15px; color:#1d3557;">Add New Statement</h3>
+        <h3 style="margin-bottom:15px;color:#1d3557;">Add New Statement</h3>
         <textarea id="newStatement" placeholder="Share your truth or react to news..." rows="4"></textarea>
         <div class="form-group"><label>News/Source Link (optional)</label><input id="sourceUrl" placeholder="https://example.com/article..." oninput="onUrlInput()"></div>
         <div id="postPreviewArea"></div>
         <button class="btn" onclick="postStatement()">Post Statement</button>
         <div id="postMsg" class="success"></div>
         <div id="postErr" class="error"></div>
-        <div id="postReactSection" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid #eee;">
-          <p style="font-size:13px; color:#666; margin-bottom:8px;"><strong>React to your statement:</strong></p>
+        <div id="postReactSection" style="display:none;margin-top:15px;padding-top:15px;border-top:1px solid #eee;">
+          <p style="font-size:13px;color:#666;margin-bottom:8px;"><strong>React to your statement:</strong></p>
           <div class="card-actions">
             <button class="btn-accept" onclick="reactToPost('accepted')">Accept</button>
             <button class="btn-modify" onclick="reactToPost('modified')">Modify</button>
@@ -276,10 +223,9 @@
     </div>
     <div id="myStatements"></div>
   </div>
-
   <div class="section" id="sec-news">
     <div class="card">
-      <h3 style="margin-bottom:10px; color:#1d3557;">📰 Media Scan</h3>
+      <h3 style="margin-bottom:10px;color:#1d3557;">📰 Media Scan</h3>
       <p class="scan-info">Scanning news for: <strong id="scanNameLabel">Loading...</strong></p>
       <button class="scan-btn" onclick="scanNews()">🔍 Scan News</button>
       <div id="newsError" class="error"></div>
@@ -289,19 +235,11 @@
   </div>
 </div>
 
-<!-- ✅ BOTTOM NAV — PROFILE ACTIVE -->
-<div class="bottomnav">
-  <div class="nav-bar">
-    <a href="feed.html" class="nav-item">
-      <div class="icon-circle"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#9aa5b4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></div>
-      <span class="nav-label">Feed</span>
-    </a>
-    <a href="dashboard.html" class="nav-item active">
-      <div class="icon-circle"><svg class="nav-icon" viewBox="0 0 24 24" fill="#1d3557" stroke="none"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg></div>
-      <span class="nav-label">Profile</span>
-    </a>
-  </div>
-</div>
+<!-- BOTTOM NAV -->
+<div class="bottomnav"><div class="nav-bar">
+  <a href="feed.html" class="nav-item"><div class="icon-circle"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#9aa5b4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></div><span class="nav-label">Feed</span></a>
+  <a href="dashboard.html" class="nav-item active"><div class="icon-circle"><svg class="nav-icon" viewBox="0 0 24 24" fill="#1d3557" stroke="none"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg></div><span class="nav-label">Profile</span></a>
+</div></div>
 
 <script src="js/api.js"></script>
 <script>
@@ -315,154 +253,160 @@ window._stmtTexts = {};
 window._newsTexts = {};
 window._newsUrls = {};
 
-function escapeHtml(str) { return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-
-function getStoredReactions() { try { return JSON.parse(localStorage.getItem("verilay_stmt_reactions") || "{}"); } catch(e) { return {}; } }
-function storeReaction(stmtId, action) { var r = getStoredReactions(); r[stmtId] = action; localStorage.setItem("verilay_stmt_reactions", JSON.stringify(r)); }
-function getStoredReaction(stmtId) { return getStoredReactions()[stmtId] || ""; }
-function getReactionForItem(item) {
-  var r = (item.reaction_type || item.reaction || item.verdict || "").toLowerCase();
-  if (r === "accepted" || r === "modified" || r === "denied") return r;
-  var text = (item.text || "").trim().toUpperCase();
-  if (text.startsWith("ACCEPTED:")) return "accepted"; if (text.startsWith("MODIFIED:")) return "modified"; if (text.startsWith("DENIED:")) return "denied";
-  var id = item._id || item.id || ""; if (id) { var stored = getStoredReaction(id); if (stored) return stored; } return "";
-}
-function timeAgo(dateStr) { if (!dateStr) return ""; try { var diff = Date.now() - new Date(dateStr).getTime(); var mins = Math.floor(diff / 60000); if (mins < 1) return "Just now"; if (mins < 60) return mins + "m ago"; var hrs = Math.floor(mins / 60); if (hrs < 24) return hrs + "h ago"; var days = Math.floor(hrs / 24); if (days < 7) return days + "d ago"; return new Date(dateStr).toLocaleDateString(); } catch(e) { return ""; } }
+function escapeHtml(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function getStoredReactions() { try { return JSON.parse(localStorage.getItem("verilay_stmt_reactions")||"{}"); } catch(e) { return {}; } }
+function storeReaction(id,a) { var r=getStoredReactions(); r[id]=a; localStorage.setItem("verilay_stmt_reactions",JSON.stringify(r)); }
+function getStoredReaction(id) { return getStoredReactions()[id]||""; }
+function getReactionForItem(item) { var r=(item.reaction_type||item.reaction||item.verdict||"").toLowerCase(); if(r==="accepted"||r==="modified"||r==="denied")return r; var t=(item.text||"").trim().toUpperCase(); if(t.startsWith("ACCEPTED:"))return"accepted"; if(t.startsWith("MODIFIED:"))return"modified"; if(t.startsWith("DENIED:"))return"denied"; var id=item._id||item.id||""; if(id){var s=getStoredReaction(id);if(s)return s} return""; }
+function timeAgo(d) { if(!d)return""; try{var diff=Date.now()-new Date(d).getTime();var m=Math.floor(diff/60000);if(m<1)return"Just now";if(m<60)return m+"m ago";var h=Math.floor(m/60);if(h<24)return h+"h ago";var dy=Math.floor(h/24);if(dy<7)return dy+"d ago";return new Date(d).toLocaleDateString()}catch(e){return""} }
 
 function openSettings() { document.getElementById("settingsOverlay").classList.add("open"); }
 function closeSettings() { document.getElementById("settingsOverlay").classList.remove("open"); }
-document.addEventListener("click", function(e) { if (e.target === document.getElementById("settingsOverlay")) closeSettings(); });
-
-function showTab(name) { document.querySelectorAll(".section").forEach(function(s) { s.classList.remove("active"); }); document.querySelectorAll(".tab").forEach(function(t) { t.classList.remove("active"); }); document.getElementById("sec-" + name).classList.add("active"); document.getElementById("tab-" + name).classList.add("active"); }
+document.addEventListener("click",function(e){if(e.target===document.getElementById("settingsOverlay"))closeSettings()});
+function showTab(n) { document.querySelectorAll(".section").forEach(function(s){s.classList.remove("active")}); document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active")}); document.getElementById("sec-"+n).classList.add("active"); document.getElementById("tab-"+n).classList.add("active"); }
 function toggleNewPost() { document.getElementById("newPostArea").classList.toggle("open"); }
 
-function setAvatarDisplay(el, photoUrl, initial) { if (photoUrl) { el.innerHTML = "<img src='" + escapeHtml(photoUrl) + "'>"; } else { el.innerHTML = initial || "?"; } }
-function handlePhotoUpload(event) { var file = event.target.files[0]; if (!file) return; var reader = new FileReader(); reader.onload = function(e) { localStorage.setItem("profile_photo", e.target.result); document.getElementById("editPhoto").value = e.target.result; updateAllAvatars(); }; reader.readAsDataURL(file); }
-function previewPhotoUrl() { var url = document.getElementById("editPhoto").value.trim(); if (url) localStorage.setItem("profile_photo", url); updateAllAvatars(); }
-function updateAllAvatars() { var photo = localStorage.getItem("profile_photo") || profileData.profile_picture_url || ""; var initial = (profileData.full_name || "?").charAt(0).toUpperCase(); setAvatarDisplay(document.getElementById("avatarMain"), photo, initial); setAvatarDisplay(document.getElementById("settingsAvatar"), photo, initial); }
+function setAvatarDisplay(el,url,init) { if(url){el.innerHTML="<img src='"+escapeHtml(url)+"'>"}else{el.innerHTML=init||"?"} }
+function handlePhotoUpload(e) { var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){localStorage.setItem("profile_photo",ev.target.result);document.getElementById("editPhoto").value=ev.target.result;updateAllAvatars()};r.readAsDataURL(f) }
+function previewPhotoUrl() { var u=document.getElementById("editPhoto").value.trim();if(u)localStorage.setItem("profile_photo",u);updateAllAvatars() }
+function updateAllAvatars() { var p=localStorage.getItem("profile_photo")||profileData.profile_picture_url||""; var i=(profileData.full_name||"?").charAt(0).toUpperCase(); setAvatarDisplay(document.getElementById("avatarMain"),p,i); setAvatarDisplay(document.getElementById("settingsAvatar"),p,i); }
 
 async function loadProfile() {
   try {
-    var res = await getProfile();
-    var user = res.response ? (res.response.User || res.response.user || res.response) : {};
-    profileData = user;
-    document.getElementById("profileName").innerText = user.full_name || "No Name";
-    document.getElementById("profileUsername").innerText = "@" + (user.username || "unknown");
-    document.getElementById("profileBio").innerText = user.bio || "";
-    document.getElementById("scanNameLabel").innerText = user.full_name || "your name";
-    if (user.profile_picture_url) localStorage.setItem("profile_photo", user.profile_picture_url);
+    var res=await getProfile(); var user=res.response?(res.response.User||res.response.user||res.response):{};
+    profileData=user;
+    document.getElementById("profileName").innerText=user.full_name||"No Name";
+    document.getElementById("profileUsername").innerText="@"+(user.username||"unknown");
+    document.getElementById("profileBio").innerText=user.bio||"";
+    document.getElementById("scanNameLabel").innerText=user.full_name||"your name";
+    if(user.profile_picture_url)localStorage.setItem("profile_photo",user.profile_picture_url);
     updateAllAvatars();
 
-    // ✅ SOCIAL — SIDE BY SIDE
-    var sh = "";
-    // Instagram
-    if (user.instagram_url) {
-      var ig = user.instagram_url.replace(/https?:\/\/(www\.)?instagram\.com\//i,"").replace(/\/$/,"");
-      sh += "<a href='" + escapeHtml(user.instagram_url) + "' target='_blank' class='social-chip'>"
-        + "<svg viewBox='0 0 24 24' fill='none' stroke='#E4405F' stroke-width='2'><rect x='2' y='2' width='20' height='20' rx='5'/><circle cx='12' cy='12' r='5'/><circle cx='17.5' cy='6.5' r='1.5' fill='#E4405F' stroke='none'/></svg>"
-        + "<span class='sc-name'>@" + escapeHtml(ig) + "</span></a>";
-    } else {
-      sh += "<div class='social-chip not-linked'><svg viewBox='0 0 24 24' fill='none' stroke='#ccc' stroke-width='2'><rect x='2' y='2' width='20' height='20' rx='5'/><circle cx='12' cy='12' r='5'/></svg><span>IG</span></div>";
-    }
-    // Twitter
-    if (user.twitter_url) {
-      var tw = user.twitter_url.replace(/https?:\/\/(www\.)?(twitter|x)\.com\//i,"").replace(/\/$/,"");
-      sh += "<a href='" + escapeHtml(user.twitter_url) + "' target='_blank' class='social-chip'>"
-        + "<svg viewBox='0 0 24 24' fill='#1a1a1a'><path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg>"
-        + "<span class='sc-name'>@" + escapeHtml(tw) + "</span></a>";
-    } else {
-      sh += "<div class='social-chip not-linked'><svg viewBox='0 0 24 24' fill='#ccc'><path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg><span>X</span></div>";
-    }
-    // LinkedIn
-    if (user.linkedin_url) {
-      var li = user.linkedin_url.replace(/https?:\/\/(www\.)?linkedin\.com\/in\//i,"").replace(/\/$/,"");
-      sh += "<a href='" + escapeHtml(user.linkedin_url) + "' target='_blank' class='social-chip'>"
-        + "<svg viewBox='0 0 24 24' fill='#0077B5'><path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/></svg>"
-        + "<span class='sc-name'>" + escapeHtml(li) + "</span></a>";
-    } else {
-      sh += "<div class='social-chip not-linked'><svg viewBox='0 0 24 24' fill='#ccc'><path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/></svg><span>in</span></div>";
-    }
-    document.getElementById("socialInline").innerHTML = sh;
+    // ✅ SOCIAL INLINE
+    var sh="";
+    if(user.instagram_url){var ig=user.instagram_url.replace(/https?:\/\/(www\.)?instagram\.com\//i,"").replace(/\/$/,"");sh+="<a href='"+escapeHtml(user.instagram_url)+"' target='_blank' class='social-chip'><svg viewBox='0 0 24 24' fill='none' stroke='#E4405F' stroke-width='2'><rect x='2' y='2' width='20' height='20' rx='5'/><circle cx='12' cy='12' r='5'/><circle cx='17.5' cy='6.5' r='1.5' fill='#E4405F' stroke='none'/></svg><span class='sc-name'>@"+escapeHtml(ig)+"</span></a>"}else{sh+="<div class='social-chip not-linked'><svg viewBox='0 0 24 24' fill='none' stroke='#ccc' stroke-width='2'><rect x='2' y='2' width='20' height='20' rx='5'/><circle cx='12' cy='12' r='5'/></svg><span>IG</span></div>"}
+    if(user.twitter_url){var tw=user.twitter_url.replace(/https?:\/\/(www\.)?(twitter|x)\.com\//i,"").replace(/\/$/,"");sh+="<a href='"+escapeHtml(user.twitter_url)+"' target='_blank' class='social-chip'><svg viewBox='0 0 24 24' fill='#1a1a1a'><path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg><span class='sc-name'>@"+escapeHtml(tw)+"</span></a>"}else{sh+="<div class='social-chip not-linked'><svg viewBox='0 0 24 24' fill='#ccc'><path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg><span>X</span></div>"}
+    if(user.linkedin_url){var li=user.linkedin_url.replace(/https?:\/\/(www\.)?linkedin\.com\/in\//i,"").replace(/\/$/,"");sh+="<a href='"+escapeHtml(user.linkedin_url)+"' target='_blank' class='social-chip'><svg viewBox='0 0 24 24' fill='#0077B5'><path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/></svg><span class='sc-name'>"+escapeHtml(li)+"</span></a>"}else{sh+="<div class='social-chip not-linked'><svg viewBox='0 0 24 24' fill='#ccc'><path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/></svg><span>in</span></div>"}
+    document.getElementById("socialInline").innerHTML=sh;
 
-    // Name lock
-    var nameLocked = localStorage.getItem("name_locked");
-    if (nameLocked === "true" && user.full_name && user.full_name.trim() !== "") {
-      var ni = document.getElementById("editName"); ni.readOnly = true; ni.style.background = "#f0f8f0"; ni.style.color = "#2d6a4f"; ni.style.border = "1px solid #a8d5ba"; ni.style.cursor = "not-allowed";
-    }
-    document.getElementById("editPhoto").value = localStorage.getItem("profile_photo") || user.profile_picture_url || "";
-    document.getElementById("editName").value = user.full_name || "";
-    document.getElementById("editUsername").value = user.username || "";
-    document.getElementById("editBio").value = user.bio || "";
-    document.getElementById("editLinkedin").value = user.linkedin_url || "";
-    document.getElementById("editInstagram").value = user.instagram_url || "";
-    document.getElementById("editTwitter").value = user.twitter_url || "";
-  } catch (err) { console.error(err); }
+    var nameLocked=localStorage.getItem("name_locked");
+    if(nameLocked==="true"&&user.full_name&&user.full_name.trim()!==""){var ni=document.getElementById("editName");ni.readOnly=true;ni.style.background="#f0f8f0";ni.style.color="#2d6a4f";ni.style.border="1px solid #a8d5ba";ni.style.cursor="not-allowed"}
+    document.getElementById("editPhoto").value=localStorage.getItem("profile_photo")||user.profile_picture_url||"";
+    document.getElementById("editName").value=user.full_name||"";
+    document.getElementById("editUsername").value=user.username||"";
+    document.getElementById("editBio").value=user.bio||"";
+    document.getElementById("editLinkedin").value=user.linkedin_url||"";
+    document.getElementById("editInstagram").value=user.instagram_url||"";
+    document.getElementById("editTwitter").value=user.twitter_url||"";
+  } catch(err) { console.error(err); }
 }
 
-// ✅ SAVE PROFILE → CLOSE SETTINGS → RELOAD PROFILE
 async function saveProfile() {
-  document.getElementById("settingsMsg").innerText = "";
-  document.getElementById("settingsErr").innerText = "";
+  document.getElementById("settingsMsg").innerText="";document.getElementById("settingsErr").innerText="";
   try {
-    var photoVal = document.getElementById("editPhoto").value.trim();
-    if (photoVal) localStorage.setItem("profile_photo", photoVal);
-    var payload = { full_name: document.getElementById("editName").value, username: document.getElementById("editUsername").value, bio: document.getElementById("editBio").value, linkedin_url: document.getElementById("editLinkedin").value, instagram_url: document.getElementById("editInstagram").value, twitter_url: document.getElementById("editTwitter").value };
-    if (photoVal && !photoVal.startsWith("data:")) payload.profile_picture_url = photoVal;
+    var photoVal=document.getElementById("editPhoto").value.trim();if(photoVal)localStorage.setItem("profile_photo",photoVal);
+    var payload={full_name:document.getElementById("editName").value,username:document.getElementById("editUsername").value,bio:document.getElementById("editBio").value,linkedin_url:document.getElementById("editLinkedin").value,instagram_url:document.getElementById("editInstagram").value,twitter_url:document.getElementById("editTwitter").value};
+    if(photoVal&&!photoVal.startsWith("data:"))payload.profile_picture_url=photoVal;
     await updateProfile(payload);
-    document.getElementById("settingsMsg").innerText = "Profile saved! ✓";
+    document.getElementById("settingsMsg").innerText="Profile saved! ✓";
     updateAllAvatars();
-    // ✅ CLOSE SETTINGS & REDIRECT TO PROFILE
-    setTimeout(function() {
-      closeSettings();
-      loadProfile();
-    }, 800);
-  } catch (err) { document.getElementById("settingsErr").innerText = "Error: " + err.message; }
+    setTimeout(function(){closeSettings();loadProfile()},800);
+  } catch(err) { document.getElementById("settingsErr").innerText="Error: "+err.message; }
 }
 
-function buildCardLink(text, verdict) { return "card.html?name=" + encodeURIComponent(profileData.full_name || "") + "&username=" + encodeURIComponent(profileData.username || "") + "&text=" + encodeURIComponent(text || "") + "&verdict=" + encodeURIComponent(verdict || "accepted"); }
-function buildStmtPreviewHtml(url) { if (!url) return ""; var safeUrl = url; if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl; return "<div class='stmt-preview'><img src='https://image.thum.io/get/" + escapeHtml(safeUrl) + "'><a href='" + escapeHtml(safeUrl) + "' target='_blank'>🔗 Source ↗</a></div>"; }
-function buildPreviewHtml(url, title, desc, img) { if (!url) return ""; var safeUrl = url; if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl; if (!img) img = "https://image.thum.io/get/" + safeUrl; return "<div class='preview-box'><img src='" + escapeHtml(img) + "'><div class='pv-body'>" + (title ? "<div class='pv-title'>" + escapeHtml(title) + "</div>" : "") + (desc ? "<div class='pv-desc'>" + escapeHtml(desc) + "</div>" : "") + "<a href='" + escapeHtml(safeUrl) + "' target='_blank'>Read source ↗</a></div></div>"; }
-function reactionBadgeHtml(reaction) { if (reaction === "accepted") return "<span class='reaction-badge badge-accepted'>Accepted ✓</span>"; if (reaction === "modified") return "<span class='reaction-badge badge-modified'>Modified ✎</span>"; if (reaction === "denied") return "<span class='reaction-badge badge-denied'>Denied ✗</span>"; return ""; }
+// ✅ CARD LINK — NOW INCLUDES NEWS TITLE + SOURCE
+function buildCardLink(text,verdict,newsTitle,newsSource) {
+  var url="card.html?name="+encodeURIComponent(profileData.full_name||"")+"&text="+encodeURIComponent(text||"")+"&verdict="+encodeURIComponent(verdict||"accepted");
+  if(newsTitle)url+="&news="+encodeURIComponent(newsTitle);
+  if(newsSource)url+="&source="+encodeURIComponent(newsSource);
+  return url;
+}
+function buildStmtPreviewHtml(url){if(!url)return"";var su=url;if(!/^https?:\/\//i.test(su))su="https://"+su;return"<div class='stmt-preview'><img src='https://image.thum.io/get/"+escapeHtml(su)+"'><a href='"+escapeHtml(su)+"' target='_blank'>🔗 Source ↗</a></div>"}
+function buildPreviewHtml(url,title,desc,img){if(!url)return"";var su=url;if(!/^https?:\/\//i.test(su))su="https://"+su;if(!img)img="https://image.thum.io/get/"+su;return"<div class='preview-box'><img src='"+escapeHtml(img)+"'><div class='pv-body'>"+(title?"<div class='pv-title'>"+escapeHtml(title)+"</div>":"")+(desc?"<div class='pv-desc'>"+escapeHtml(desc)+"</div>":"")+"<a href='"+escapeHtml(su)+"' target='_blank'>Read source ↗</a></div></div>"}
+function reactionBadgeHtml(r){if(r==="accepted")return"<span class='reaction-badge badge-accepted'>Accepted ✓</span>";if(r==="modified")return"<span class='reaction-badge badge-modified'>Modified ✎</span>";if(r==="denied")return"<span class='reaction-badge badge-denied'>Denied ✗</span>";return""}
 
-function onUrlInput() { clearTimeout(urlTimer); var url = document.getElementById("sourceUrl").value.trim(); if (!url || url.length < 10) { document.getElementById("postPreviewArea").innerHTML = ""; return; } urlTimer = setTimeout(function() { fetchPostPreview(url); }, 800); }
-async function fetchPostPreview(url) { var area = document.getElementById("postPreviewArea"); if (!/^https?:\/\//i.test(url)) url = "https://" + url; area.innerHTML = buildPreviewHtml(url, "Loading...", "", ""); var title = "", desc = "", ogImg = ""; try { var res = await fetch("https://r.jina.ai/" + url); var html = await res.text(); function pick(regex) { var m = html.match(regex); return m && m[1] ? m[1].trim() : ""; } title = pick(/<title[^>]*>([^<]+)<\/title>/i); desc = pick(/meta\s+name="description"\s+content="([^"]+)"/i); ogImg = pick(/property="og:image"\s+content="([^"]+)"/i); var ogTitle = pick(/property="og:title"\s+content="([^"]+)"/i); var ogDesc = pick(/property="og:description"\s+content="([^"]+)"/i); if (ogTitle) title = ogTitle; if (ogDesc) desc = ogDesc; } catch (e) {} var stmtBox = document.getElementById("newStatement"); if (!stmtBox.value.trim() && title) stmtBox.value = title; area.innerHTML = buildPreviewHtml(url, title || "News Article", desc, ogImg); }
+function onUrlInput(){clearTimeout(urlTimer);var u=document.getElementById("sourceUrl").value.trim();if(!u||u.length<10){document.getElementById("postPreviewArea").innerHTML="";return}urlTimer=setTimeout(function(){fetchPostPreview(u)},800)}
+async function fetchPostPreview(url){var area=document.getElementById("postPreviewArea");if(!/^https?:\/\//i.test(url))url="https://"+url;area.innerHTML=buildPreviewHtml(url,"Loading...","","");var title="",desc="",ogImg="";try{var res=await fetch("https://r.jina.ai/"+url);var html=await res.text();function pick(re){var m=html.match(re);return m&&m[1]?m[1].trim():""}title=pick(/<title[^>]*>([^<]+)<\/title>/i);desc=pick(/meta\s+name="description"\s+content="([^"]+)"/i);ogImg=pick(/property="og:image"\s+content="([^"]+)"/i);var ogT=pick(/property="og:title"\s+content="([^"]+)"/i);var ogD=pick(/property="og:description"\s+content="([^"]+)"/i);if(ogT)title=ogT;if(ogD)desc=ogD}catch(e){}var sb=document.getElementById("newStatement");if(!sb.value.trim()&&title)sb.value=title;area.innerHTML=buildPreviewHtml(url,title||"News Article",desc,ogImg)}
 
 async function loadMyStatements() {
   try {
-    var res = await getMyStatements(); var list = [];
-    if (res.response && res.response.statements) list = res.response.statements;
-    else if (Array.isArray(res.response)) list = res.response;
-    document.getElementById("statStatements").innerText = list.length;
-    document.getElementById("statScore").innerText = list.length * 10;
-    var container = document.getElementById("myStatements"); container.innerHTML = "";
-    if (list.length === 0) { container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No truths yet.</p></div>"; return; }
-    window._stmtTexts = {};
-    for (var i = 0; i < list.length; i++) {
-      var item = list[i]; var id = item._id; window._stmtTexts[id] = item.text || "";
-      var previewHtml = item.source_url ? buildStmtPreviewHtml(item.source_url) : "";
-      var reaction = getReactionForItem(item); var hasReaction = !!reaction; var actionHtml = "";
-      if (hasReaction) { actionHtml = "<div class='result-row'>" + reactionBadgeHtml(reaction) + "<a class='gen-card-link' href='" + buildCardLink(item.text || "", reaction) + "'>🎨 Generate Card</a></div>"; }
-      else { actionHtml = "<div class='card-actions' id='actions-" + id + "'><button class='btn-accept' onclick=\"reactToStatement('" + id + "','accepted')\">Accept</button><button class='btn-modify' onclick=\"reactToStatement('" + id + "','modified')\">Modify</button><button class='btn-deny' onclick=\"reactToStatement('" + id + "','denied')\">Deny</button></div>"; }
-      container.innerHTML += "<div class='card'><p>" + escapeHtml(item.text || "") + "</p>" + previewHtml + "<div class='card-date'>" + timeAgo(item.Created_Date) + "</div>" + actionHtml + "<div id='result-" + id + "'></div></div>";
+    var res=await getMyStatements();var list=[];
+    if(res.response&&res.response.statements)list=res.response.statements;else if(Array.isArray(res.response))list=res.response;
+    document.getElementById("statStatements").innerText=list.length;
+    document.getElementById("statScore").innerText=list.length*10;
+    var container=document.getElementById("myStatements");container.innerHTML="";
+    if(list.length===0){container.innerHTML="<div class='card'><p style='color:#999;text-align:center;'>No truths yet.</p></div>";return}
+    window._stmtTexts={};
+    for(var i=0;i<list.length;i++){
+      var item=list[i];var id=item._id;window._stmtTexts[id]=item.text||"";
+      var previewHtml=item.source_url?buildStmtPreviewHtml(item.source_url):"";
+      var reaction=getReactionForItem(item);var hasReaction=!!reaction;var actionHtml="";
+      if(hasReaction){actionHtml="<div class='result-row'>"+reactionBadgeHtml(reaction)+"<a class='gen-card-link' href='"+buildCardLink(item.text||"",reaction)+"'>🎨 Generate Card</a></div>"}
+      else{actionHtml="<div class='card-actions' id='actions-"+id+"'><button class='btn-accept' onclick=\"reactToStatement('"+id+"','accepted')\">Accept</button><button class='btn-modify' onclick=\"reactToStatement('"+id+"','modified')\">Modify</button><button class='btn-deny' onclick=\"reactToStatement('"+id+"','denied')\">Deny</button></div>"}
+      container.innerHTML+="<div class='card'><p>"+escapeHtml(item.text||"")+"</p>"+previewHtml+"<div class='card-date'>"+timeAgo(item.Created_Date)+"</div>"+actionHtml+"<div id='result-"+id+"'></div></div>"
     }
-  } catch (err) { console.error(err); }
+  } catch(err) { console.error(err); }
 }
 
-async function reactToStatement(id, action) { try { await reactStatement(id, action); storeReaction(id, action); var actionsEl = document.getElementById("actions-" + id); if (actionsEl) actionsEl.style.display = "none"; var resultEl = document.getElementById("result-" + id); var text = (window._stmtTexts && window._stmtTexts[id]) || ""; if (resultEl) { resultEl.innerHTML = "<div class='result-row'>" + reactionBadgeHtml(action) + "<a class='gen-card-link' href='" + buildCardLink(text, action) + "'>🎨 Generate Card</a></div>"; } setTimeout(function() { loadMyStatements(); }, 1500); } catch (err) { console.error(err); } }
+async function reactToStatement(id,action){try{await reactStatement(id,action);storeReaction(id,action);var actionsEl=document.getElementById("actions-"+id);if(actionsEl)actionsEl.style.display="none";var resultEl=document.getElementById("result-"+id);var text=(window._stmtTexts&&window._stmtTexts[id])||"";if(resultEl){resultEl.innerHTML="<div class='result-row'>"+reactionBadgeHtml(action)+"<a class='gen-card-link' href='"+buildCardLink(text,action)+"'>🎨 Generate Card</a></div>"}setTimeout(function(){loadMyStatements()},1500)}catch(err){console.error(err)}}
 
-async function postStatement() { document.getElementById("postMsg").innerText = ""; document.getElementById("postErr").innerText = ""; document.getElementById("postReactSection").style.display = "none"; document.getElementById("postReactResult").innerHTML = ""; var text = document.getElementById("newStatement").value.trim(); var sourceUrl = document.getElementById("sourceUrl").value.trim(); if (!text) { document.getElementById("postErr").innerText = "Write something first"; return; } try { var res = await addStatement(text, sourceUrl); lastPostedId = ""; if (res.response) { lastPostedId = res.response.id || res.response._id || ""; } if (res.id) lastPostedId = res.id; if (res._id) lastPostedId = res._id; lastPostedText = text; document.getElementById("postMsg").innerText = "Posted! Now react:"; document.getElementById("postReactSection").style.display = "block"; } catch (err) { document.getElementById("postErr").innerText = "Error: " + err.message; } }
+async function postStatement(){document.getElementById("postMsg").innerText="";document.getElementById("postErr").innerText="";document.getElementById("postReactSection").style.display="none";document.getElementById("postReactResult").innerHTML="";var text=document.getElementById("newStatement").value.trim();var sourceUrl=document.getElementById("sourceUrl").value.trim();if(!text){document.getElementById("postErr").innerText="Write something first";return}try{var res=await addStatement(text,sourceUrl);lastPostedId="";if(res.response){lastPostedId=res.response.id||res.response._id||""}if(res.id)lastPostedId=res.id;if(res._id)lastPostedId=res._id;lastPostedText=text;document.getElementById("postMsg").innerText="Posted! Now react:";document.getElementById("postReactSection").style.display="block"}catch(err){document.getElementById("postErr").innerText="Error: "+err.message}}
 
-async function reactToPost(action) { if (!lastPostedId) return; try { await reactStatement(lastPostedId, action); storeReaction(lastPostedId, action); document.getElementById("postReactResult").innerHTML = "<div class='result-row'>" + reactionBadgeHtml(action) + "<a class='gen-card-link' href='" + buildCardLink(lastPostedText, action) + "'>🎨 Generate Card</a></div>"; document.getElementById("newStatement").value = ""; document.getElementById("sourceUrl").value = ""; document.getElementById("postPreviewArea").innerHTML = ""; setTimeout(function() { document.getElementById("postReactSection").style.display = "none"; document.getElementById("postMsg").innerText = ""; document.getElementById("postReactResult").innerHTML = ""; document.getElementById("newPostArea").classList.remove("open"); lastPostedId = ""; lastPostedText = ""; loadMyStatements(); }, 2000); } catch (err) { document.getElementById("postReactResult").innerHTML = "<span class='error'>Error: " + err.message + "</span>"; } }
+async function reactToPost(action){if(!lastPostedId)return;try{await reactStatement(lastPostedId,action);storeReaction(lastPostedId,action);document.getElementById("postReactResult").innerHTML="<div class='result-row'>"+reactionBadgeHtml(action)+"<a class='gen-card-link' href='"+buildCardLink(lastPostedText,action)+"'>🎨 Generate Card</a></div>";document.getElementById("newStatement").value="";document.getElementById("sourceUrl").value="";document.getElementById("postPreviewArea").innerHTML="";setTimeout(function(){document.getElementById("postReactSection").style.display="none";document.getElementById("postMsg").innerText="";document.getElementById("postReactResult").innerHTML="";document.getElementById("newPostArea").classList.remove("open");lastPostedId="";lastPostedText="";loadMyStatements()},2000)}catch(err){document.getElementById("postReactResult").innerHTML="<span class='error'>Error: "+err.message+"</span>"}}
 
-var newsCounter = 0;
-async function scanNews() { document.getElementById("newsError").innerText = ""; document.getElementById("newsInfo").innerText = "Scanning..."; document.getElementById("newsResults").innerHTML = ""; var query = (profileData.full_name || "").trim(); if (!query) { document.getElementById("newsError").innerText = "Set your Full Name first."; document.getElementById("newsInfo").innerText = ""; return; } try { var res = await searchNews(query); var articles = res.articles || []; var container = document.getElementById("newsResults"); if (articles.length === 0) { container.innerHTML = "<div class='card'><p style='color:#999;text-align:center;'>No news found.</p></div>"; document.getElementById("newsInfo").innerText = ""; return; } document.getElementById("newsInfo").innerText = articles.length + " articles found"; for (var i = 0; i < articles.length; i++) { var a = articles[i]; newsCounter++; var nid = "news-" + newsCounter; window._newsTexts[nid] = a.title || ""; window._newsUrls[nid] = a.url || ""; var imgSrc = a.image || ""; if (!imgSrc && a.url) { var safeUrl = a.url; if (!/^https?:\/\//i.test(safeUrl)) safeUrl = "https://" + safeUrl; imgSrc = "https://image.thum.io/get/" + safeUrl; } var imgHtml = imgSrc ? "<img src='" + escapeHtml(imgSrc) + "'>" : ""; var srcLabel = a.source ? "<span style='font-size:11px;color:#999;'>via " + escapeHtml(a.source) + "</span>" : ""; container.innerHTML += "<div class='news-card'>" + imgHtml + "<h4>" + escapeHtml(a.title || "") + "</h4><p>" + escapeHtml(a.description || "") + "</p>" + srcLabel + "<br><a href='" + escapeHtml(a.url || "") + "' target='_blank'>Read full article ↗</a><div class='news-actions' id='nactions-" + nid + "'><button class='btn-accept' onclick=\"reactToNews('" + nid + "','accepted')\">Accept</button><button class='btn-modify' onclick=\"reactToNews('" + nid + "','modified')\">Modify</button><button class='btn-deny' onclick=\"reactToNews('" + nid + "','denied')\">Deny</button></div><div id='nresult-" + nid + "'></div></div>"; } } catch (err) { document.getElementById("newsError").innerText = "Error: " + err.message; document.getElementById("newsInfo").innerText = ""; } }
+// ✅ REACTION POPUP FOR NEWS
+var pendingReactNid="";
+var pendingReactAction="";
 
-async function reactToNews(nid, action) { var title = (window._newsTexts && window._newsTexts[nid]) || ""; var url = (window._newsUrls && window._newsUrls[nid]) || ""; try { var res = await addStatement(action.toUpperCase() + ": " + title, url); var stmtId = ""; if (res.response) { stmtId = res.response.id || res.response._id || ""; } if (res.id) stmtId = res.id; if (res._id) stmtId = res._id; if (stmtId) { await reactStatement(stmtId, action); storeReaction(stmtId, action); } var actionsEl = document.getElementById("nactions-" + nid); if (actionsEl) actionsEl.style.display = "none"; var resultEl = document.getElementById("nresult-" + nid); if (resultEl) { resultEl.innerHTML = "<div class='result-row'>" + reactionBadgeHtml(action) + "<a class='gen-card-link' href='" + buildCardLink(title, action) + "'>🎨 Generate Card</a></div>"; } loadMyStatements(); } catch (err) { var el = document.getElementById("nresult-" + nid); if (el) el.innerHTML = "<span class='error'>Error: " + err.message + "</span>"; } }
+function showReactPopup(nid,action){
+  pendingReactNid=nid;pendingReactAction=action;
+  var badge=document.getElementById("rpBadge");
+  badge.className="rp-badge rp-badge-"+action;
+  badge.innerText=action.charAt(0).toUpperCase()+action.slice(1);
+  document.getElementById("rpStatement").value="";
+  document.getElementById("rpErr").innerText="";
+  document.getElementById("reactPopup").classList.add("open");
+  setTimeout(function(){document.getElementById("rpStatement").focus()},200);
+}
 
-function logout() { localStorage.removeItem("token"); localStorage.removeItem("user_id"); localStorage.removeItem("profile_photo"); window.location.href = "login.html"; }
+function closeReactPopup(){document.getElementById("reactPopup").classList.remove("open");pendingReactNid="";pendingReactAction=""}
+
+async function submitReactPopup(){
+  var stmt=document.getElementById("rpStatement").value.trim();
+  if(!stmt){document.getElementById("rpErr").innerText="Please add your statement";return}
+  document.getElementById("rpErr").innerText="";
+  var nid=pendingReactNid;var action=pendingReactAction;
+  var newsTitle=(window._newsTexts&&window._newsTexts[nid])||"";
+  var url=(window._newsUrls&&window._newsUrls[nid])||"";
+  closeReactPopup();
+  try{
+    var res=await addStatement(action.toUpperCase()+": "+stmt,url);
+    var stmtId="";if(res.response)stmtId=res.response.id||res.response._id||"";if(res.id)stmtId=res.id;if(res._id)stmtId=res._id;
+    if(stmtId){await reactStatement(stmtId,action);storeReaction(stmtId,action)}
+    var actionsEl=document.getElementById("nactions-"+nid);if(actionsEl)actionsEl.style.display="none";
+    var resultEl=document.getElementById("nresult-"+nid);
+    if(resultEl){
+      resultEl.innerHTML="<div class='result-row'>"+reactionBadgeHtml(action)
+        +"<a class='gen-card-link' href='"+buildCardLink(stmt,action,newsTitle,url)+"'>🎨 Generate Card</a></div>"
+        +"<p style='font-size:12px;color:#666;margin-top:6px;font-style:italic;'>\""+escapeHtml(stmt)+"\"</p>"
+    }
+    loadMyStatements();
+  }catch(err){var el=document.getElementById("nresult-"+nid);if(el)el.innerHTML="<span class='error'>Error: "+err.message+"</span>"}
+}
+
+// ✅ REACT TO NEWS — SHOWS POPUP
+async function reactToNews(nid,action){showReactPopup(nid,action)}
+
+var newsCounter=0;
+async function scanNews(){document.getElementById("newsError").innerText="";document.getElementById("newsInfo").innerText="Scanning...";document.getElementById("newsResults").innerHTML="";var query=(profileData.full_name||"").trim();if(!query){document.getElementById("newsError").innerText="Set your Full Name first.";document.getElementById("newsInfo").innerText="";return}try{var res=await searchNews(query);var articles=res.articles||[];var container=document.getElementById("newsResults");if(articles.length===0){container.innerHTML="<div class='card'><p style='color:#999;text-align:center;'>No news found.</p></div>";document.getElementById("newsInfo").innerText="";return}document.getElementById("newsInfo").innerText=articles.length+" articles found";for(var i=0;i<articles.length;i++){var a=articles[i];newsCounter++;var nid="news-"+newsCounter;window._newsTexts[nid]=a.title||"";window._newsUrls[nid]=a.url||"";var imgSrc=a.image||"";if(!imgSrc&&a.url){var safeUrl=a.url;if(!/^https?:\/\//i.test(safeUrl))safeUrl="https://"+safeUrl;imgSrc="https://image.thum.io/get/"+safeUrl}var imgHtml=imgSrc?"<img src='"+escapeHtml(imgSrc)+"'>":"";var srcLabel=a.source?"<span style='font-size:11px;color:#999;'>via "+escapeHtml(a.source)+"</span>":"";container.innerHTML+="<div class='news-card'>"+imgHtml+"<h4>"+escapeHtml(a.title||"")+"</h4><p>"+escapeHtml(a.description||"")+"</p>"+srcLabel+"<br><a href='"+escapeHtml(a.url||"")+"' target='_blank'>Read full article ↗</a><div class='news-actions' id='nactions-"+nid+"'><button class='btn-accept' onclick=\"reactToNews('"+nid+"','accepted')\">Accept</button><button class='btn-modify' onclick=\"reactToNews('"+nid+"','modified')\">Modify</button><button class='btn-deny' onclick=\"reactToNews('"+nid+"','denied')\">Deny</button></div><div id='nresult-"+nid+"'></div></div>"}}catch(err){document.getElementById("newsError").innerText="Error: "+err.message;document.getElementById("newsInfo").innerText=""}}
+
+function logout(){localStorage.removeItem("token");localStorage.removeItem("user_id");localStorage.removeItem("profile_photo");window.location.href="login.html"}
 
 loadProfile();
 loadMyStatements();
 </script>
 </body>
 </html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
