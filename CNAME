@@ -1,3 +1,1 @@
-rename verilay_website.html index.html
-rename verilay_app_v2.html app.html
-echo verilay.co.in> CNAME
+verilay.co.in
