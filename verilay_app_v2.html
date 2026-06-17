@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 <title>Verilay — The Layer of Truth</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#0A1628;--white:#FFF;--off:#F7F8FA;--saff:#FF9933;--saff-l:rgba(255,153,51,.1);--grn:#22C55E;--grn-l:rgba(34,197,94,.1);--yel:#EAB308;--yel-l:rgba(234,179,8,.1);--red:#EF4444;--red-l:rgba(239,68,68,.1);--g1:#F1F3F5;--g2:#E2E5E9;--g3:#C8CDD3;--g4:#9CA3AF;--g5:#6B7280;--g6:#4B5563;--sh:0 2px 8px rgba(10,22,40,.06);--sh2:0 4px 16px rgba(10,22,40,.08);--r:16px}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:'Inter',sans-serif;background:var(--off);color:var(--navy);overflow:hidden;height:100vh;width:100vw;display:flex;justify-content:center}
+body{font-family:'Inter',sans-serif;background:var(--off);color:var(--navy);overflow:hidden;height:calc(var(--vh, 1vh) * 100);width:100vw;display:flex;justify-content:center}
 h1,h2,h3{font-family:'DM Serif Display',serif;font-weight:400}
-.app{width:100%;max-width:430px;height:100vh;display:flex;flex-direction:column;background:var(--white);position:relative;overflow:hidden;box-shadow:var(--sh2)}
+.app{width:100%;max-width:430px;height:calc(var(--vh, 1vh) * 100);display:flex;flex-direction:column;background:var(--white);position:relative;overflow:hidden;box-shadow:var(--sh2)}
 .top{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;padding-top:max(14px,env(safe-area-inset-top));background:var(--white);border-bottom:1px solid var(--g1);flex-shrink:0;z-index:10;min-height:56px}
 .logo{font-family:'DM Serif Display',serif;font-size:22px;color:var(--navy);letter-spacing:-.5px}.logo span{color:var(--saff)}
 .ti{display:flex;gap:4px;align-items:center}
@@ -82,7 +82,7 @@ h1,h2,h3{font-family:'DM Serif Display',serif;font-weight:400}
 .bs{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;background:var(--white);border-radius:20px 20px 0 0;padding:20px;padding-bottom:max(20px,env(safe-area-inset-bottom));z-index:51;transition:transform .35s cubic-bezier(.32,.72,0,1)}.bs.on{transform:translateX(-50%) translateY(0)}
 .bsh{width:36px;height:4px;background:var(--g3);border-radius:2px;margin:0 auto 20px}.bst{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px}.bst svg{color:var(--navy)}
 .so{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;cursor:pointer;transition:background .2s;margin-bottom:2px}.so:active{background:var(--g1)}.so svg{color:var(--g5);flex-shrink:0}.sot{font-size:14px;font-weight:500;color:var(--navy)}
-.sov{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:100vh;background:var(--white);z-index:100;padding:16px;display:none}.sov.on{display:block}
+.sov{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:calc(var(--vh, 1vh) * 100);background:var(--white);z-index:100;padding:16px;display:none}.sov.on{display:block}
 .sb{display:flex;align-items:center;gap:12px;margin-bottom:24px}.si{flex:1;padding:12px 16px;border-radius:100px;border:1.5px solid var(--g2);font-size:15px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}.si:focus{border-color:var(--saff)}.sc{font-size:14px;color:var(--saff);font-weight:600;cursor:pointer;padding:8px}.sh2{color:var(--g4);font-size:13px;text-align:center;margin-top:40px}
 .pnl::-webkit-scrollbar{width:0}
 
