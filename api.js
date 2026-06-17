@@ -385,7 +385,7 @@ const API = (() => {
             <div class="mh"><div class="rd" style="background:${sevColor}"></div><div class="ms">${m.source}</div><div class="mt">${timeAgo(m.created_at)}</div></div>
             <div class="mhl">"${m.headline}"</div>
             <div class="mr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg> ${formatNumber(m.reach)} reach ${m.url ? `&nbsp;&middot;&nbsp; <a href="${m.url}" target="_blank" style="color:var(--saff);font-size:11px;">View source</a>` : ""}</div>
-            ${platformBadges}
+            ${platformBadges}${engHtml}
             ${m.response_statement ? `<div style="font-size:12px;color:var(--g6);font-style:italic;margin:8px 0;padding:8px;background:var(--g1);border-radius:8px;">"${m.response_statement}"</div>` : ""}
             ${showActions ? `<div class="ma">
                 <button class="mb mba" onclick="API.radar.respond('${m.id}','ACCEPTED')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Accept</button>
