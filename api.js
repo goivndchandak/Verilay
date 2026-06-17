@@ -257,7 +257,7 @@ const API = (() => {
     }
     async function shareCardAction(cardId) {
         if (!isLoggedIn()) return showLoginScreen();
-        try { await apiPost(`/cards/${cardId}/share`); if(navigator.share) navigator.share({title:"Verilay Truth Record",text:"Check this verified truth record",url:`https://verilay.in/card/${cardId}`}); } catch(e){}
+        try { await apiPost(`/cards/${cardId}/share`); if(navigator.share) navigator.share({title:"Verilay Truth Record",text:"Check this verified truth record",url:`https://verilay.co.in/card/${cardId}`}); } catch(e){}
     }
 
     // ============================================================
@@ -489,7 +489,7 @@ var feedC = document.querySelector("#tf .feed");
         const newBio = prompt("Enter your bio:");
         if (newBio === null || !newBio.trim()) return;
         try {
-            await apiPut("/users/me/bio", { bio: newBio.trim() });
+            await apiPut("/users/me", { bio: newBio.trim() });
             const el = document.getElementById("bio-text");
             if (el) el.textContent = newBio.trim();
             const pt = document.querySelector("#tp .pt");
