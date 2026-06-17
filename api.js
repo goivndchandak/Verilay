@@ -363,6 +363,22 @@ const API = (() => {
         if(plist.length===0) plist.push("Google News");
         const platformBadges='<div class="mpi">'+plist.map(p=>{const d=_pbm[p];return`<span class="mpb ${d.c}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${d.i}</svg>${p}</span>`;}).join("")+'</div>';
 
+        // ── Real engagement metrics (upvotes / points / comments) per platform ──
+        let engHtml = "";
+        if (m.platform_spread && typeof m.platform_spread === "object") {
+            const labels = { reddit:"Reddit", hackernews:"Hacker News", google:"Google News", twitter:"Twitter / X", linkedin:"LinkedIn", newsdata:"News", gnews:"News" };
+            const rows = [];
+            for (const plat of Object.keys(m.platform_spread)) {
+                const d = m.platform_spread[plat] || {};
+                const bits = [];
+                if (d.upvotes != null) bits.push("&#9650; " + formatNumber(d.upvotes) + " upvotes");
+                if (d.points != null) bits.push("&#9650; " + formatNumber(d.points) + " points");
+                if (d.comments != null) bits.push("&#128172; " + formatNumber(d.comments) + " comments");
+                if (!bits.length && d.reach) bits.push(formatNumber(d.reach) + " reach");
+                if (bits.length) rows.push('<div style="font-size:11px;color:var(--g5);display:flex;gap:8px;flex-wrap:wrap"><strong style="color:var(--g6)">' + (labels[plat]||plat) + '</strong> ' + bits.join(' &middot; ') + '</div>');
+            }
+            if (rows.length) engHtml = '<div style="margin:8px 0 4px;display:flex;flex-direction:column;gap:4px">' + rows.join("") + '</div>';
+        }
         return `<div class="mc" style="${m.severity==="URGENT"&&m.status==="PENDING"?"border-left:3px solid var(--red)":""}">
             ${urgentBadge}
             ${statusBadge}
