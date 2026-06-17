@@ -143,7 +143,7 @@ const API = (() => {
     }
 
     function showAuthError(msg) { const el = document.getElementById("auth-error"); if (el) { el.textContent = msg; el.style.display = "block"; } }
-        let authEmail = "";
+    let authEmail = "";
     let authOtp = "";
 
     async function handleSendOTP() {
@@ -164,7 +164,7 @@ const API = (() => {
         if (!otp) return showAuthError("Please enter the OTP");
         try {
             const res = await apiPost("/auth/verify-otp", { email: authEmail, otp });
-                        if (res.needs_registration) {
+            if (res.needs_registration) {
                 authOtp = otp;
                 document.getElementById("auth-step-2").style.display = "none";
                 document.getElementById("auth-step-3").style.display = "block";
@@ -177,7 +177,7 @@ const API = (() => {
         } catch (e) { showAuthError(e.message); }
     }
 
-        async function handleRegister() {
+    async function handleRegister() {
         const full_name = document.getElementById("auth-fullname").value.trim();
         const username = document.getElementById("auth-username").value.trim().toLowerCase();
         if (!full_name || !username) return showAuthError("Please fill in all fields");
@@ -189,6 +189,7 @@ const API = (() => {
             init();
         } catch (e) { showAuthError(e.message); }
     }
+
     // ============================================================
     // FEED MODULE
     // ============================================================
@@ -272,6 +273,7 @@ const API = (() => {
         rsc.innerHTML = `
             <div class="rc rh" id="radar-circle"><div class="rv" id="radar-score">...</div><div class="rl" id="radar-level">Scanning</div></div>
             <div class="rsp" id="radar-spike">Scanning for mentions...</div>
+            <div id="radar-velocity" style="text-align:center;font-size:12px;color:var(--g5);margin:-8px 0 18px"></div>
             <div class="rst"><div><div class="rsn" id="radar-mentions-today">-</div><div class="rsl">Mentions today</div></div><div><div class="rsn" id="radar-reach">-</div><div class="rsl">Reach this week</div></div></div>
             <button class="shb" onclick="API.radar.scan()" style="margin-bottom:20px">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><circle cx="12" cy="12" r="2"/></svg>
@@ -283,7 +285,7 @@ const API = (() => {
 
         // First trigger a scan, then load everything
         try { await apiGet("/radar/scan"); } catch (e) { console.log("Scan:", e.message); }
-        await Promise.all([loadRiskScore(), loadMentions(), loadWeeklyStats()]);
+        await Promise.all([loadRiskScore(), loadMentions(), loadWeeklyStats(), loadVelocity()]);
     }
 
     async function loadRiskScore() {
@@ -309,6 +311,20 @@ const API = (() => {
                 if (d.score < 30) { circleEl.style.borderColor = "var(--navy)"; circleEl.style.background = "var(--off)"; }
             }
         } catch (e) { console.error("Risk score:", e.message); }
+    }
+
+    async function loadVelocity() {
+        const el = document.getElementById("radar-velocity");
+        if (!el) return;
+        try {
+            const d = await apiGet("/radar/velocity");
+            const arrow = d.trend === "accelerating" ? "\u25B2" : d.trend === "cooling" ? "\u25BC" : "\u25AC";
+            const color = d.trend === "accelerating" ? "var(--red)" : d.trend === "cooling" ? "var(--grn)" : "var(--g5)";
+            const spark = (d.buckets || []).map(v => v > 0 ? "\u2587" : "\u2581").join("");
+            el.innerHTML = '<span style="letter-spacing:1px;color:var(--g3)">' + spark + '</span><br>'
+                + '<span style="color:' + color + ';font-weight:700">' + arrow + ' ' + d.trend + '</span> \u00b7 '
+                + d.last_hour + ' in last hour (was ' + d.prev_hour + ')';
+        } catch (e) { el.innerHTML = ""; }
     }
 
     async function loadMentions() {
@@ -379,11 +395,22 @@ const API = (() => {
             }
             if (rows.length) engHtml = '<div style="margin:8px 0 4px;display:flex;flex-direction:column;gap:4px">' + rows.join("") + '</div>';
         }
+
+        // ── Sentiment + source-credibility badges ──
+        const _sent = m.sentiment || "neutral";
+        const _sc = _sent === "negative" ? {bg:"var(--red-l)",c:"var(--red)",t:"Negative"} : _sent === "positive" ? {bg:"var(--grn-l)",c:"var(--grn)",t:"Positive"} : {bg:"var(--g1)",c:"var(--g5)",t:"Neutral"};
+        const _cred = m.credibility || "low";
+        const _cc = _cred === "high" ? {bg:"var(--grn-l)",c:"var(--grn)",t:"High credibility"} : _cred === "medium" ? {bg:"var(--yel-l)",c:"var(--yel)",t:"Medium credibility"} : {bg:"var(--g1)",c:"var(--g5)",t:"Low credibility"};
+        const sentCredHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 8px">'
+            + '<span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;background:'+_sc.bg+';color:'+_sc.c+'">'+_sc.t+'</span>'
+            + '<span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;background:'+_cc.bg+';color:'+_cc.c+'">'+_cc.t+'</span>'
+            + '</div>';
+
         return `<div class="mc" style="${m.severity==="URGENT"&&m.status==="PENDING"?"border-left:3px solid var(--red)":""}">
             ${urgentBadge}
             ${statusBadge}
             <div class="mh"><div class="rd" style="background:${sevColor}"></div><div class="ms">${m.source}</div><div class="mt">${timeAgo(m.created_at)}</div></div>
-            <div class="mhl">"${m.headline}"</div>
+            <div class="mhl">"${m.headline}"</div>${sentCredHtml}
             <div class="mr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg> ${formatNumber(m.reach)} reach ${m.url ? `&nbsp;&middot;&nbsp; <a href="${m.url}" target="_blank" style="color:var(--saff);font-size:11px;">View source</a>` : ""}</div>
             ${platformBadges}${engHtml}
             ${m.response_statement ? `<div style="font-size:12px;color:var(--g6);font-style:italic;margin:8px 0;padding:8px;background:var(--g1);border-radius:8px;">"${m.response_statement}"</div>` : ""}
@@ -445,7 +472,7 @@ var feedC = document.querySelector("#tf .feed");
         try {
             const res = await apiGet("/radar/scan");
             alert(`Scan complete!\n${res.new_mentions} new mentions found\nTotal: ${res.total_mentions} mentions`);
-            await Promise.all([loadRiskScore(), loadMentions(), loadWeeklyStats()]);
+            await Promise.all([loadRiskScore(), loadMentions(), loadWeeklyStats(), loadVelocity()]);
         } catch (e) { console.error("Scan:", e.message); alert("Scan failed: " + e.message); }
         if (btn) { btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><circle cx="12" cy="12" r="2"/></svg> Scan for New Mentions`; btn.disabled = false; }
     }
