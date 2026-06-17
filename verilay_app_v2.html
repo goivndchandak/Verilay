@@ -231,6 +231,13 @@ h1,h2,h3{font-family:'DM Serif Display',serif;font-weight:400}
 <div class="sov" id="sov"><div class="sb"><input class="si" type="text" placeholder="Search people, claims, or topics..."><span class="sc" onclick="toggleSearch()">Cancel</span></div><div class="sh2">Search for verified public figures, truth records,<br>or trending claims across Verilay.</div></div>
 
 <script>
+  // ═══ Mobile viewport fix: keep top bar + bottom nav visible together
+(function(){
+  function setVH(){document.documentElement.style.setProperty('--vh',(window.innerHeight*0.01)+'px');}
+  setVH();
+  window.addEventListener('resize',setVH);
+  window.addEventListener('orientationchange',function(){setTimeout(setVH,200);});
+})();
 // ═══ Website handoff: pre-fill email from waitlist
 document.addEventListener('DOMContentLoaded',function(){
   var we=localStorage.getItem('verilay_waitlist_email');
