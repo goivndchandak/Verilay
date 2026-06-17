@@ -177,21 +177,18 @@ const API = (() => {
         } catch (e) { showAuthError(e.message); }
     }
 
-    async function handleRegister() {
+        async function handleRegister() {
         const full_name = document.getElementById("auth-fullname").value.trim();
         const username = document.getElementById("auth-username").value.trim().toLowerCase();
         if (!full_name || !username) return showAuthError("Please fill in all fields");
-        try { await apiPost("/auth/send-otp", { email: authEmail }); } catch (e) { /* ignore */ }
-        const otp = prompt("A new OTP was sent to your terminal.\nPlease enter the 6-digit OTP:");
-        if (!otp) return;
+        if (!authOtp) return showAuthError("Please verify your OTP again");
         try {
-            const res = await apiPost("/auth/register", { email: authEmail, otp, full_name, username });
+            const res = await apiPost("/auth/register", { email: authEmail, otp: authOtp, full_name, username });
             saveToken(res.access_token, res.user);
             document.getElementById("verilay-auth-overlay").remove();
             init();
         } catch (e) { showAuthError(e.message); }
     }
-
     // ============================================================
     // FEED MODULE
     // ============================================================
