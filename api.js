@@ -143,7 +143,8 @@ const API = (() => {
     }
 
     function showAuthError(msg) { const el = document.getElementById("auth-error"); if (el) { el.textContent = msg; el.style.display = "block"; } }
-    let authEmail = "";
+        let authEmail = "";
+    let authOtp = "";
 
     async function handleSendOTP() {
         const email = document.getElementById("auth-email").value.trim();
@@ -163,7 +164,8 @@ const API = (() => {
         if (!otp) return showAuthError("Please enter the OTP");
         try {
             const res = await apiPost("/auth/verify-otp", { email: authEmail, otp });
-            if (res.needs_registration) {
+                        if (res.needs_registration) {
+                authOtp = otp;
                 document.getElementById("auth-step-2").style.display = "none";
                 document.getElementById("auth-step-3").style.display = "block";
                 document.getElementById("auth-error").style.display = "none";
