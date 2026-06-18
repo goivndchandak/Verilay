@@ -71,10 +71,16 @@
                 const p = await get("/users/" + user.username);
                 const joinDate = new Date(p.created_at||Date.now()).toLocaleDateString("en-IN",{month:"long",year:"numeric"});
                 const bioBtnLabel = (p.bio && p.bio.trim()) ? "Edit Bio" : "Add Bio";
+                const sl = p.social_links || {};
+                const slKeys = Object.keys(sl).filter(function(k){ return sl[k]; });
+                const socialRows = slKeys.length ? slKeys.map(function(k){
+                    return '<div class="arow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="arowt" style="text-transform:capitalize">'+k+'</span><span class="arows" style="color:var(--g5);font-weight:500">'+sl[k]+'</span></div>';
+                }).join("") : '<div style="font-size:13px;color:var(--g4);padding:8px 0">No accounts linked yet.</div>';
+                const socialHtml = '<div class="asec"><div class="alab">Social Accounts</div>'+socialRows+'<button onclick="vpEditSocial()" style="margin-top:10px;padding:8px 16px;border-radius:100px;border:1.5px solid var(--g2);background:#fff;font-size:12px;font-weight:600;color:var(--saff);cursor:pointer;font-family:inherit">Add / Edit Accounts</button></div>';
                 container.innerHTML =
                     '<div class="asec"><div class="alab">Bio</div>'+
                     '<div class="atxt" id="vp-bio-text">'+(p.bio||"No bio added yet.")+'</div>'+
-                    '<button onclick="vpEditBio()" style="margin-top:10px;padding:8px 16px;border-radius:100px;border:1.5px solid var(--g2);background:#fff;font-size:12px;font-weight:600;color:var(--saff);cursor:pointer;font-family:inherit">'+bioBtnLabel+'</button></div>'+
+                    '<button onclick="vpEditBio()" style="margin-top:10px;padding:8px 16px;border-radius:100px;border:1.5px solid var(--g2);background:#fff;font-size:12px;font-weight:600;color:var(--saff);cursor:pointer;font-family:inherit">'+bioBtnLabel+'</button></div>'+ socialHtml +
                     '<div class="asec"><div class="alab">Verification</div>'+
                     '<div class="arow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>'+
                     '<span class="arowt">'+(p.is_verified?"Identity Verified":"Not Yet Verified")+'</span>'+
@@ -93,6 +99,23 @@
         // ─────────────────────────────────────────────
         // 3. BIO EDIT (uses existing API.profile.editBio, then refresh)
         // ─────────────────────────────────────────────
+        window.vpEditSocial = async function() {
+            const user = API.auth.getUser();
+            if (!user) return;
+            let current = {};
+            try { const pr = await get("/users/" + user.username); current = pr.social_links || {}; } catch(e) {}
+            const platform = prompt("Which platform? (instagram, twitter, linkedin, youtube, website, other)");
+            if (!platform) return;
+            const key = platform.toLowerCase().trim();
+            const handle = prompt("Enter username or link for " + key + ":", current[key] || "");
+            if (handle === null) return;
+            if (handle.trim() === "") { delete current[key]; } else { current[key] = handle.trim(); }
+            try {
+                await fetch(BASE + "/users/me", { method: "PUT", headers: H(), body: JSON.stringify({ social_links: current }) });
+                loadAboutSection();
+            } catch(e) { alert("Could not save: " + (e.message || "")); }
+        };
+
         window.vpEditBio = async function() {
             try {
                 await API.profile.editBio();      // prompts + PUT /users/me
