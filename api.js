@@ -283,9 +283,10 @@ const API = (() => {
             <div id="radar-weekly-container"></div>
         `;
 
-        // First trigger a scan, then load everything
-        try { await apiGet("/radar/scan"); } catch (e) { console.log("Scan:", e.message); }
+        // Show stored mentions immediately (persisted — no scan required)
         await Promise.all([loadRiskScore(), loadMentions(), loadWeeklyStats(), loadVelocity()]);
+        // Then scan for new mentions in the background and refresh when done
+        apiGet("/radar/scan").then(() => Promise.all([loadRiskScore(), loadMentions(), loadVelocity()])).catch(() => {});
     }
 
     async function loadRiskScore() {
@@ -366,7 +367,7 @@ const API = (() => {
 
     function renderMentionCard(m, showActions) {
         const sevColor = m.severity === "URGENT" ? "var(--red)" : m.severity === "MODERATE" ? "var(--yel)" : "var(--grn)";
-        const statusBadge = m.status !== "PENDING" ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700;text-transform:uppercase;background:${m.status==="ACCEPTED"?"var(--grn-l)":"var(--red-l)"};color:${m.status==="ACCEPTED"?"var(--grn)":"var(--red)"}">${m.status}</span>` : "";
+        const statusBadge = m.status !== "PENDING" ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700;text-transform:uppercase;background:${m.status==="ACCEPTED"?"var(--grn-l)":m.status==="MODIFIED"?"var(--yel-l)":"var(--red-l)"};color:${m.status==="ACCEPTED"?"var(--grn)":m.status==="MODIFIED"?"var(--yel)":"var(--red)"}">${m.status}</span>` : "";
         const urgentBadge = m.severity === "URGENT" && m.status === "PENDING" ?
             `<div class="abg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg> Urgent</div>` : "";
         const _pbm={"Google News":{c:"mpb-gn",i:'<path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/>'},"Twitter / X":{c:"mpb-tw",i:'<path d="M4 4l11.733 16h4.267l-11.733-16z"/><path d="M4 20l6.768-6.768m2.46-2.46L20 4"/>'},"Reddit":{c:"mpb-rd",i:'<circle cx="12" cy="12" r="10"/><path d="M14.5 15c-.83.83-2.17.83-3 0"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/>'},"LinkedIn":{c:"mpb-li",i:'<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>'},"Instagram":{c:"mpb-ig",i:'<rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>'}};
@@ -570,6 +571,7 @@ var feedC = document.querySelector("#tf .feed");
     async function draftDenialStatement(mentionId) { try { const r = await apiPost(`/shield/denial-statement?mention_id=${mentionId}`); alert("Denial Statement:\n\n"+r.drafted_statement); return r; } catch(e) { alert("Failed: "+e.message); } }
     async function fileTakedown(mentionId) { try { const r = await apiPost(`/shield/takedown?mention_id=${mentionId}`); alert("Takedown request filed!"); return r; } catch(e) { alert("Failed: "+e.message); } }
     async function setAlert(mentionId) { try { const r = await apiPost(`/shield/alert?mention_id=${mentionId}`); alert("Alert set!"); return r; } catch(e) { alert("Failed: "+e.message); } }
+    async function exportEvidencePdf(mentionId) { try { const r = await apiPost(`/shield/export-pdf?mention_id=${mentionId}`); alert(r.message || "Export requested."); return r; } catch(e) { alert("Failed: "+e.message); } }
 
     // ============================================================
     // SEARCH & NOTIFICATIONS
@@ -636,7 +638,7 @@ var feedC = document.querySelector("#tf .feed");
         reactions: { vouch: vouchCard, counter: counterCard, share: shareCardAction },
         radar: { load: loadRadar, scan: scanNews, respond: respondToMention },
         profile: { load: loadProfile, truthLog: loadTruthLog, about: loadAboutSection, cards: loadCardsSection, editBio: editBio },
-        shield: { responseCard: generateResponseCard, denialStatement: draftDenialStatement, takedown: fileTakedown, alert: setAlert, openForMention: openForMention, get _mid(){return _currentShieldMentionId;} },
+        shield: { responseCard: generateResponseCard, denialStatement: draftDenialStatement, takedown: fileTakedown, alert: setAlert, exportPdf: exportEvidencePdf, openForMention: openForMention, get _mid(){return _currentShieldMentionId;} },
         search: searchQuery,
         notifications: { loadCount: loadUnreadCount, markAllRead },
         helpers: { getInitials, getAvatarColor, timeAgo, formatNumber },
