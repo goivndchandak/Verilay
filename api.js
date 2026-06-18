@@ -586,6 +586,80 @@ var feedC = document.querySelector("#tf .feed");
 
     async function markAllRead() { try { await apiPut("/notifications/read"); loadUnreadCount(); } catch(e){} }
 
+    // ── Notifications panel ──
+    async function loadNotifications() {
+        const list = document.getElementById("nov-list");
+        if (!list) return;
+        list.innerHTML = '<div style="text-align:center;padding:40px;color:#9CA3AF">Loading...</div>';
+        try {
+            const items = await apiGet("/notifications/");
+            if (!items || items.length === 0) { list.innerHTML = '<div style="text-align:center;padding:50px;color:#9CA3AF;font-size:14px">No notifications yet</div>'; return; }
+            list.innerHTML = items.map(function(n){
+                const unread = !n.is_read;
+                return '<div style="display:flex;gap:12px;padding:14px 20px;border-bottom:1px solid var(--g1);background:'+(unread?'var(--saff-l)':'#fff')+'">'
+                    + '<div style="width:8px;height:8px;border-radius:50%;background:'+(unread?'var(--saff)':'transparent')+';margin-top:6px;flex-shrink:0"></div>'
+                    + '<div><div style="font-weight:600;font-size:13px;color:var(--navy)">'+(n.title||'')+'</div>'
+                    + '<div style="font-size:12px;color:var(--g5);margin-top:2px">'+(n.message||'')+'</div>'
+                    + '<div style="font-size:11px;color:var(--g4);margin-top:4px">'+timeAgo(n.created_at)+'</div></div></div>';
+            }).join("");
+        } catch(e) { list.innerHTML = '<div style="text-align:center;padding:40px;color:#9CA3AF">Could not load notifications</div>'; }
+    }
+    async function toggleNotifications() {
+        if (!isLoggedIn()) return showLoginScreen();
+        const el = document.getElementById("nov");
+        if (!el) return;
+        if (el.style.display === "flex") { el.style.display = "none"; return; }
+        el.style.display = "flex";
+        await loadNotifications();
+        try { await markAllRead(); } catch(e) {}
+    }
+    window.toggleNotifications = toggleNotifications;
+
+    // ── Search + Follow ──
+    async function runSearch(q) {
+        const el = document.getElementById("sov-results");
+        const hint = document.querySelector("#sov .sh2");
+        if (!el) return;
+        if (!q || !q.trim()) { el.innerHTML = ""; if (hint) hint.style.display = "block"; return; }
+        if (hint) hint.style.display = "none";
+        el.innerHTML = '<div style="text-align:center;padding:30px;color:#9CA3AF">Searching...</div>';
+        try {
+            const data = await apiGet("/search?q=" + encodeURIComponent(q.trim()));
+            renderSearchResults(data);
+        } catch(e) { el.innerHTML = '<div style="text-align:center;padding:30px;color:#9CA3AF">Search failed</div>'; }
+    }
+    function renderSearchResults(data) {
+        const el = document.getElementById("sov-results");
+        if (!el) return;
+        const users = (data && data.users) || [], cards = (data && data.cards) || [];
+        let html = "";
+        if (users.length) {
+            html += '<div style="font-size:11px;font-weight:700;color:var(--g4);text-transform:uppercase;letter-spacing:.5px;margin:8px 0">People</div>';
+            html += users.map(function(u){ return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--g1)">'
+                + '<div style="width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0;background:'+getAvatarColor(u.full_name)+'">'+getInitials(u.full_name)+'</div>'
+                + '<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px;color:var(--navy)">'+(u.full_name||'')+(u.is_verified?' <span style="color:var(--saff)">&#10003;</span>':'')+'</div><div style="font-size:12px;color:var(--g4)">@'+(u.username||'')+'</div></div>'
+                + '<button data-follow="'+(u.username||'')+'" style="padding:7px 16px;border-radius:100px;background:var(--saff);color:#fff;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0">Follow</button>'
+                + '</div>'; }).join("");
+        }
+        if (cards.length) {
+            html += '<div style="font-size:11px;font-weight:700;color:var(--g4);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px">Claims</div>';
+            html += cards.map(function(c){ return '<div style="padding:10px 0;border-bottom:1px solid var(--g1)"><div style="font-size:13px;color:var(--navy)">"'+(c.statement||'')+'"</div><div style="font-size:11px;color:var(--g4);margin-top:3px">'+((c.user&&c.user.full_name)||'')+' &middot; '+c.status+'</div></div>'; }).join("");
+        }
+        el.innerHTML = html || '<div style="text-align:center;padding:30px;color:#9CA3AF">No results found</div>';
+    }
+    async function followUser(username, btn) {
+        if (!isLoggedIn()) return showLoginScreen();
+        try {
+            await apiPost("/users/" + username + "/follow");
+            if (btn) { btn.textContent = "Following"; btn.disabled = true; btn.style.background = "var(--g3)"; }
+        } catch(e) { if (btn) { btn.textContent = ((e.message||"").indexOf("Already")>=0) ? "Following" : "Retry"; } }
+    }
+    // Delegated follow-button handler (no inline onclick needed)
+    document.addEventListener("click", function(e){
+        const fb = e.target && e.target.closest ? e.target.closest("[data-follow]") : null;
+        if (fb) followUser(fb.getAttribute("data-follow"), fb);
+    });
+
     // ============================================================
     // TAB SWITCHING
     // ============================================================
@@ -623,6 +697,8 @@ var feedC = document.querySelector("#tf .feed");
         loadFeed("following");
         loadUnreadCount();
         setInterval(loadUnreadCount, 30000);
+        const _si = document.querySelector("#sov .si");
+        if (_si && !_si._wired) { _si._wired = true; let _t; _si.addEventListener("input", function(){ clearTimeout(_t); _t = setTimeout(function(){ runSearch(_si.value); }, 350); }); }
         console.log("Verilay API connected — logged in as:", currentUser?.full_name);
     }
 
@@ -637,10 +713,10 @@ var feedC = document.querySelector("#tf .feed");
         feed: { load: loadFeed },
         reactions: { vouch: vouchCard, counter: counterCard, share: shareCardAction },
         radar: { load: loadRadar, scan: scanNews, respond: respondToMention },
-        profile: { load: loadProfile, truthLog: loadTruthLog, about: loadAboutSection, cards: loadCardsSection, editBio: editBio },
+        profile: { load: loadProfile, truthLog: loadTruthLog, about: loadAboutSection, cards: loadCardsSection, editBio: editBio, follow: followUser },
         shield: { responseCard: generateResponseCard, denialStatement: draftDenialStatement, takedown: fileTakedown, alert: setAlert, exportPdf: exportEvidencePdf, openForMention: openForMention, get _mid(){return _currentShieldMentionId;} },
         search: searchQuery,
-        notifications: { loadCount: loadUnreadCount, markAllRead },
+        notifications: { loadCount: loadUnreadCount, markAllRead, toggle: toggleNotifications },
         helpers: { getInitials, getAvatarColor, timeAgo, formatNumber },
     };
 })();
