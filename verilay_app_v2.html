@@ -106,7 +106,7 @@ h1,h2,h3{font-family:'DM Serif Display',serif;font-weight:400}
 </head>
 <body>
 <div class="app">
-<div class="top"><a href="index.html" class="logo" style="text-decoration:none">Veri<span>lay</span></a><div class="ti"><button class="tb2" onclick="toggleSearch()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button><button class="tb2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="badge">3</span></button></div></div>
+<div class="top"><a href="index.html" class="logo" style="text-decoration:none">Veri<span>lay</span></a><div class="ti"><button class="tb2" onclick="toggleSearch()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button><button class="tb2" onclick="toggleNotifications()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="badge">3</span></button></div></div>
 <div class="cnt">
 
 <div class="pnl on" id="tf">
@@ -228,7 +228,9 @@ h1,h2,h3{font-family:'DM Serif Display',serif;font-weight:400}
 <div class="so" onclick="if(API.shield._mid)API.shield.alert(API.shield._mid);closeShield()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="sot">Set Alert for This Story</span></div>
 </div>
 
-<div class="sov" id="sov"><div class="sb"><input class="si" type="text" placeholder="Search people, claims, or topics..."><span class="sc" onclick="toggleSearch()">Cancel</span></div><div class="sh2">Search for verified public figures, truth records,<br>or trending claims across Verilay.</div></div>
+
+<div id="nov" style="position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:calc(var(--vh,1vh) * 100);background:#fff;z-index:100;display:none;flex-direction:column"><div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--g1)"><div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--navy)">Notifications</div><span onclick="toggleNotifications()" style="color:var(--saff);font-weight:600;cursor:pointer;font-size:14px">Close</span></div><div id="nov-list" style="flex:1;overflow-y:auto"></div></div>
+<div class="sov" id="sov"><div class="sb"><input class="si" type="text" placeholder="Search people, claims, or topics..."><span class="sc" onclick="toggleSearch()">Cancel</span></div><div class="sh2">Search for verified public figures, truth records,<br>or trending claims across Verilay.</div><div id="sov-results" style="margin-top:8px;padding:0 4px"></div></div>
 
 <script>
 // ═══ Mobile viewport fix: keep top bar + bottom nav visible together
