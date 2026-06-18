@@ -11,6 +11,8 @@ const API = (() => {
     // HELPERS
     // ============================================================
 
+    function imgTag(url) { return url ? '<img src="' + url + '" style="width:100%;height:150px;object-fit:cover;border-radius:10px;margin:6px 0 10px;display:block" loading="lazy">' : ""; }
+
     function getInitials(name) {
         if (!name) return "?";
         const parts = name.trim().split(/\s+/);
@@ -222,7 +224,7 @@ const API = (() => {
                 : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"/></svg>`;
             const tp = card.trust_percentage || 0;
             const tc = tp >= 70 ? "var(--grn)" : tp >= 40 ? "var(--yel)" : "var(--red)";
-            return `<div class="tc" data-card-id="${card.id}" style="animation-delay:${i*0.08}s">
+            return `<div class="tc" data-card-id="${card.id}" style="animation-delay:${i*0.08}s">${imgTag(card.image_url)}
                 <div class="ch"><div class="av" style="background:${getAvatarColor(u.full_name)}">${getInitials(u.full_name)}</div><div><div class="cn">${u.full_name||"Unknown"} ${u.is_verified?`<span class="vb"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>`:""}</div><div class="cm">${u.is_verified?"Verified · ":""}${timeAgo(card.created_at)}</div></div></div>
                 <div class="rs ${sc}">${si} ${card.status}</div>
                 <div class="ts">"${card.statement}"</div>
@@ -407,7 +409,7 @@ const API = (() => {
             + '<span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;background:'+_cc.bg+';color:'+_cc.c+'">'+_cc.t+'</span>'
             + '</div>';
 
-        return `<div class="mc" style="${m.severity==="URGENT"&&m.status==="PENDING"?"border-left:3px solid var(--red)":""}">
+        return `<div class="mc" style="${m.severity==="URGENT"&&m.status==="PENDING"?"border-left:3px solid var(--red)":""}">${imgTag(m.image_url)}
             ${urgentBadge}
             ${statusBadge}
             <div class="mh"><div class="rd" style="background:${sevColor}"></div><div class="ms">${m.source}</div><div class="mt">${timeAgo(m.created_at)}</div></div>
@@ -511,7 +513,7 @@ var feedC = document.querySelector("#tf .feed");
                 const si = card.status==="DENIED"?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`:card.status==="ACCEPTED"?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>`:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"/></svg>`;
                 const tp = card.trust_percentage||0, tc = tp>=70?"var(--grn)":tp>=40?"var(--yel)":"var(--red)";
                 const dt = new Date(card.created_at).toLocaleDateString("en-IN",{month:"short",day:"numeric",year:"numeric"});
-                return `<div class="le"><span class="rs ${sc}" style="font-size:11px;padding:3px 10px">${si} ${sl}</span><span class="ld">${dt}</span><div class="lc">"${card.news_headline||card.statement}"</div>${card.news_source?`<div class="lso">${card.news_source}</div>`:""}<div class="tb"><div class="tbg"><div class="tbf" style="width:${tp}%;background:${tc}"></div></div><div class="tl"><span class="tp" style="color:${tc}">${tp}%</span><span class="tt">${formatNumber(card.vouch_count)} vouches · ${formatNumber(card.counter_count)} counters</span></div></div></div>`;
+                return `<div class="le"><span class="rs ${sc}" style="font-size:11px;padding:3px 10px">${si} ${sl}</span><span class="ld">${dt}</span>${imgTag(card.image_url)}<div class="lc">"${card.news_headline||card.statement}"</div>${card.news_source?`<div class="lso">${card.news_source}</div>`:""}<div class="tb"><div class="tbg"><div class="tbf" style="width:${tp}%;background:${tc}"></div></div><div class="tl"><span class="tp" style="color:${tc}">${tp}%</span><span class="tt">${formatNumber(card.vouch_count)} vouches · ${formatNumber(card.counter_count)} counters</span></div></div>${card.mention_id?`<button class="shb" style="margin-top:10px;padding:10px" onclick="API.shield.openForMention('${card.mention_id}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg> Shield Options</button>`:""}</div>`;
             }).join("");
         } catch (e) { console.error("Truth log:", e.message); }
     }
