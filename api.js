@@ -12,6 +12,7 @@ const API = (() => {
     // ============================================================
 
     function imgTag(url) { return url ? '<img src="' + url + '" style="width:100%;height:150px;object-fit:cover;border-radius:10px;margin:6px 0 10px;display:block" loading="lazy">' : ""; }
+    const CAT_META = { deepfake:["Deepfake","var(--red)","var(--red-l)"], scam:["Scam","var(--red)","var(--red-l)"], impersonation:["Impersonation","var(--red)","var(--red-l)"], defamation:["Reputational","var(--red)","var(--red-l)"], legal:["Legal","var(--yel)","var(--yel-l)"], financial:["Financial","var(--yel)","var(--yel-l)"], positive:["Positive","var(--grn)","var(--grn-l)"], social:["Social","var(--g5)","var(--g1)"], news:["News","var(--navy)","var(--g1)"] };
 
     function getInitials(name) {
         if (!name) return "?";
@@ -347,7 +348,13 @@ const API = (() => {
             const pending = mentions.filter(m => m.status === "PENDING");
             const responded = mentions.filter(m => m.status !== "PENDING");
 
-            let html = "";
+            const cats = Array.from(new Set(mentions.map(m => m.category || "news")));
+            let chipBar = '<div id="radar-cat-chips" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:12px;-webkit-overflow-scrolling:touch">';
+            chipBar += '<span data-chip="all" style="white-space:nowrap;font-size:12px;font-weight:600;padding:6px 14px;border-radius:100px;background:var(--navy);color:#fff;cursor:pointer">All</span>';
+            chipBar += cats.map(function(c){ const meta = CAT_META[c] || CAT_META.news; return '<span data-chip="'+c+'" style="white-space:nowrap;font-size:12px;font-weight:600;padding:6px 14px;border-radius:100px;background:var(--g1);color:var(--g6);cursor:pointer">'+meta[0]+'</span>'; }).join("");
+            chipBar += '</div>';
+
+            let html = chipBar;
 
             if (pending.length > 0) {
                 html += `<div class="stt">Needs Your Response</div>`;
@@ -404,12 +411,16 @@ const API = (() => {
         const _sc = _sent === "negative" ? {bg:"var(--red-l)",c:"var(--red)",t:"Negative"} : _sent === "positive" ? {bg:"var(--grn-l)",c:"var(--grn)",t:"Positive"} : {bg:"var(--g1)",c:"var(--g5)",t:"Neutral"};
         const _cred = m.credibility || "low";
         const _cc = _cred === "high" ? {bg:"var(--grn-l)",c:"var(--grn)",t:"High credibility"} : _cred === "medium" ? {bg:"var(--yel-l)",c:"var(--yel)",t:"Medium credibility"} : {bg:"var(--g1)",c:"var(--g5)",t:"Low credibility"};
+        const _catm = CAT_META[m.category] || CAT_META.news;
+        const _mc = (m.match_confidence != null) ? '<span style="font-size:10px;font-weight:600;padding:3px 9px;border-radius:100px;background:var(--g1);color:var(--g5)">'+m.match_confidence+'% match</span>' : '';
         const sentCredHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 8px">'
+            + '<span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;background:'+_catm[2]+';color:'+_catm[1]+'">'+_catm[0]+'</span>'
             + '<span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;background:'+_sc.bg+';color:'+_sc.c+'">'+_sc.t+'</span>'
             + '<span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;background:'+_cc.bg+';color:'+_cc.c+'">'+_cc.t+'</span>'
+            + _mc
             + '</div>';
 
-        return `<div class="mc" style="${m.severity==="URGENT"&&m.status==="PENDING"?"border-left:3px solid var(--red)":""}">${imgTag(m.image_url)}
+        return `<div class="mc" data-category="${m.category||'news'}" style="${m.severity==="URGENT"&&m.status==="PENDING"?"border-left:3px solid var(--red)":""}">${imgTag(m.image_url)}
             ${urgentBadge}
             ${statusBadge}
             <div class="mh"><div class="rd" style="background:${sevColor}"></div><div class="ms">${m.source}</div><div class="mt">${timeAgo(m.created_at)}</div></div>
@@ -660,6 +671,20 @@ var feedC = document.querySelector("#tf .feed");
     document.addEventListener("click", function(e){
         const fb = e.target && e.target.closest ? e.target.closest("[data-follow]") : null;
         if (fb) followUser(fb.getAttribute("data-follow"), fb);
+    });
+    function radarFilterCat(cat) {
+        document.querySelectorAll("#radar-mentions-container .mc").forEach(function(c){
+            c.style.display = (cat === "all" || c.getAttribute("data-category") === cat) ? "" : "none";
+        });
+        document.querySelectorAll("#radar-cat-chips [data-chip]").forEach(function(sp){
+            const on = sp.getAttribute("data-chip") === cat;
+            sp.style.background = on ? "var(--navy)" : "var(--g1)";
+            sp.style.color = on ? "#fff" : "var(--g6)";
+        });
+    }
+    document.addEventListener("click", function(e){
+        const ch = e.target && e.target.closest ? e.target.closest("#radar-cat-chips [data-chip]") : null;
+        if (ch) radarFilterCat(ch.getAttribute("data-chip"));
     });
 
     // ============================================================
