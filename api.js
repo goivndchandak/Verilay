@@ -258,9 +258,22 @@ const API = (() => {
         else if (res.message.includes("VOUCH")) { btns[0].classList.add("va"); btns[1].classList.remove("ca"); }
         else { btns[1].classList.add("ca"); btns[0].classList.remove("va"); }
     }
+    const CARD_PAGE_BASE = "https://verilay-backend.onrender.com/card/";
+    function shareVerilayCard(cardId, text) {
+        const url = CARD_PAGE_BASE + cardId;
+        if (navigator.share) {
+            navigator.share({ title: "Verilay Truth Card", text: text || "Verified on Verilay", url: url }).catch(function(){});
+        } else if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).then(function(){ alert("Card link copied:\n" + url); }, function(){ prompt("Copy this card link:", url); });
+        } else {
+            prompt("Copy this card link:", url);
+        }
+    }
+
     async function shareCardAction(cardId) {
         if (!isLoggedIn()) return showLoginScreen();
-        try { await apiPost(`/cards/${cardId}/share`); if(navigator.share) navigator.share({title:"Verilay Truth Record",text:"Check this verified truth record",url:`https://verilay.co.in/card/${cardId}`}); } catch(e){}
+        try { await apiPost(`/cards/${cardId}/share`); } catch(e){}
+        shareVerilayCard(cardId, "Check this verified Truth Card");
     }
 
     // ============================================================
@@ -580,7 +593,7 @@ var feedC = document.querySelector("#tf .feed");
         document.getElementById('bso').classList.add('on');
         document.getElementById('bss').classList.add('on');
     }
-    async function generateResponseCard(mentionId) { try { const r = await apiPost(`/shield/response-card?mention_id=${mentionId}`); alert("Response card created!"); return r; } catch(e) { alert("Failed: "+e.message); } }
+    async function generateResponseCard(mentionId) { try { const r = await apiPost(`/shield/response-card?mention_id=${mentionId}`); if (r && r.id) { shareVerilayCard(r.id, "My verified response on Verilay"); } else { alert("Response card created!"); } return r; } catch(e) { alert("Failed: "+e.message); } }
     async function draftDenialStatement(mentionId) { try { const r = await apiPost(`/shield/denial-statement?mention_id=${mentionId}`); alert("Denial Statement:\n\n"+r.drafted_statement); return r; } catch(e) { alert("Failed: "+e.message); } }
     async function fileTakedown(mentionId) { try { const r = await apiPost(`/shield/takedown?mention_id=${mentionId}`); alert("Takedown request filed!"); return r; } catch(e) { alert("Failed: "+e.message); } }
     async function setAlert(mentionId) { try { const r = await apiPost(`/shield/alert?mention_id=${mentionId}`); alert("Alert set!"); return r; } catch(e) { alert("Failed: "+e.message); } }
