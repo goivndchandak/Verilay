@@ -593,7 +593,19 @@ var feedC = document.querySelector("#tf .feed");
         document.getElementById('bso').classList.add('on');
         document.getElementById('bss').classList.add('on');
     }
-    async function generateResponseCard(mentionId) { try { const r = await apiPost(`/shield/response-card?mention_id=${mentionId}`); if (r && r.id) { shareVerilayCard(r.id, "My verified response on Verilay"); } else { alert("Response card created!"); } return r; } catch(e) { alert("Failed: "+e.message); } }
+        async function generateResponseCard(mentionId) {
+        const statement = prompt("Your statement for this Truth Card:", "This claim is false. I deny the allegations made in this report.");
+        if (statement === null) return;
+        try {
+            const r = await apiPost(`/shield/response-card?mention_id=${mentionId}&statement=${encodeURIComponent(statement)}`);
+            if (r && r.id) {
+                try { window.open(CARD_PAGE_BASE + r.id, "_blank"); } catch(e) {}
+                shareVerilayCard(r.id, "My verified response on Verilay");
+            }
+            try { loadFeed(currentFeedType); } catch(e) {}
+            return r;
+        } catch(e) { alert("Failed: " + e.message); }
+    }
     async function draftDenialStatement(mentionId) { try { const r = await apiPost(`/shield/denial-statement?mention_id=${mentionId}`); alert("Denial Statement:\n\n"+r.drafted_statement); return r; } catch(e) { alert("Failed: "+e.message); } }
     async function fileTakedown(mentionId) { try { const r = await apiPost(`/shield/takedown?mention_id=${mentionId}`); alert("Takedown request filed!"); return r; } catch(e) { alert("Failed: "+e.message); } }
     async function setAlert(mentionId) { try { const r = await apiPost(`/shield/alert?mention_id=${mentionId}`); alert("Alert set!"); return r; } catch(e) { alert("Failed: "+e.message); } }
